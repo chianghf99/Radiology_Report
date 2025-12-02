@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 <head>
-    <title>Smart DXA Reporter (Debug: Menopause Fixed)</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Smart DXA Reporter</title>
     <style>
         body { font-family: "Microsoft JhengHei", "Segoe UI", sans-serif; padding: 20px; background-color: #f4f6f8; color: #333; }
         .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
         
         /* API & Model Section */
         .setup-section { background: #e8f5e9; padding: 20px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #c8e6c9; }
-        .input-row { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-end; }
-        .input-group-api { flex: 2; }
+        .input-row { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-end; flex-wrap: wrap; }
+        .input-group-api { flex: 2; min-width: 250px; }
         .input-group-api label { font-weight: bold; font-size: 0.9em; color: #2e7d32; display: block; margin-bottom: 5px; }
         .input-group-api a { color: #1565c0; text-decoration: none; font-size: 0.9em; margin-left: 5px; }
         .input-group-api a:hover { text-decoration: underline; }
 
         input[type="password"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
-        button.detect-btn { flex: 1; padding: 10px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; height: 42px; }
+        button.detect-btn { flex: 1; min-width: 150px; padding: 10px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; height: 42px; }
         button.detect-btn:hover { background: #1b5e20; }
         
         select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; margin-top: 5px; font-weight: bold; background: #fff;}
@@ -59,13 +60,14 @@
 <body>
 
 <div class="container">
+    <h2 style="text-align:center; color:#444; margin-bottom:20px;">AI Smart DXA Reporter</h2>
     
     <div class="setup-section">
         <div class="input-row">
             <div class="input-group-api">
                 <label>
                     🔑 Google API Key 
-                    <a href="https://aistudio.google.com/app/apikey" target="_blank" title="點擊前往 Google AI Studio">👉 (前往 Google AI Studio 取得 Key)</a>
+                    <a href="https://aistudio.google.com/app/apikey" target="_blank" title="點擊前往 Google AI Studio">👉 (取得免費 Key)</a>
                 </label>
                 <input type="password" id="apiKey" placeholder="請在此貼上 API Key" onchange="saveKey()">
             </div>
@@ -241,7 +243,7 @@ function handleFile(file) {
     reader.readAsDataURL(file);
 }
 
-// 核心分析函式 (修正: 加入 Menopause_Age)
+// 核心分析函式 (修正: 要求回傳 String 以保留小數點)
 async function analyzeImage(base64, mimeType) {
     const key = apiKeyInput.value.trim();
     let modelName = modelSelect.value;
@@ -251,16 +253,19 @@ async function analyzeImage(base64, mimeType) {
 
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${key}`;
     
-    // 更新 Prompt: 明確要求 Menopause_Age
+    // 更新 Prompt: 要求數值回傳為 String
     const prompt = `
     Analyze this Bone Mineral Density (DXA) report image. Extract data into JSON.
+    
+    IMPORTANT: Return all numeric values (BMD, T-score, Z-score) as STRINGS to preserve trailing zeros (e.g. "-1.0" instead of -1).
+    
     Fields: 
     - Age (number)
     - Sex (Male/Female)
     - Menopause_Age (number, extract only if "Menopause" or "停經" age appears)
-    - RH_BMD, RH_T, RH_Z (Right Hip)
-    - LH_BMD, LH_T, LH_Z (Left Hip)
-    - L_BMD, L_T, L_Z (Lumbar Spine/L1-L4)
+    - RH_BMD, RH_T, RH_Z (Right Hip) - return as string
+    - LH_BMD, LH_T, LH_Z (Left Hip) - return as string
+    - L_BMD, L_T, L_Z (Lumbar Spine/L1-L4) - return as string
     
     Return ONLY JSON. Use null for missing values.
     `;
@@ -296,7 +301,6 @@ async function analyzeImage(base64, mimeType) {
     }
 }
 
-// 修正填表函式: 加入 Menopause 處理
 function fillForm(d) {
     const f = document.form;
     const s = (field, val) => { if(val != null) field.value = val; };
@@ -307,7 +311,6 @@ function fillForm(d) {
         else f.Sex[0].checked = true;
     }
     
-    // 新增: 填入停經年齡
     s(f.Menopause, d.Menopause_Age);
 
     s(f.L_BMD, d.L_BMD); s(f.L_T, d.L_T); s(f.L_Z, d.L_Z);
