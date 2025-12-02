@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radiology Report Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50; /* 深藍色主調 */
+            --accent-color: #3498db;  /* 亮藍色點綴 */
+            --bg-color: #f8f9fa;      /* 淺灰背景 */
+            --card-hover: #ffffff;
+            --text-main: #333;
+            --text-sub: #666;
+        }
+
+        body {
+            font-family: 'Inter', "Microsoft JhengHei", sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* 頂部標題區 */
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        /* 主要內容區 */
+        main {
+            flex: 1;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* 卡片網格系統 - 自動適應螢幕 */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        /* 卡片設計 */
+        .tool-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 180px; /* 固定高度讓排版整齊 */
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border-color: var(--accent-color);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .card-desc {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        .card-arrow {
+            text-align: right;
+            color: var(--accent-color);
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        /* 頁尾 */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            font-size: 0.85rem;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Radiology Report</h1>
+        <p>Automated Reporting Tools & Utilities</p>
+    </header>
+
+    <main>
+        <div class="grid-container">
+            
+            <a href="dxa.html" class="tool-card">
+                <div>
+                    <div class="card-icon">🦴</div>
+                    <div class="card-title">Bone Densitometry (DXA)</div>
+                    <div class="card-desc">
+                        AI-powered OCR tool to extract data from DXA images and generate structured reports automatically.
+                    </div>
+                </div>
+                <div class="card-arrow">Open Tool →</div>
+            </a>
+
+            </div>
+    </main>
+
+    <footer>
+        &copy; 2025 Radiology Report Hub. Hosted on GitHub Pages.
+    </footer>
+
+</body>
+</html>
