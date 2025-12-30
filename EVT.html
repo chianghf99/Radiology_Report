@@ -100,9 +100,10 @@
         /* CTP 數據專用佈局 */
         .ctp-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 10px;
             align-items: center;
+            margin-bottom: 15px; /* 增加行距 */
         }
         .ctp-item {
             background: #fafafa;
@@ -110,8 +111,11 @@
             border-radius: 4px;
             border: 1px solid #eee;
             font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between; /* 讓文字和輸入框對齊更整齊 */
+            align-items: center;
         }
-        .ctp-item input { width: 50px; text-align: center; }
+        .ctp-item input { width: 60px; text-align: center; }
 
         /* 器材清單佈局 */
         .device-group {
@@ -170,6 +174,12 @@
             box-sizing: border-box;
             margin-top: 10px;
         }
+        
+        textarea[name="Others"] {
+            width: 100%;
+            box-sizing: border-box;
+            resize: vertical; /* 允許垂直調整大小 */
+        }
 
         .helper-link { color: var(--accent-color); text-decoration: none; font-size: 0.9rem; }
         .helper-link:hover { text-decoration: underline; }
@@ -179,6 +189,16 @@
         
         /* 小標題 */
         .sub-label { font-weight: bold; margin-bottom: 5px; display: block; color: #555; margin-top: 10px;}
+        
+        /* 說明文字列表 */
+        .info-list {
+            margin: 5px 0 0 0;
+            padding-left: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        .info-list li { margin-bottom: 2px; }
     </style>
 </head>
 <body>
@@ -247,26 +267,40 @@
                     <option value="0">0</option><option value="1">1</option><option value="2">2</option>
                     <option value="3">3</option><option value="4">4</option><option value="5">5</option>
                 </select>
-                <div style="font-size: 0.85em; color: #666; margin-top: 5px; line-height: 1.4;">
-                    (5: Good, Similar vessel) / (4: Intermediate, A2 delay) / (3: Poor, 1 phase delay) / (2: Poor, 2 phase delay) / (1: Poor, few vessels) / (0: Poor, no vessels)
-                </div>
+                <ul class="info-list">
+                    <li>(Grade 5 Good collateral: Similar vessel enhancement pattern)</li>
+                    <li>(Grade 4 Intermediate collateral: A2 phase similar to Normal side A1 phase vessels)</li>
+                    <li>(Grade 3 Poor collateral: One phase delay with decreased vessel prominence or A3 phase similar to Normal side A1 phase vessels)</li>
+                    <li>(Grade 2 Poor collateral: Two phase delay with decreased vessel prominence or focal regions without vessels)</li>
+                    <li>(Grade 1 Poor collateral: A few vessels in A1-A3)</li>
+                    <li>(Grade 0 Poor collateral: No vessel in A1-A3)</li>
+                </ul>
+                <p style="font-size:0.85em; color:#999; margin-top:5px;">Referring to Radiology. 2015;275:510-520</p>
             </div>
 
             <hr style="margin: 20px 0; border:0; border-top:1px dashed #ddd;">
 
             <div class="sub-label">CTP Results (RAPID)</div>
+            
+            <div style="font-weight:bold; color:#2c3e50; margin-bottom:5px;">1. Tmax Parameters (Time)</div>
             <div class="ctp-grid">
-                <div class="ctp-item">CBF &lt; 20%: <input name="CBF20" type="text"> ml</div>
-                <div class="ctp-item"><b>CBF &lt; 30% (Core):</b> <input name="CBF30" type="text"> ml</div>
-                <div class="ctp-item">CBF &lt; 34%: <input name="CBF34" type="text"> ml</div>
-                <div class="ctp-item">CBF &lt; 38%: <input name="CBF38" type="text"> ml</div>
-                
                 <div class="ctp-item">Tmax &gt; 10s: <input name="Tmax10" type="text"> ml</div>
                 <div class="ctp-item">Tmax &gt; 8s: <input name="Tmax8" type="text"> ml</div>
-                <div class="ctp-item"><b>Tmax &gt; 6s (Penumbra):</b> <input name="Tmax6" type="text"> ml</div>
+                <div class="ctp-item">Tmax &gt; 6s (Penumbra): <input name="Tmax6" type="text"> ml</div>
                 <div class="ctp-item">Tmax &gt; 4s: <input name="Tmax4" type="text"> ml</div>
                 <div class="ctp-item">Hypo Index: <input name="Hypo_index" type="text"></div>
-                
+            </div>
+
+            <div style="font-weight:bold; color:#2c3e50; margin-bottom:5px;">2. CBF Parameters (Flow)</div>
+            <div class="ctp-grid">
+                <div class="ctp-item">CBF &lt; 20%: <input name="CBF20" type="text"> ml</div>
+                <div class="ctp-item">CBF &lt; 30% (Core): <input name="CBF30" type="text"> ml</div>
+                <div class="ctp-item">CBF &lt; 34%: <input name="CBF34" type="text"> ml</div>
+                <div class="ctp-item">CBF &lt; 38%: <input name="CBF38" type="text"> ml</div>
+            </div>
+
+            <div style="font-weight:bold; color:#2c3e50; margin-bottom:5px;">3. CBV Parameters (Volume)</div>
+            <div class="ctp-grid">
                 <div class="ctp-item">CBV &lt; 34%: <input name="CBV34" type="text"> ml</div>
                 <div class="ctp-item">CBV &lt; 38%: <input name="CBV38" type="text"> ml</div>
                 <div class="ctp-item">CBV &lt; 42%: <input name="CBV42" type="text"> ml</div>
@@ -476,7 +510,7 @@
             
             <div style="margin-top:15px;">
                 <span class="sub-label">Other Notes:</span>
-                <textarea rows="3" name="Others" placeholder="Optional notes..."></textarea>
+                <textarea rows="10" name="Others" placeholder="Optional notes..."></textarea>
             </div>
         </div>
 
