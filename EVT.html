@@ -15,8 +15,6 @@
             --border-color: #e0e0e0;
             --text-main: #333;
             --text-sub: #666;
-            --infarct-color: #e74c3c; /* 點擊後的顏色 (紅色代表 Infarct) */
-            --hover-color: #fadbd8;
         }
 
         body {
@@ -67,59 +65,6 @@
             border-left: 4px solid var(--accent-color);
         }
 
-        /* ==================== SVG Interactive Map Styles ==================== */
-        .svg-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        .svg-box {
-            text-align: center;
-        }
-        .svg-label {
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: #555;
-            margin-bottom: 5px;
-            display: block;
-        }
-        svg {
-            border: 1px solid #eee;
-            border-radius: 8px;
-            background: #fafafa;
-            max-width: 100%;
-        }
-        /* 腦部區域樣式 */
-        .brain-region {
-            fill: #e0e0e0;
-            stroke: #fff;
-            stroke-width: 1.5px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .brain-region:hover {
-            fill: var(--hover-color);
-        }
-        .brain-region.selected {
-            fill: var(--infarct-color);
-            stroke: #c0392b;
-        }
-        /* 文字標籤樣式 (在 SVG 內) */
-        .region-text {
-            font-size: 10px;
-            fill: #555;
-            pointer-events: none; /* 讓點擊穿透文字直接點到區域 */
-            text-anchor: middle;
-            font-family: sans-serif;
-        }
-        .region-text.selected {
-            fill: #fff;
-            font-weight: bold;
-        }
-        /* ==================================================================== */
-
         /* 表單元素美化 */
         label {
             cursor: pointer;
@@ -146,8 +91,8 @@
             border-color: var(--accent-color);
             box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
         }
-        
-        /* 自動計算欄位 */
+
+        /* 自動計算欄位的樣式 (視覺提示) */
         input[name="Hypo_index"] {
             background-color: #e8f5e9;
             border-color: #a5d6a7;
@@ -158,12 +103,15 @@
         /* Grid 佈局系統 */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        
+        /* CTP 數據專用佈局 */
         .ctp-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 10px;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 15px; /* 增加行距 */
         }
         .ctp-item {
             background: #fafafa;
@@ -177,6 +125,7 @@
         }
         .ctp-item input { width: 60px; text-align: center; }
 
+        /* 器材清單佈局 */
         .device-group {
             display: flex;
             flex-wrap: wrap;
@@ -194,30 +143,69 @@
             background: #eef6fc;
             border-color: #bbdefb;
         }
-        /* 選中時的高亮效果 (針對文字清單) */
-        .device-group label.active-check {
-            background-color: #fadbd8;
-            border-color: #e74c3c;
-            color: #c0392b;
+
+        /* 按鈕群組 */
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
         }
 
-        .btn-group { display: flex; gap: 15px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; }
-        button { padding: 12px 24px; border: none; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
         .btn-primary { background-color: var(--accent-color); color: white; }
         .btn-secondary { background-color: #95a5a6; color: white; }
         .btn-success { background-color: #27ae60; color: white; width: 100%; margin-top: 15px;}
+        
         button:hover { opacity: 0.9; }
 
+        /* 最終報告區域 */
         #Final_Report {
-            width: 100%; padding: 15px; border: 2px solid #34495e; border-radius: 8px; background: #f8f9fa;
-            font-family: monospace; font-size: 1rem; color: #2c3e50; box-sizing: border-box; margin-top: 10px;
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #34495e;
+            border-radius: 8px;
+            background: #f8f9fa;
+            font-family: monospace;
+            font-size: 1rem;
+            color: #2c3e50;
+            box-sizing: border-box;
+            margin-top: 10px;
         }
-        textarea[name="Others"] { width: 100%; box-sizing: border-box; resize: vertical; }
+        
+        textarea[name="Others"] {
+            width: 100%;
+            box-sizing: border-box;
+            resize: vertical; /* 允許垂直調整大小 */
+        }
+
         .helper-link { color: var(--accent-color); text-decoration: none; font-size: 0.9rem; }
         .helper-link:hover { text-decoration: underline; }
+
+        /* 時間選擇器微調 */
         .datetime-picker { width: 160px; text-align: center; }
+        
+        /* 小標題 */
         .sub-label { font-weight: bold; margin-bottom: 5px; display: block; color: #555; margin-top: 10px;}
-        .info-list { margin: 5px 0 0 0; padding-left: 20px; color: #666; font-size: 0.9rem; line-height: 1.6; }
+        
+        /* 說明文字列表 */
+        .info-list {
+            margin: 5px 0 0 0;
+            padding-left: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
         .info-list li { margin-bottom: 2px; }
     </style>
 </head>
@@ -246,98 +234,11 @@
         <div class="section-card">
             <div class="section-title">🧠 Imaging Assessment</div>
             
-            <div class="sub-label">Nonenhanced Brain CT (ASPECTS) - Interactive Map</div>
-            
-            <div class="svg-container">
-                <div class="svg-box">
-                    <span class="svg-label">Basal Ganglia Level</span>
-                    <svg width="200" height="240" viewBox="0 0 200 240">
-                        <path d="M100,10 C150,10 190,50 190,120 C190,190 150,230 100,230 C50,230 10,190 10,120 C10,50 50,10 100,10 Z" fill="#fff" stroke="#ccc" stroke-width="2"/>
-                        <path d="M85,90 Q100,110 115,90 Q110,130 100,140 Q90,130 85,90" fill="#eee" stroke="none"/>
-                        
-                        <path class="brain-region" data-group="Anterior" data-value="Caudate neucleus" d="M75,90 Q85,85 90,100 Q80,110 75,90" />
-                        <text x="82" y="100" class="region-text">C</text>
-                        
-                        <path class="brain-region" data-group="Anterior" data-value="Internal capsule" d="M70,115 L90,105 L85,130 L65,135 Z" />
-                        <text x="78" y="125" class="region-text">IC</text>
-                        
-                        <path class="brain-region" data-group="Anterior" data-value="Lentiform nucleus" d="M55,100 Q70,95 75,115 Q70,135 55,130 Q50,115 55,100" />
-                        <text x="62" y="118" class="region-text">L</text>
-                        
-                        <path class="brain-region" data-group="Anterior" data-value="Insula" d="M45,95 Q50,95 50,135 Q45,135 40,115 Z" />
-                        <text x="45" y="115" class="region-text">I</text>
-
-                        <path class="brain-region" data-group="Anterior" data-value="M1" d="M40,40 Q80,20 100,20 L100,50 Q70,60 40,80 Z" />
-                        <text x="70" y="50" class="region-text">M1</text>
-                        
-                        <path class="brain-region" data-group="Anterior" data-value="M2" d="M20,90 Q35,85 35,140 Q20,130 20,90 Z" />
-                        <text x="28" y="115" class="region-text">M2</text>
-                        
-                        <path class="brain-region" data-group="Anterior" data-value="M3" d="M30,150 Q50,140 70,160 L50,190 Q30,170 30,150 Z" />
-                        <text x="50" y="170" class="region-text">M3</text>
-                    </svg>
-                </div>
-                
-                <div class="svg-box">
-                    <span class="svg-label">Supraganglionic Level</span>
-                    <svg width="200" height="240" viewBox="0 0 200 240">
-                        <path d="M100,10 C150,10 190,50 190,120 C190,190 150,230 100,230 C50,230 10,190 10,120 C10,50 50,10 100,10 Z" fill="#fff" stroke="#ccc" stroke-width="2"/>
-                        <path d="M90,80 L90,160 L110,160 L110,80 Z" fill="#eee" stroke="none"/>
-                        
-                        <path class="brain-region" data-group="Anterior" data-value="M4" d="M40,50 Q80,30 100,30 L100,70 Q70,80 50,90 Z" />
-                        <text x="75" y="65" class="region-text">M4</text>
-                        
-                        <path class="brain-region" data-group="Anterior" data-value="M5" d="M30,100 Q50,100 50,150 Q30,150 20,120 Z" />
-                        <text x="40" y="125" class="region-text">M5</text>
-                        
-                        <path class="brain-region" data-group="Anterior" data-value="M6" d="M40,160 Q60,150 80,180 L60,200 Q40,180 40,160 Z" />
-                        <text x="60" y="180" class="region-text">M6</text>
-                    </svg>
-                </div>
-            </div>
-
-            <div class="sub-label" style="text-align:center; border-top:1px dashed #ddd; padding-top:10px;">Posterior Circulation (pc-ASPECTS) - Interactive Map</div>
-            <div class="svg-container">
-                <div class="svg-box">
-                    <span class="svg-label">Thalami Level</span>
-                    <svg width="180" height="150" viewBox="0 0 180 150">
-                        <path d="M90,10 C140,10 170,40 170,90 C170,130 140,140 90,140 C40,140 10,130 10,90 C10,40 40,10 90,10 Z" fill="#fff" stroke="#ccc" stroke-width="2"/>
-                        <ellipse class="brain-region" data-group="Posterior" data-value="Right thalamus" cx="70" cy="70" rx="10" ry="20" transform="rotate(10 70 70)" />
-                        <text x="70" y="75" class="region-text">R-T</text>
-                        <ellipse class="brain-region" data-group="Posterior" data-value="Left thalamus" cx="110" cy="70" rx="10" ry="20" transform="rotate(-10 110 70)" />
-                        <text x="110" y="75" class="region-text">L-T</text>
-                        <path class="brain-region" data-group="Posterior" data-value="Right occipital lobe" d="M50,110 Q60,100 80,110 L70,130 Q40,130 50,110" />
-                        <text x="60" y="125" class="region-text">R-Occ</text>
-                        <path class="brain-region" data-group="Posterior" data-value="Left occipital lobe" d="M130,110 Q120,100 100,110 L110,130 Q140,130 130,110" />
-                        <text x="120" y="125" class="region-text">L-Occ</text>
-                    </svg>
-                </div>
-                <div class="svg-box">
-                    <span class="svg-label">Midbrain Level</span>
-                    <svg width="150" height="150" viewBox="0 0 150 150">
-                        <path d="M75,10 C120,10 140,40 140,80 C140,120 120,140 75,140 C30,140 10,120 10,80 C10,40 30,10 75,10 Z" fill="#fff" stroke="#ccc" stroke-width="2"/>
-                        <path class="brain-region" data-group="Posterior" data-value="Midbrain" d="M75,90 C90,80 100,60 75,50 C50,60 60,80 75,90 Z" />
-                        <text x="75" y="75" class="region-text">Mid</text>
-                    </svg>
-                </div>
-                <div class="svg-box">
-                    <span class="svg-label">Pons Level</span>
-                    <svg width="180" height="150" viewBox="0 0 180 150">
-                        <path d="M90,10 C140,10 170,40 170,90 C170,130 140,140 90,140 C40,140 10,130 10,90 C10,40 40,10 90,10 Z" fill="#fff" stroke="#ccc" stroke-width="2"/>
-                        <circle class="brain-region" data-group="Posterior" data-value="Pons" cx="90" cy="60" r="20" />
-                        <text x="90" y="65" class="region-text">Pons</text>
-                        <path class="brain-region" data-group="Posterior" data-value="Right cerebellar hemisphere" d="M40,80 Q70,70 70,110 Q40,130 20,100 Z" />
-                        <text x="50" y="100" class="region-text">R-Cer</text>
-                        <path class="brain-region" data-group="Posterior" data-value="Left cerebellar hemisphere" d="M140,80 Q110,70 110,110 Q140,130 160,100 Z" />
-                        <text x="130" y="100" class="region-text">L-Cer</text>
-                    </svg>
-                </div>
-            </div>
-
+            <div class="sub-label">Nonenhanced Brain CT (ASPECTS)</div>
             <div class="grid-2">
                 <div>
-                    <b>Anterior Checklist:</b><br>
-                    <div class="device-group" id="anterior-checks">
+                    <b>Anterior Circulation:</b><br>
+                    <div class="device-group">
                         <label><input name="Anterior_ASPECTS" type="checkbox" value="Caudate neucleus">Caudate</label>
                         <label><input name="Anterior_ASPECTS" type="checkbox" value="Lentiform nucleus">Lentiform</label>
                         <label><input name="Anterior_ASPECTS" type="checkbox" value="Internal capsule">Int. Capsule</label>
@@ -351,8 +252,8 @@
                     </div>
                 </div>
                 <div>
-                    <b>Posterior Checklist:</b><br>
-                    <div class="device-group" id="posterior-checks">
+                    <b>Posterior Circulation:</b><br>
+                    <div class="device-group">
                         <label><input name="Posterior_ASPECTS" type="checkbox" value="Right thalamus">R-Thalamus</label>
                         <label><input name="Posterior_ASPECTS" type="checkbox" value="Left thalamus">L-Thalamus</label>
                         <label><input name="Posterior_ASPECTS" type="checkbox" value="Right occipital lobe">R-Occipital</label>
@@ -413,7 +314,9 @@
                 <div class="ctp-item">CBV &lt; 34%: <input name="CBV34" type="text"> ml</div>
                 <div class="ctp-item">CBV &lt; 38%: <input name="CBV38" type="text"> ml</div>
                 <div class="ctp-item">CBV &lt; 42%: <input name="CBV42" type="text"> ml</div>
-                <div class="ctp-item">rCBV Index: <input name="rCBV_index" type="text" placeholder="Wait"></div>
+                <div class="ctp-item">
+                    rCBV Index: <input name="rCBV_index" type="text">
+                </div>
             </div>
         </div>
 
@@ -639,80 +542,22 @@
 </div>
 
 <script>
+    // 初始化 Flatpickr 24小時制選擇器
     document.addEventListener('DOMContentLoaded', function() {
-        // Flatpickr setup
         flatpickr(".datetime-picker", {
-            enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true, defaultHour: 12, defaultMinute: 0, allowInput: true
+            enableTime: true,
+            dateFormat: "Y-m-d H:i", // 年-月-日 24時:分
+            time_24hr: true,         // 強制 24 小時制
+            defaultHour: 12,
+            defaultMinute: 0,
+            allowInput: true         // 允許手動輸入
         });
-
-        // Initialize Auto Calculations
-        initAutoCalcs();
         
-        // Initialize Interactive Map Logic
-        initInteractiveMap();
+        // 啟動 CTP 自動計算監聽
+        initAutoCalcs();
     });
     
-    // --- 互動式地圖邏輯 (核心功能) ---
-    function initInteractiveMap() {
-        const regions = document.querySelectorAll('.brain-region');
-        
-        regions.forEach(region => {
-            // 1. 綁定點擊事件
-            region.addEventListener('click', function() {
-                const value = this.getAttribute('data-value');
-                const group = this.getAttribute('data-group'); // 'Anterior' or 'Posterior'
-                
-                // Toggle Visual Class
-                this.classList.toggle('selected');
-                
-                // Find corresponding text label inside SVG if explicit sync needed (optional, visual only)
-                
-                // Sync to Checkbox
-                let checkbox = null;
-                if (group === 'Anterior') {
-                    // 對於 Anterior，找到 value 符合的 checkbox
-                    checkbox = document.querySelector(`input[name="Anterior_ASPECTS"][value="${value}"]`);
-                } else if (group === 'Posterior') {
-                    checkbox = document.querySelector(`input[name="Posterior_ASPECTS"][value="${value}"]`);
-                }
-                
-                if (checkbox) {
-                    checkbox.checked = this.classList.contains('selected');
-                    // 同步高亮對應的 Label (Device Group Label)
-                    const label = checkbox.closest('label');
-                    if(label) {
-                        if(checkbox.checked) label.classList.add('active-check');
-                        else label.classList.remove('active-check');
-                    }
-                }
-            });
-        });
-
-        // 2. 反向同步：當 Checkbox 被點擊時，更新 SVG
-        const checkboxes = document.querySelectorAll('input[name="Anterior_ASPECTS"], input[name="Posterior_ASPECTS"]');
-        checkboxes.forEach(box => {
-            box.addEventListener('change', function() {
-                const val = this.value;
-                const isChecked = this.checked;
-                const group = this.name.includes('Anterior') ? 'Anterior' : 'Posterior';
-                
-                // Find SVG element
-                const svgEl = document.querySelector(`.brain-region[data-group="${group}"][data-value="${val}"]`);
-                if(svgEl) {
-                    if(isChecked) svgEl.classList.add('selected');
-                    else svgEl.classList.remove('selected');
-                }
-                
-                // Highlight text label
-                const label = this.closest('label');
-                if(label) {
-                    if(isChecked) label.classList.add('active-check');
-                    else label.classList.remove('active-check');
-                }
-            });
-        });
-    }
-
+    // 自動計算功能
     function initAutoCalcs() {
         // Hypoperfusion Index = Tmax10 / Tmax6
         const tmax10Input = document.getElementsByName('Tmax10')[0];
@@ -724,9 +569,12 @@
             const v6 = parseFloat(tmax6Input.value);
             
             if (!isNaN(v10) && !isNaN(v6) && v6 !== 0) {
+                // 保留小數點後 1 位 (RAPID 常見格式)
                 hypoIndexInput.value = (v10 / v6).toFixed(1);
             }
         }
+
+        // 當輸入改變時即時觸發
         tmax10Input.addEventListener('input', calcHI);
         tmax6Input.addEventListener('input', calcHI);
     }
@@ -742,6 +590,7 @@
         navigator.clipboard.writeText(copyText.value);
     }
 
+    // 此函式邏輯完全未更動，確保產出格式與原本一致
     function activeFunction() {
         var IV_Medication = document.form.IV_Medication;
         var Report_Anesthesia = "";
