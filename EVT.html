@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Endovascular thrombectomy Report</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <style>
+        /* 稍微調整一下時間欄位的寬度，讓顯示更清楚 */
+        .datetime-picker {
+            width: 200px;
+            font-size: 14px;
+            padding: 2px;
+        }
+    </style>
+</head>
+<body>
+    <p><font size=6><b><u>Endovascular thrombectomy Reporting Platform(Updated:2025/12/30)</u></b></font></p>
+    
+    <form name="form">
+        <p><b>Anesthesia:</b><input name="Anesthesia" checked="checked" type="radio" value="Local anesthesia"> Local anesthesia&nbsp;&nbsp;//&nbsp;&nbsp;<input name="Anesthesia" type="radio" value="IV sedation"> IV sedation [<input name="IV_Medication" type="checkbox" value="Midazolam">Midazolam(Dormicum), <input name="IV_Medication" type="checkbox" value="Fentanyl">Fentanyl, <input name="IV_Medication" type="checkbox" value="Propofol">Propofol, <input name="IV_Medication" type="checkbox" value="Morphine">Morphine]&nbsp;&nbsp;//&nbsp;&nbsp;<input name="Anesthesia" type="radio" value="General anesthesia">General anesthesia</p>
+
+        <p><b><u>Nonenhanced Brain CT:</u></b></p>
+        <p><b>Anterior circulation ASPECTS</b>(<input name="Anterior_ASPECTS" type="checkbox" value="Caudate neucleus">Caudate neucleus,<input name="Anterior_ASPECTS" type="checkbox" value="Lentiform nucleus">Lentiform nucleus,<input name="Anterior_ASPECTS" type="checkbox" value="Internal capsule">Internal capsule,<input name="Anterior_ASPECTS" type="checkbox" value="Insula">Insula,Ganglion level:<input name="Anterior_ASPECTS" type="checkbox" value="M1">M1,<input name="Anterior_ASPECTS" type="checkbox" value="M2">M2,<input name="Anterior_ASPECTS" type="checkbox" value="M3">M3,Supraganglion level:<input name="Anterior_ASPECTS" type="checkbox" value="M4">M4,<input name="Anterior_ASPECTS" type="checkbox" value="M5">M5,<input name="Anterior_ASPECTS" type="checkbox" value="M6">M6)</p>
+        <p><b>Posterior circulation ASPECTS</b>(<input name="Posterior_ASPECTS" type="checkbox" value="Right thalamus">Right thalamus,<input name="Posterior_ASPECTS" type="checkbox" value="Left thalamus">Left thalamus,<input name="Posterior_ASPECTS" type="checkbox" value="Right occipital lobe">Right occipital lobe,<input name="Posterior_ASPECTS" type="checkbox" value="Left occipital lobe">Left occipital lobe,<input name="Posterior_ASPECTS" type="checkbox" value="Right cerebellar hemisphere">Right cerebellar hemisphere,<input name="Posterior_ASPECTS" type="checkbox" value="Left cerebellar hemisphere">Left cerebellar hemisphere,<input name="Posterior_ASPECTS" type="checkbox" value="Midbrain">Midbrain,<input name="Posterior_ASPECTS" type="checkbox" value="Pons">Pons)</p><br>
+
+        <p><b><u>Multiphase Brain CTA:</u></b></p>
+        <p>Collateral grading score(0-5):<select name="mCTA_Grading"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></p>
+        <p>(Grade 5 Good collateral: Similar vessel enhancement pattern)</p>
+        <p>(Grade 4 Inetermediate collateral: A2 phase similar to Normal side A1 phase vessels)</p>
+        <p>(Grade 3 Poor collateral:One phase delay with decreased vessel prominence or A3 phase similar to Normal side A1 phase vessles)</p>
+        <p>(Grade 2 Poor collateral: Two phase delay with decreased vessel prominence or focal regions without vessels)</p>
+        <p>(Grade 1 Poor collateral: A few vessels in A1-A3)</p>
+        <p>(Grade 0 Poor collateral: No vessel in A1-A3)</p>
+        <p>Refering to Radiology. 2015;275:510-520</p><br>
+
+        <p><b><u>CTP results(by RAPID software):</u></b></p>
+        <p>CBF&lt;20%=&nbsp;<input name="CBF20" type="text" size="2">ml,&nbsp;&nbsp;CBF&lt;30%(Core)=&nbsp;<input name="CBF30" type="text" size="2">ml,&nbsp;&nbsp;CBF&lt;34%=&nbsp;<input name="CBF34" type="text" size="2">ml,&nbsp;&nbsp;CBF&lt;38%=&nbsp;<input name="CBF38" type="text" size="2">ml</p>
+        <p>Tmax&gt;10s=&nbsp;<input name="Tmax10" type="text" size="2">ml,&nbsp;&nbsp;Tmax&gt;8s=&nbsp;<input name="Tmax8" type="text" size="2">ml,&nbsp;&nbsp;Tmax&gt;6s(Penumbra)=&nbsp;<input name="Tmax6" type="text" size="2">ml,&nbsp;&nbsp;Tmax&gt;4s=&nbsp;<input name="Tmax4" type="text" size="2">ml,&nbsp;&nbsp; Hypoperfusion index:&nbsp;<input name="Hypo_index" type="text" size="2"></p>
+        <p>CBV&lt;34%=&nbsp;<input name="CBV34" type="text" size="2">ml,&nbsp;&nbsp;CBV&lt;38%=&nbsp;<input name="CBV38" type="text" size="2">ml,&nbsp;&nbsp;CBV&lt;42%=&nbsp;<input name="CBV42" type="text" size="2"> ml,&nbsp;&nbsp;rCBV Index:&nbsp;<input name="rCBV_index" type="text" size="2"></p><br>
+
+        <p><b><u>Onset time and Procedure details:</u></b></p>
+        <p>Onset time of acute ischemic stroke:&nbsp;<input type="text" class="datetime-picker" name="onsettime" placeholder="點選時間 (24h)"></p>
+        <p>Start time of the procedure(When patient arrived angiosuite):&nbsp;<input type="text" class="datetime-picker" name="proceduretime" placeholder="點選時間 (24h)">&nbsp;&nbsp;Please refer to the Link:<a href="https://docs.google.com/spreadsheets/d/1GjMWXXcdLpB4wgIknmTDIVkyW2-DUCT8Vpn0oFQpkdk/edit?gid=1317938315#gid=1317938315" target="_blank">Here</a></p>
+        <p>Puncture time(Performing arterial puncture):&nbsp;<input type="text" class="datetime-picker" name="puncturetime" placeholder="點選時間 (24h)"></p>
+        
+        <p>Thrombus location:<br><input name="Thrombus" type="checkbox" value="Right ICA">Right ICA,&nbsp;<input name="Thrombus" type="checkbox" value="Right M1">Right M1,&nbsp;<input name="Thrombus" type="checkbox" value="Right M2">Right M2,&nbsp;<input name="Thrombus" type="checkbox" value="Right ACA">Right ACA,<br><input name="Thrombus" type="checkbox" value="Left ICA">Left ICA,&nbsp;<input name="Thrombus" type="checkbox" value="Left M1">Left M1,&nbsp;<input name="Thrombus" type="checkbox" value="Left M2">Left M2,&nbsp;<input name="Thrombus" type="checkbox" value="Left ACA">Left ACA,<br><input name="Thrombus" type="checkbox" value="Right VA">Right VA,&nbsp;<input name="Thrombus" type="checkbox" value="Left VA">Left VA,&nbsp;<input name="Thrombus" type="checkbox" value="BA">BA</p>
+
+        <p>Approach route:<input name="Approach" type="radio" value="Right" checked>Right femoral&nbsp;&nbsp;<input name="Approach" type="radio" value="Left">Left femoral</p>
+        <p>Sheath:<input name="Sheath" type="radio" value="6Fr">6Fr.&nbsp;&nbsp;<input name="Sheath" type="radio" value="7Fr">7Fr.&nbsp;&nbsp;<input name="Sheath" type="radio" value="8Fr" checked>8Fr.&nbsp;&nbsp;<input name="Sheath" type="radio" value="9Fr">9Fr.</p>
+        <p>Guiding catheter:<input name="Guiding" type="radio" value="Neuron 088" checked>Neuron 088,&nbsp;&nbsp;<input name="Guiding" type="radio" value="AXS Infinity LS">AXS Infinity LS,&nbsp;&nbsp;<input name="Guiding" type="radio" value="AXS Infinity LS Plus">AXS Infinity LS Plus,&nbsp;&nbsp;<input name="Guiding" type="radio" value="Cerebase DA">Cerebase DA,&nbsp;&nbsp;<input name="Guiding" type="radio" value="Shuttle">Shuttle guiding sheath,&nbsp;&nbsp;</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="Guiding" type="radio" value="Cello balloon guiding catheter">Cello balloon guiding catheter,&nbsp;&nbsp;<input name="Guiding" type="radio" value="Fullblock balloon guiding catheter">Fullblock balloon guiding catheter,&nbsp;&nbsp;</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="Guiding" type="radio" value="Neuron 070">Neuron 070,&nbsp;&nbsp;<input name="Guiding" type="radio" value="Envoy 6Fr">Envoy 6Fr,&nbsp;&nbsp;<input name="Guiding" type="radio" value="Diagnostic catheter">Diagnostic catheter</p>
+        <p>Intermediate catheter:<input name="Intermediate" type="radio" value="Not used" checked>None,&nbsp;&nbsp;<input name="Intermediate" type="radio" value="Navien 058">Navien 058,&nbsp;&nbsp;<input name="Intermediate" type="radio" value="Navien 072">Navien 072,&nbsp;&nbsp;<input name="Intermediate" type="radio" value="Extraflex 5Fr.">Extraflex 5Fr.,&nbsp;&nbsp;<input name="Intermediate" type="radio" value="Extraflex 6Fr.">Extraflex 6Fr.</p>
+        <p>Microcatheter:<input name="Microcatheter" type="checkbox" value="Headway 17">Headway 17,&nbsp;&nbsp;<input name="Microcatheter" type="checkbox" value="Phenom 017">Phenom 017,&nbsp;&nbsp;<input name="Microcatheter" type="checkbox" value="SL-10">SL-10,&nbsp;&nbsp;<input name="Microcatheter" type="checkbox" value="Echelon 10">Echelon 10,&nbsp;&nbsp;<input name="Microcatheter" type="checkbox" value="Headway 21">Headway 21,&nbsp;&nbsp;<input name="Microcatheter" type="checkbox" value="Phenom 021">Phenom 021,&nbsp;&nbsp;<input name="Microcatheter" type="checkbox" value="Prowler Select Plus">Prowler Select Plus,&nbsp;&nbsp;<input name="Microcatheter" type="checkbox" value="Headway 27">Headway 27,&nbsp;&nbsp;<input name="Microcatheter" type="checkbox" value="Phenom 027">Phenom 027,&nbsp;&nbsp;<input name="Microcatheter" type="checkbox" value="Marksman">Marksman</p>
+        <p>Microguidewire:<input name="Microguidewire" type="checkbox" value="Transend EX 14 Soft Tip">Transend EX 14 Soft Tip,&nbsp;&nbsp;<input name="Microguidewire" type="checkbox" value="Transend EX 14 Soft Tip">Transend EX 14 Floppy,&nbsp;&nbsp;<input name="Microguidewire" type="checkbox" value="Traxcess 14">Traxcess 14,&nbsp;&nbsp;<input name="Microguidewire" type="checkbox" value="Asahi Chikai 14">Asahi Chikai 14,&nbsp;&nbsp;<input name="Microguidewire" type="checkbox" value="Synchro">Synchro</p>
+        <p>Aspiration tube:<input name="Aspiration_tube" type="checkbox" value="Sofia 5Fr.">Sofia 5Fr.,&nbsp;&nbsp;<input name="Aspiration_tube" type="checkbox" value="Sofia plus 6Fr.">Sofia plus 6Fr.,&nbsp;&nbsp;<input name="Aspiration_tube" type="checkbox" value="Flowplus 5Fr.">Flowplus 5Fr.,&nbsp;&nbsp;<input name="Aspiration_tube" type="checkbox" value="Flowplus 6Fr.">Flowplus 6Fr.,&nbsp;&nbsp;<input name="Aspiration_tube" type="checkbox" value="React 68">React 68,&nbsp;&nbsp;<input name="Aspiration_tube" type="checkbox" value="React 71">React 71,&nbsp;&nbsp;<input name="Aspiration_tube" type="checkbox" value="Embovac">Embovac,&nbsp;&nbsp;<input name="Aspiration_tube" type="checkbox" value="Catalyst 5">Catalyst 5,&nbsp;&nbsp;<input name="Aspiration_tube" type="checkbox" value="Catalyst 7">Catalyst 7,</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="Aspiration_tube" type="checkbox" value="Red 43">Red 43,&nbsp;&nbsp;<input name="Aspiration_tube" type="checkbox" value="Red 62">Red 62,&nbsp;&nbsp;<input name="Aspiration_tube" type="checkbox" value="Red 68">Red 68,&nbsp;&nbsp;<input name="Aspiration_tube" type="checkbox" value="Red 72">Red 72,&nbsp;&nbsp;<input name="Aspiration_tube" type="checkbox" value="Cereglide 71">Cereglide 71,&nbsp;&nbsp;<input name="Aspiration_tube" type="checkbox" value="AXS Vecta 46">AXS Vecta 46,&nbsp;&nbsp;<input name="Aspiration_tube" type="checkbox" value="AXS Vecta 71">AXS Vecta 71,&nbsp;&nbsp;<input name="Aspiration_tube" type="checkbox" value="AXS Vecta 74">AXS Vecta 74</p>
+
+        <p>Suction conducted:&nbsp;<select name="Suction"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select>pass</p>
+
+        <p>Stent-retriever:<input name="Stent" type="checkbox" value="Solitaire 3x20mm">Solitaire 3x20mm,&nbsp;&nbsp;<input name="Stent" type="checkbox" value="Solitaire 4x20mm">Solitaire 4x20mm,&nbsp;&nbsp;<input name="Stent" type="checkbox" value="Solitaire 4x40mm">Solitaire 4x40mm,&nbsp;&nbsp;<input name="Stent" type="checkbox" value="Solitaire 6x40mm">Solitaire 6x40mm,&nbsp;&nbsp;<input name="Stent" type="checkbox" value="Trevo NXT 4x28mm">Trevo NXT 4x28mm,&nbsp;&nbsp;<input name="Stent" type="checkbox" value="Trevo NXT 4x41mm">Trevo NXT 4x41mm,</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="Stent" type="checkbox" value="Embotrap 5x22mm">Embotrap 5x22mm,&nbsp;&nbsp;<input name="Stent" type="checkbox" value="Embotrap 5x37mm">Embotrap 5x37mm</p>
+        <p>Stent retriever conducted:&nbsp;<select name="Stent_pass"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select>pass</p>
+
+        <p>Technique used:<input name="Technique" type="checkbox" value="Simple suction">Simple suction,&nbsp;&nbsp;<input name="Technique" type="checkbox" value="Stent-retrieving">Stent-retrieving,&nbsp;&nbsp;<input name="Technique" type="checkbox" value="Combined technique">Combined technique</p>
+
+        <p>Final mTICI&nbsp;grade<select name="mTICI" required="required"><option value="0">0</option><option value="1">1</option><option value="2a">2a</option><option value="2b">2b</option><option value="2c">2c</option><option value="3">3</option></select></span></span></span></p>
+        
+        <p>Time of first thrombus contact:&nbsp;<input type="text" class="datetime-picker" name="contacttime" placeholder="點選時間 (24h)"></p>
+        <p>End time of the procedure (last thrombectomy or final reperfusion):&nbsp;<input type="text" class="datetime-picker" name="endtime" placeholder="點選時間 (24h)"></p>
+        
+        <p>On-table CT:<input name="CT" type="radio" value="Not performed">Not performed,&nbsp;&nbsp;<input name="CT" type="radio" value="No Hemorrhage" checked>No Hemorrhage,&nbsp;&nbsp;<input name="CT" type="radio" value="Likely Hemorrhage">Likely Hemorrhage,&nbsp;&nbsp;<input name="CT" type="radio" value="Likely Contrast parenchymal enhancement">Likely Contrast parenchymal enhancement,&nbsp;&nbsp;</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="CT" type="radio" value="Both hemorrhage and contrast parenchymal enhancement">Both hemorrhage and contrast parenchymal enhancement,&nbsp;&nbsp;<input name="CT" type="radio" value="Uncertain hyperdensities">Uncertain hyperdensities</p>
+        <p>Closure device:<input name="Closure" type="radio" value="Not used" checked>Not used,&nbsp;&nbsp;<input name="Closure" type="radio" value="Angioseal">Angioseal,&nbsp;&nbsp;<input name="Closure" type="radio" value="Starclose">Starclose,&nbsp;&nbsp;<input name="Closure" type="radio" value="Obtura">Obtura</p>
+
+        <p>Operator (for Neurologist only):<input name="Operator" type="radio" value="" checked>Neuroradiologist,&nbsp;&nbsp;<input name="Operator" type="radio" value="4189">4189,&nbsp;&nbsp;<input name="Operator" type="radio" value="4191">4191</p>
+
+        <p>Other notes:<br><textarea rows="5" cols="150" name="Others" value=""></textarea></br><p>
+        <br><button type="button" onclick="activeFunction()">Show Final Report</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onclick="refresh()">Clear</button>
+    </form>
+    <button onclick="copyFunction()">Copy Report</button>
+    <p>Final Report:</p><textarea rows="50" cols="150" id="Final_Report" name="Final_Report"></textarea>
+
+    <script>
+        // 初始化 Flatpickr 24小時制選擇器
+        document.addEventListener('DOMContentLoaded', function() {
+            flatpickr(".datetime-picker", {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i", // 年-月-日 24時:分
+                time_24hr: true,         // 強制 24 小時制
+                defaultHour: 12,
+                defaultMinute: 0,
+                allowInput: true         // 允許手動輸入
+            });
+        });
+
+        function refresh() {
+            window.location.reload();
+        }
+
+        function copyFunction() {
+            // Get the text field
+            var copyText = document.getElementById("Final_Report");
+            // Select the text field
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); //For mobile devices
+            // Copy the text inside the text field
+            navigator.clipboard.writeText(copyText.value);
+            // Alert the copied text
+            // alert("The report has been copied.");
+        }
+
+        function activeFunction() {
+            var IV_Medication = document.form.IV_Medication;
+            var Report_Anesthesia = "";
+            if (document.form.Anesthesia.value == "IV sedation") {
+                var i;
+                for (i = 0; i < IV_Medication.length; i++) {
+                    if (IV_Medication[i].checked) {
+                        Report_Anesthesia += IV_Medication[i].value + ", ";
+                    }
+                }
+                Report_Anesthesia = document.form.Anesthesia.value + "with medication of (" + Report_Anesthesia + ")";
+            } else {
+                Report_Anesthesia = document.form.Anesthesia.value;
+            }
+            var Report_Thrombus = "";
+            var Occlusion_Territory = "";
+            var Thrombus = document.form.Thrombus;
+            var i;
+            var k = 0;
+            for (i = 0; i < Thrombus.length; i++) {
+                if (Thrombus[i].checked) {
+                    Report_Thrombus += Thrombus[i].value + ", ";
+                }
+            }
+            if (Report_Thrombus.includes("ICA") || Report_Thrombus.includes("M1") || Report_Thrombus.includes("M2")) {
+                Occlusion_Territory = "Anterior"
+            } else if (Report_Thrombus.includes("BA") || Report_Thrombus.includes("VA")) {
+                Occlusion_Territory = "Posterior";
+            }
+            var Report_ASPECTS = "";
+            var Anterior_ASPECTS = document.form.Anterior_ASPECTS;
+            var Posterior_ASPECTS = document.form.Posterior_ASPECTS;
+            var Report_Collateral = "";
+            var Collateral = "";
+            if (Occlusion_Territory == "Posterior") {
+                var i;
+                var j = 10;
+                for (i = 0; i < Posterior_ASPECTS.length; i++) {
+                    if (Posterior_ASPECTS[i].checked) {
+                        Report_ASPECTS += Posterior_ASPECTS[i].value + ", ";
+                        if (i < 6) {
+                            j--;
+                        } else {
+                            j = j - 2;
+                        }
+                    }
+                }
+                Report_ASPECTS = "For acute thrombus in the posterior circulation:\npc-ASPECTS score in nonenhanced brain CT:" + j + "\nSubtract (" + Report_ASPECTS + ")\n";
+            } else if (Occlusion_Territory == "Anterior") {
+                var i;
+                var j = 10;
+                for (i = 0; i < Anterior_ASPECTS.length; i++) {
+                    if (Anterior_ASPECTS[i].checked) {
+                        Report_ASPECTS += Anterior_ASPECTS[i].value + ", ";
+                        j--;
+                    }
+                }
+                Report_ASPECTS = "For acute thrombus in the anterior circulation:\nASPECTS score in nonenhanced brain CT:" + j + "\nSubtract (" + Report_ASPECTS + ")\n";
+                if (document.form.mCTA_Grading.value == 5) {
+                    Collateral = "Good";
+                } else if (document.form.mCTA_Grading.value == 4) {
+                    Collateral = "Intermediate";
+                } else {
+                    Collateral = "Poor";
+                }
+                Report_Collateral = "Anterior circulation Pial arterial filling evaluation in multiphase CTA suggests " + Collateral + " collaterals and the grading score is " + document.form.mCTA_Grading.value + "\n";
+            } else {
+                Report_ASPECTS = "ASPECTS score: Not applicable.";
+            }
+            var Report_CTP = "";
+            if (document.form.CBF20.value != "") {
+                var Mismatch = document.form.Tmax6.value - document.form.CBF30.value;
+                if (document.form.CBF30.value == 0) {
+                    Ratio = "Infinite"
+                } else {
+                    Ratio = document.form.Tmax6.value / document.form.CBF30.value;
+                    Ratio = Ratio.toFixed(2);
+                }
+                Report_CTP = "CT Perfusion Scan Results:\nCBF<20%= " + document.form.CBF20.value + "ml, CBF<30%(Core)= " + document.form.CBF30.value + "ml, CBF<34%= " + document.form.CBF34.value + "ml, CBF<38%= " + document.form.CBF38.value + "ml\nTmax>10s= " + document.form.Tmax10.value + "ml, Tmax>8s= " + document.form.Tmax8.value + "ml, Tmax>6s(Penumbra)= " + document.form.Tmax6.value + "ml, Tmax>4s= " + document.form.Tmax4.value + "ml, Hypoperfusion index: " + document.form.Hypo_index.value + "\nCBV<34%= " + document.form.CBV34.value + "ml, CBV<38%= " + document.form.CBV38.value + "ml, CBV<42%= " + document.form.CBV42.value + "ml, rCBV Index: " + document.form.rCBV_index.value + "\nMismatch volume(Penumbra - Core): " + Mismatch + "ml\nMismatch ratio(Penumbar/Core): " + Ratio;
+            }
+            var Report_Microcatheter = "";
+            var Microcatheter = document.form.Microcatheter;
+            var i;
+            for (i = 0; i < Microcatheter.length; i++) {
+                if (Microcatheter[i].checked) {
+                    Report_Microcatheter += Microcatheter[i].value + ", ";
+                }
+            }
+            if (Report_Microcatheter == "") {
+                Report_Microcatheter = "Not used";
+            }
+            var Report_Microguidewire = "";
+            var Microguidewire = document.form.Microguidewire;
+            var i;
+            for (i = 0; i < Microguidewire.length; i++) {
+                if (Microguidewire[i].checked) {
+                    Report_Microguidewire += Microguidewire[i].value + ", ";
+                }
+            }
+            if (Report_Microguidewire == "") {
+                Report_Microguidewire = "Not used";
+            }
+            var Report_Aspiration_tube = "";
+            var Aspiration_tube = document.form.Aspiration_tube;
+            var i;
+            for (i = 0; i < Aspiration_tube.length; i++) {
+                if (Aspiration_tube[i].checked) {
+                    Report_Aspiration_tube += Aspiration_tube[i].value + ", ";
+                }
+            }
+            if (Report_Aspiration_tube == "") {
+                Report_Aspiration_tube = "Not used";
+            }
+            var Report_Stent = "";
+            var Stent = document.form.Stent;
+            var i;
+            for (i = 0; i < Stent.length; i++) {
+                if (Stent[i].checked) {
+                    Report_Stent += Stent[i].value + ", ";
+                }
+            }
+            if (Report_Stent == "") {
+                Report_Stent = "Not used";
+            }
+            var Report_Technique = "";
+            var Technique = document.form.Technique;
+            var i;
+            for (i = 0; i < Technique.length; i++) {
+                if (Technique[i].checked) {
+                    Report_Technique += Technique[i].value + ", ";
+                }
+            }
+            var Impression = "";
+            if (document.form.mTICI.value == "0") {
+                Impression = "Failure of endovascular thrombectomy for focal thrombus at ";
+            } else if ((document.form.mTICI.value == "1") || (document.form.mTICI.value == "2a")) {
+                Impression = "Mild reperfusion after endovascular thrombectomy for focal thrombus at ";
+            } else {
+                Impression = "Successful endovascular thrombectomy for focal thrombus at ";
+            }
+            if (document.form.Operator.value == "4189") {
+                Operator = "周兆亮 CL Chou\n神經科專科醫師 神專795號\n中華民國神經放射線醫學會 動脈取栓認證 006號";
+            } else if (document.form.Operator.value == "4191") {
+                Operator = "黃勇評 YP Hwang\n神經科專科醫師 神專1060號\n中華民國神經放射線醫學會 動脈取栓認證 022號";
+            } else if (document.form.Operator.value == "5443") {
+                Operator = "黃志凱 CK Wong\n神經科專科醫師 神專1497號\n中華民國神經放射線醫學會 動脈取栓認證 174號";
+            } else {
+                Operator = "";
+            }
+            var Others = document.getElementsByName('Others')[0].value;
+            if (Others == "") {
+                var Others = "Nil"
+                // Onset_Date = document.form.onsettime.value.substring(0, 10);
+                // Onset_Time = document.form.onsettime.value.substring(11, 16);
+                // Puncture_Date = document.form.puncturetime.value.substring(0, 10);
+                // Puncture_Time = document.form.puncturetime.value.substring(11, 16);
+                // Contact_Date = document.form.contacttime.value.substring(0, 10);
+                // Contact_Time = document.form.contacttime.value.substring(11, 16);
+                // Endtime_Date = document.form.endtime.value.substring(0, 10);
+                // Endtime_Time = document.form.endtime.value.substring(11, 16);
+            }
+            document.getElementById('Final_Report').innerHTML = "Endovascular thrombectomy was performed under the impression of focal arterial thrombus with acute large vessel occlusion:\n\nThe procedure was performed under: " + Report_Anesthesia + "\n" + Report_ASPECTS + Report_Collateral + "\n\n" + Report_CTP + "\n\nOnset time of acute ischemic stroke: " + "Date:" + document.form.onsettime.value.substring(0, 10) + ", Time:" + document.form.onsettime.value.substring(11, 16) + "\nStart time of the procedure(When patient arrived angiosuite): " + "Date:" + document.form.proceduretime.value.substring(0, 10) + ", Time:" + document.form.proceduretime.value.substring(11, 16) + "\nPuncture time(Performing arterial puncture): " + "Date:" + document.form.puncturetime.value.substring(0, 10) + ", Time:" + document.form.puncturetime.value.substring(11, 16) + "\nThe target thrombus was located at " + Report_Thrombus + "\nThe procedure was performed via " + document.form.Approach.value + " femoral arterial approach with " + document.form.Sheath.value + " peripheral sheath and " + document.form.Guiding.value + " as guiding catheter. After advancing to the lesion location,\nSuction was conducted for " + document.form.Suction.value + " times.\nStent-retrieving was conducted for " + document.form.Stent_pass.value + " times.\nIn general, the techniques used in this procedure included the following: " + Report_Technique + "\nThe devices used in this procedure included the following:\nAspiration tube: " + Report_Aspiration_tube + "\nStent-retriever: " + Report_Stent + "\nIntermediate catheter: " + document.form.Intermediate.value + "\nMicrocatheters: " + Report_Microcatheter + "\nMicroguidewires: " + Report_Microguidewire + "\n\nThe final result suggested mTICI(modified Treatment in Cerebral Ischemia Scale) grade " + document.form.mTICI.value + ". (Refering to Stroke. 2013;44:2650-2663.)\n\nTime of first thrombus contact by the aspiration tube or stent-retriever: " + "Date:" + document.form.contacttime.value.substring(0, 10) + ", Time:" + document.form.contacttime.value.substring(11, 16) + "\nEnd time of the procedure (last thrombectomy or final reperfusion): " + "Date:" + document.form.endtime.value.substring(0, 10) + ", Time:" + document.form.endtime.value.substring(11, 16) + "\n\nPost thrombectomy on-table CT: " + document.form.CT.value + "\n\nClosure device used at the end of the procedure: " + document.form.Closure.value + "\n\nOther notes:\n" + Others + "\n\nImpression:\n" + Impression + Report_Thrombus + " (mTICI grade " + document.form.mTICI.value + ").\n\n" + Operator;
+        }
+    </script>
+</body>
+</html>
