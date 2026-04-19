@@ -1,3 +1,66 @@
+
+
+有一些特殊狀況我們不會作post dilatation並按照情況加敘述 幫我先修一下文法 並且看看可以如何寫進這個模版
+Because of bilateral carotid stenosis, full post-dilatation was not performed considering the risk of hyperperfusion. Suggest follow up angiography in one to three months to decide whether post-dilatation was required then.
+
+Due to recent history of stroke and tight stenosis before stenting, post-dilatation was not performed considering the risk of reperfusion injury. Suggest follow up angiography in one to three months to decide whether post-dilatation was required then.
+
+然後有時候做完之後如果病人不使用angioseal 那我們會測一下postoperative ACT 若大於200s, 會打protamine to reverse ACT, 麻煩幫我也加入這個選項
+完成。改動整理：
+
+Post-dilatation 新增兩個選項：
+
+Not performed — bilateral carotid stenosis (hyperperfusion risk) → 輸出：
+
+Post-dilatation: Not performed.
+Due to bilateral carotid stenosis, full post-dilatation was withheld considering the risk of hyperperfusion syndrome. Follow-up angiography in one to three months is suggested to determine whether post-dilatation would be required.
+Not performed — recent stroke + tight stenosis (reperfusion injury risk) → 輸出類似句子
+
+Postoperative ACT（勾選後展開）：
+
+ACT 值 + Protamine checkbox
+若打 protamine → Postoperative ACT was XXX sec (>200 sec). Protamine was administered to reverse anticoagulation.
+若不打 → Postoperative ACT was XXX sec.
+這行出現在 hemostasis 之後、Other notes 之前
+1
+CAS.html
+residual stenosis 預設幫我寫30%
+然後.. 如果有勾選那兩個bilateral ica stenois或是recent stroke 幫我後面那句的satisfactory改成partial stenting effect
+
+然後沒有作post PTA出現的這幾句如果有勾選 幫我出現在IMP後面 原本的改成1. Sussecsful partial angioplasty and stenting 並增加序號2. 寫上勾的敘述
+
+若沒有止血器 量測ACT 打protamine那段如果有出現 幫我寫在傷口止血之前 因為是要在止血前評估的
+全部完成。重點整理：
+
+Residual stenosis → 預設 30%
+
+Bilateral / Recent stroke 選項 → 文內自動替換：
+
+Satisfactory stenting effect → Partial stenting effect
+IMP 格式 選一般：
+
+IMP: Successful angioplasty and stenting of right internal carotid stenosis with a 7x40mm Closed-cell carotid Wallstent.
+選 bilateral or stroke：
+
+IMP:
+1. Successful partial angioplasty and stenting of right internal carotid stenosis with a 7x40mm Closed-cell carotid Wallstent.
+2. Due to bilateral carotid stenosis, full post-dilatation was withheld...
+ACT/Protamine → 移到 hemostasis 之前（先評估再止血的邏輯）
+
+1
+CAS.html
+
+
+
+
+
+
+
+
+CAS.html
+
+
+
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -328,7 +391,7 @@
             </div>
             <div class="field-row" style="margin-top:10px;">
                 <span class="field-label">Residual stenosis:</span>
-                <input name="Residual" type="number" min="0" max="100" class="hl" style="width:80px;">
+                <input name="Residual" type="number" min="0" max="100" class="hl" style="width:80px;" value="30">
                 <span>%</span>
             </div>
         </div>
@@ -508,11 +571,12 @@
         lines.push(`- Post-dilatation: ${postDilat}.`);
         if (postDilatExtra) lines.push(postDilatExtra);
         if (complicationLine) lines.push(complicationLine);
-        lines.push(`- Satisfactory stenting effect was noted with a ${residual}% residual stenosis.`);
+        const isPartial = (postDilatOpt === '__bilateral__' || postDilatOpt === '__stroke__');
+        const effectWord = isPartial ? 'Partial' : 'Satisfactory';
+        lines.push(`- ${effectWord} stenting effect was noted with a ${residual}% residual stenosis.`);
         lines.push('- No immediate complication and new neurologic deficit were noted.');
         lines.push('');
-        lines.push(`- Hemostasis was achieved by ${closureText}.`);
-        // Postoperative ACT
+        // Postoperative ACT (before hemostasis)
         const postACTDone = f.PostACTDone.checked;
         if (postACTDone) {
             const postACT = f.PostACT.value;
@@ -523,12 +587,22 @@
                 lines.push(`- Postoperative ACT was ${postACT} sec.`);
             }
         }
+        lines.push(`- Hemostasis was achieved by ${closureText}.`);
         if (postNotes) {
             lines.push('Other notes:');
             lines.push(`- ${postNotes}`);
         }
         lines.push('');
-        lines.push(`IMP: Successful angioplasty and stenting of ${side} internal carotid stenosis with a ${stentDesc}.`);
+        // IMP
+        if (isPartial) {
+            // Strip the leading "- " from postDilatExtra for bullet use
+            const reasonText = postDilatExtra.replace(/^- /, '');
+            lines.push('IMP:');
+            lines.push(`1. Successful partial angioplasty and stenting of ${side} internal carotid stenosis with a ${stentDesc}.`);
+            lines.push(`2. ${reasonText}`);
+        } else {
+            lines.push(`IMP: Successful angioplasty and stenting of ${side} internal carotid stenosis with a ${stentDesc}.`);
+        }
         document.getElementById('Final_Report').value = lines.join('\n');
     }
     function copyReport() {
