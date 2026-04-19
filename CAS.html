@@ -1,3 +1,46 @@
+
+
+sheath others那個欄位舉例的部分幫我寫8fr. Fortress 45cm  然後幫我加一個6fr. shuttle long sheath, 選擇shuttle 這個的話就直接上到distal CCA, 可以取代掉 後面guiding catheter的使用 ,幫我報告也作香對應的修改
+完成。改動重點：
+
+Sheath 選 "6Fr. Shuttle"：
+
+UI：Guiding Catheter 整個區塊自動隱藏
+報告輸出：
+- The procedure was performed using 6Fr. Shuttle long sheath via the right femoral arterial approach.
+- Target stenosis was located at right proximal cervical ICA with 75% stenosis.
+- The Shuttle long sheath was advanced directly to the lesion side distal CCA.
+（沒有 guiding catheter 那行）
+其他 sheath（7Fr/8Fr/Other）：
+
+Guiding Catheter 區塊正常顯示
+報告照原本格式 "A [guiding catheter] was advanced..."
+Other sheath placeholder → 改為 e.g. 8Fr. Fortress 45cm
+
+1
+CAS.html
+那個若使用shuttle 會自動隱藏的提醒可以不用寫
+移除了。現在 Guiding Catheter 區塊就直接乾淨地顯示/隱藏，不會有任何提示文字。
+
+1
+CAS.html
+guiding catheter others 的部分格子內就空白即可
+好了，空白了。
+
+1
+CAS.html
+
+
+
+
+
+
+
+
+CAS.html
+
+
+
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -226,7 +269,7 @@
                 <label><input name="GuidingOpt" type="radio" value="__custom__" onchange="toggleCustomGuiding(true)"> Other</label>
             </div>
             <div class="custom-guiding-row" id="customGuidingRow">
-                <input name="GuidingCustom" type="text" class="hl" style="width:280px;" placeholder="e.g. 8Fr. MACH 1 guide catheter">
+                <input name="GuidingCustom" type="text" class="hl" style="width:280px;">
             </div>
         </div>
         <!-- ④ ACT & Heparin -->
