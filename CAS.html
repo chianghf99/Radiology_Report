@@ -180,12 +180,13 @@
             </div>
             <div class="field-row">
                 <span class="field-label">Sheath:</span>
-                <label><input name="SheathOpt" type="radio" value="7Fr. 25cm peripheral sheath" checked onchange="toggleCustomSheath(false)"> 7Fr.</label>
-                <label><input name="SheathOpt" type="radio" value="8Fr. 25cm peripheral sheath" onchange="toggleCustomSheath(false)"> 8Fr.</label>
-                <label><input name="SheathOpt" type="radio" value="__custom__" onchange="toggleCustomSheath(true)"> Other</label>
+                <label><input name="SheathOpt" type="radio" value="7Fr. 25cm peripheral sheath" checked onchange="onSheathChange(this)"> 7Fr.</label>
+                <label><input name="SheathOpt" type="radio" value="8Fr. 25cm peripheral sheath" onchange="onSheathChange(this)"> 8Fr.</label>
+                <label><input name="SheathOpt" type="radio" value="__shuttle__" onchange="onSheathChange(this)"> 6Fr. Shuttle</label>
+                <label><input name="SheathOpt" type="radio" value="__custom__" onchange="onSheathChange(this)"> Other</label>
             </div>
             <div class="custom-sheath-row" id="customSheathRow">
-                <input name="SheathCustom" type="text" class="hl" style="width:280px;" placeholder="e.g. 6Fr. 25cm peripheral sheath">
+                <input name="SheathCustom" type="text" class="hl" style="width:300px;" placeholder="e.g. 8Fr. Fortress 45cm">
             </div>
             <div class="field-row" style="margin-top:8px;">
                 <span class="field-label">Ultrasound guidance:</span>
@@ -216,7 +217,7 @@
             </div>
         </div>
         <!-- ③ Guiding Catheter -->
-        <div class="section-card">
+        <div class="section-card" id="guidingSection">
             <div class="section-title">🔧 Guiding Catheter</div>
             <div class="device-group">
                 <label><input name="GuidingOpt" type="radio" value="7Fr. MACH 1 guide catheter" checked onchange="toggleCustomGuiding(false)"> MACH 1 7Fr.</label>
@@ -227,6 +228,9 @@
             <div class="custom-guiding-row" id="customGuidingRow">
                 <input name="GuidingCustom" type="text" class="hl" style="width:280px;" placeholder="e.g. 8Fr. MACH 1 guide catheter">
             </div>
+            <p style="font-size:0.85rem; color:#999; margin:8px 0 0;">
+                💡 若使用 Shuttle long sheath，此區塊將自動略過。
+            </p>
         </div>
         <!-- ④ ACT & Heparin -->
         <div class="section-card">
@@ -349,8 +353,12 @@
 </div>
 <script>
     // --- Toggle helpers ---
-    function toggleCustomSheath(show) {
-        document.getElementById('customSheathRow').style.display = show ? 'block' : 'none';
+    function onSheathChange(radio) {
+        const isShuttle = radio.value === '__shuttle__';
+        const isCustom  = radio.value === '__custom__';
+        document.getElementById('customSheathRow').style.display  = isCustom  ? 'block' : 'none';
+        // Hide guiding catheter section when Shuttle is used
+        document.getElementById('guidingSection').style.display   = isShuttle ? 'none'  : 'block';
     }
     function toggleCustomGuiding(show) {
         document.getElementById('customGuidingRow').style.display = show ? 'block' : 'none';
@@ -371,9 +379,11 @@
     function generateReport() {
         const f = document.form;
         // Sheath
-        const sheathOpt = f.SheathOpt.value;
+        const sheathOpt   = f.SheathOpt.value;
+        const isShuttle   = sheathOpt === '__shuttle__';
         const sheath = sheathOpt === '__custom__'
             ? (f.SheathCustom.value.trim() || '[sheath]')
+            : isShuttle ? '6Fr. Shuttle long sheath'
             : sheathOpt;
         // Approach & ultrasound
         const approach   = f.Approach.value;
@@ -382,7 +392,7 @@
         const side     = f.Side.value;
         const location = f.Location.value;
         const stenosis = f.Stenosis.value;
-        // Guiding
+        // Guiding (skip if Shuttle)
         const guidingOpt = f.GuidingOpt.value;
         const guiding = guidingOpt === '__custom__'
             ? (f.GuidingCustom.value.trim() || '[guiding catheter]')
@@ -453,7 +463,11 @@
         lines.push('Percutaneous transluminal angioplasty and stenting for carotid stenosis:');
         lines.push(`- The procedure was performed using ${sheath} via the ${approach} femoral arterial approach${ultrasound}.`);
         lines.push(`- Target stenosis was located at ${side} ${location} with ${stenosis}% stenosis.`);
-        lines.push(`- A ${guiding} was advanced to the lesion side distal CCA.`);
+        if (isShuttle) {
+            lines.push('- The Shuttle long sheath was advanced directly to the lesion side distal CCA.');
+        } else {
+            lines.push(`- A ${guiding} was advanced to the lesion side distal CCA.`);
+        }
         lines.push(`- Baseline ACT was ${baseACT} sec.`);
         lines.push(`- Heparin ${heparin}U was given before stenting procedure.`);
         lines.push(`- Preprocedure ACT was ${preACT} sec.`);
