@@ -15,13 +15,11 @@
         .input-group-api label { font-weight: bold; font-size: 0.9em; color: #2e7d32; display: block; margin-bottom: 5px; }
         .input-group-api a { color: #1565c0; text-decoration: none; font-size: 0.9em; margin-left: 5px; }
         .input-group-api a:hover { text-decoration: underline; }
-
         input[type="password"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
         button.detect-btn { flex: 1; min-width: 150px; padding: 10px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; height: 42px; }
         button.detect-btn:hover { background: #1b5e20; }
         
         select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; margin-top: 5px; font-weight: bold; background: #fff;}
-
         /* Upload Section */
         .upload-area { 
             border: 3px dashed #90caf9; padding: 30px; text-align: center; margin-bottom: 20px; background: #fdfdfd; cursor: pointer; border-radius: 8px;
@@ -34,7 +32,6 @@
         .status-ok { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
         .status-err { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
         .status-wait { background: #fff3e0; color: #ef6c00; border: 1px solid #ffe0b2; }
-
         /* Form Grid */
         .form-grid { display: flex; gap: 15px; flex-wrap: wrap; }
         .form-card { flex: 1; min-width: 260px; background: #fafafa; padding: 15px; border-radius: 8px; border: 1px solid #eee; }
@@ -42,7 +39,6 @@
         
         .field-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .field-row input { width: 80px; padding: 5px; text-align: center; border: 1px solid #ccc; border-radius: 4px; font-weight: bold; }
-
         textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: monospace; height: 150px; margin-top: 20px; box-sizing: border-box;}
         
         /* Buttons */
@@ -53,13 +49,12 @@
         .btn-clear { background: #757575; }
         .btn-clear:hover { background: #616161; }
         .btn-copy { background: #388e3c; margin-top: 20px; width: 100%; }
-
         #preview-img { max-width: 150px; display: none; margin: 10px auto; border: 1px solid #ddd; padding: 2px; }
     </style>
 </head>
 <body>
-
 <div class="container">
+    <a href="index.html" style="display:inline-flex; align-items:center; gap:6px; color:#2e7d32; text-decoration:none; font-size:0.9rem; margin-bottom:15px;">← Back to Home</a>
     <h2 style="text-align:center; color:#444; margin-bottom:20px;">AI Smart DXA Reporter</h2>
     
     <div class="setup-section">
@@ -82,15 +77,12 @@
             </p>
         </div>
     </div>
-
     <div class="upload-area" id="dropZone" onclick="document.getElementById('fileInput').click()">
         <p style="font-size:1.2em; font-weight:bold; color:#555;">Step 2: 貼上圖片 (Ctrl+V) 或點擊上傳</p>
         <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFile(this.files[0])">
         <img id="preview-img">
     </div>
-
     <div id="status-bar"></div>
-
     <form name="form">
         <div style="background: #fff8e1; padding: 10px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #ffecb3;">
             <b>Patient Info:</b> 
@@ -100,7 +92,6 @@
             <label><input name="Sex" type="radio" value="Female"> F</label>
             &nbsp; (Menopause Age: <input name="Menopause" type="text" style="width:40px;">)
         </div>
-
         <div class="form-grid">
             
             <div class="form-card">
@@ -109,58 +100,48 @@
                 <div class="field-row"><label>T-score</label><input name="RH_T" type="text"></div>
                 <div class="field-row"><label>Z-score</label><input name="RH_Z" type="text"></div>
             </div>
-
             <div class="form-card">
                 <h3>Left Hip (Neck)</h3>
                 <div class="field-row"><label>BMD</label><input name="LH_BMD" type="text"></div>
                 <div class="field-row"><label>T-score</label><input name="LH_T" type="text"></div>
                 <div class="field-row"><label>Z-score</label><input name="LH_Z" type="text"></div>
             </div>
-
             <div class="form-card">
                 <h3>Lumbar Spine (L1-L4)</h3>
                 <div class="field-row"><label>BMD</label><input name="L_BMD" type="text"></div>
                 <div class="field-row"><label>T-score</label><input name="L_T" type="text"></div>
                 <div class="field-row"><label>Z-score</label><input name="L_Z" type="text"></div>
             </div>
-
         </div>
         
         <p style="margin-top:15px;"><b>Other Findings:</b></p>
         <textarea name="Others" rows="2" style="height:50px;" placeholder="Nil"></textarea>
-
         <div class="btn-group">
             <button type="button" class="btn-action btn-gen" onclick="activeFunction()">↻ 更新報告文字</button>
             <button type="button" class="btn-action btn-clear" onclick="clearForm()">🗑️ 清除重來 (Clear)</button>
         </div>
     </form>
-
     <button class="btn-action btn-copy" onclick="copyFunction()">📋 複製最終報告</button>
     <textarea id="Final_Report" placeholder="最終報告將顯示於此..."></textarea>
 </div>
-
 <script>
 const apiKeyInput = document.getElementById('apiKey');
 const modelSelect = document.getElementById('modelSelect');
 const statusDiv = document.getElementById('status-bar');
-
 if(localStorage.getItem('gemini_api_key_v2')) {
     apiKeyInput.value = localStorage.getItem('gemini_api_key_v2');
 }
-
 function saveKey() {
     localStorage.setItem('gemini_api_key_v2', apiKeyInput.value.trim());
 }
 function saveModel() {
     localStorage.setItem('gemini_selected_model_safe', modelSelect.value);
 }
-
 function showStatus(msg, type) {
     statusDiv.innerHTML = msg;
     statusDiv.style.display = 'block';
     statusDiv.className = type === 'error' ? 'status-err' : (type === 'wait' ? 'status-wait' : 'status-ok');
 }
-
 function clearForm() {
     document.form.reset();
     document.getElementById('Final_Report').value = "";
@@ -169,24 +150,20 @@ function clearForm() {
     document.getElementById('fileInput').value = "";
     document.getElementById('status-bar').style.display = 'none';
 }
-
 async function listModels() {
     const key = apiKeyInput.value.trim();
     if(!key) return alert("請先輸入 API Key");
-
     showStatus("正在從 Google 取得模型列表...", "wait");
     
     try {
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
         const data = await response.json();
-
         if (data.error) throw new Error(data.error.message);
         
         const safeModels = data.models.filter(m => {
             const name = m.name.toLowerCase();
             return name.includes('gemini') && !name.includes('embedding');
         });
-
         modelSelect.innerHTML = "";
         safeModels.forEach(m => {
             const id = m.name.replace('models/', '');
@@ -196,7 +173,6 @@ async function listModels() {
             if(id.includes('flash')) opt.selected = true;
             modelSelect.appendChild(opt);
         });
-
         const lastModel = localStorage.getItem('gemini_selected_model_safe');
         if(lastModel) {
              let found = false;
@@ -212,14 +188,12 @@ async function listModels() {
         } else {
              showStatus("✅ 模型列表更新完成", "ok");
         }
-
         document.getElementById('modelSelectContainer').style.display = 'block';
         
     } catch (e) {
         showStatus("載入失敗: " + e.message, "error");
     }
 }
-
 document.addEventListener('paste', (e) => {
     const items = (e.clipboardData || e.originalEvent.clipboardData).items;
     for (let item of items) {
@@ -228,13 +202,11 @@ document.addEventListener('paste', (e) => {
         }
     }
 });
-
 function handleFile(file) {
     if (!file) return;
     const img = document.getElementById('preview-img');
     img.src = URL.createObjectURL(file);
     img.style.display = 'block';
-
     const reader = new FileReader();
     reader.onloadend = () => {
         const base64String = reader.result.split(',')[1];
@@ -242,15 +214,12 @@ function handleFile(file) {
     };
     reader.readAsDataURL(file);
 }
-
 // 核心分析函式 (修正: 要求回傳 String 以保留小數點)
 async function analyzeImage(base64, mimeType) {
     const key = apiKeyInput.value.trim();
     let modelName = modelSelect.value;
     if(!modelName) modelName = "gemini-1.5-flash"; 
-
     showStatus(`正在使用 <b>${modelName}</b> 分析中...`, "wait");
-
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${key}`;
     
     // 更新 Prompt: 要求數值回傳為 String
@@ -269,7 +238,6 @@ async function analyzeImage(base64, mimeType) {
     
     Return ONLY JSON. Use null for missing values.
     `;
-
     try {
         const response = await fetch(url, {
             method: 'POST',
@@ -283,28 +251,23 @@ async function analyzeImage(base64, mimeType) {
                 }]
             })
         });
-
         const data = await response.json();
         if (data.error) throw new Error(data.error.message);
         
         let text = data.candidates[0].content.parts[0].text;
         text = text.replace(/```json|```/g, '').trim();
         const result = JSON.parse(text);
-
         console.log("AI Result:", result);
         showStatus("✅ 分析成功！", "ok");
         fillForm(result);
-
     } catch (e) {
         console.error(e);
         showStatus("❌ 錯誤: " + e.message, "error");
     }
 }
-
 function fillForm(d) {
     const f = document.form;
     const s = (field, val) => { if(val != null) field.value = val; };
-
     s(f.Age, d.Age);
     if(d.Sex) {
         if(d.Sex.toLowerCase().includes('fe')) f.Sex[1].checked = true;
@@ -312,29 +275,23 @@ function fillForm(d) {
     }
     
     s(f.Menopause, d.Menopause_Age);
-
     s(f.L_BMD, d.L_BMD); s(f.L_T, d.L_T); s(f.L_Z, d.L_Z);
     s(f.LH_BMD, d.LH_BMD); s(f.LH_T, d.LH_T); s(f.LH_Z, d.LH_Z);
     s(f.RH_BMD, d.RH_BMD); s(f.RH_T, d.RH_T); s(f.RH_Z, d.RH_Z);
-
     activeFunction();
 }
-
 function copyFunction() {
   var copyText = document.getElementById("Final_Report");
   copyText.select();
   navigator.clipboard.writeText(copyText.value);
 }   
-
 function activeFunction() {
   var Reference = "T-score";
   var AgeVal = parseFloat(document.form.Age.value) || 0;
   if (document.form.Sex.value == "Male" && AgeVal < 50) Reference = "Z-score";
   if (document.form.Sex.value == "Female" && !document.form.Menopause.value) Reference = "Z-score";
-
   var SexText = document.form.Sex.value == "Female" ? 
       (document.form.Menopause.value ? "Female with menopause at age of " + document.form.Menopause.value : "Female without menopause") : "Male";
-
   function interpret(t, z, ref, region) {
       if(!t && !z) return "Not performed.";
       var tVal = parseFloat(t), zVal = parseFloat(z);
@@ -348,33 +305,23 @@ function activeFunction() {
       }
       return `BMD: ${document.form[region+'_BMD'].value}g/cm2, T-score: ${t}, Z-score: ${z},\nInterpretation: The BMD of the ${region=='L'?'lumbar spine':(region=='LH'?'left hip':'right hip')} is corresponding to the condition of ${text}`;
   }
-
   var resL = interpret(document.form.L_T.value, document.form.L_Z.value, Reference, 'L');
   var resLH = interpret(document.form.LH_T.value, document.form.LH_Z.value, Reference, 'LH');
   var resRH = interpret(document.form.RH_T.value, document.form.RH_Z.value, Reference, 'RH');
-
   var others = document.getElementsByName('Others')[0].value || "Nil";
-
   document.getElementById('Final_Report').value = 
 `# Imaging Report Form for Bone Mineral Density Scan #
-
 1.Patient Information:
 Age: ${document.form.Age.value},    Sex: ${SexText}
-
 2.Reference: ${Reference}
-
 3.The bone mineral density (BMD) of the following regions was measured using dual-energy X-ray absorptiometry (DXA).
 The BMD values, along with their corresponding standard deviations (SD) for T-scores and Z-scores, are summarized as follows:
-
 Lumbar spine (L1-L4):
 ${resL}
-
 Left hip:
 ${resLH}
-
 Right hip:
 ${resRH}
-
 Other Findings:
 ${others}`;
 }
