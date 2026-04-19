@@ -293,10 +293,22 @@
             </div>
             <hr class="dashed">
             <span class="sub-label">Post-dilatation</span>
-            <div class="field-row">
-                <label><input name="PostDilatOpt" type="radio" value="__none__" checked onchange="toggleDilatSize('post', false)"> Not performed</label>
-                <label><input name="PostDilatOpt" type="radio" value="__custom__" onchange="toggleDilatSize('post', true)"> Balloon size:</label>
-                <input name="PostDilatSize" type="text" class="hl" id="postDilatSize" style="width:110px; display:none;" value="4.0x20mm">
+            <div style="display:flex; flex-direction:column; gap:8px;">
+                <div>
+                    <label><input name="PostDilatOpt" type="radio" value="__none__" checked onchange="toggleDilatSize('post', false)"> Not performed</label>
+                    <label><input name="PostDilatOpt" type="radio" value="__custom__" onchange="toggleDilatSize('post', true)"> Balloon size:</label>
+                    <input name="PostDilatSize" type="text" class="hl" id="postDilatSize" style="width:110px; display:none;" value="4.0x20mm">
+                </div>
+                <div>
+                    <label><input name="PostDilatOpt" type="radio" value="__bilateral__" onchange="toggleDilatSize('post', false)">
+                        Not performed — bilateral carotid stenosis (hyperperfusion risk)
+                    </label>
+                </div>
+                <div>
+                    <label><input name="PostDilatOpt" type="radio" value="__stroke__" onchange="toggleDilatSize('post', false)">
+                        Not performed — recent stroke + tight stenosis (reperfusion injury risk)
+                    </label>
+                </div>
             </div>
         </div>
         <!-- ⑦ Complications -->
@@ -333,6 +345,15 @@
             <div class="manual-pad-row" id="manualPadRow">
                 <label><input name="ManualPad" type="radio" value="__none__" checked> Manual compression only</label>
                 <label><input name="ManualPad" type="radio" value="__pad__"> + Hemostatic pad</label>
+            </div>
+            <span class="sub-label" style="margin-top:15px;">Postoperative ACT <span style="font-size:0.8rem; color:#888; font-weight:normal;">(if measured)</span></span>
+            <div class="field-row">
+                <label><input name="PostACTDone" type="checkbox" id="postACTDone" onchange="togglePostACT(this.checked)"> Measured</label>
+                <span id="postACTFields" style="display:none; gap:10px; align-items:center; flex-wrap:wrap; display:none;">
+                    <span>ACT:</span>
+                    <input name="PostACT" type="number" class="hl" style="width:90px;"> sec
+                    <label style="margin-left:10px;"><input name="Protamine" type="checkbox" value="1"> → Protamine administered</label>
+                </span>
             </div>
             <span class="sub-label" style="margin-top:15px;">Other Notes <span style="font-size:0.8rem; color:#888; font-weight:normal;">(optional)</span></span>
             <textarea name="PostNotes" rows="2" style="width:100%; box-sizing:border-box;" placeholder="Optional..."></textarea>
@@ -371,6 +392,9 @@
     }
     function toggleManualPad(show) {
         document.getElementById('manualPadRow').style.display = show ? 'block' : 'none';
+    }
+    function togglePostACT(show) {
+        document.getElementById('postACTFields').style.display = show ? 'flex' : 'none';
     }
     // --- Report generation ---
     function generateReport() {
@@ -422,9 +446,19 @@
         const stentDesc = `${stentSize} ${stentType}`;
         // Post-dilatation
         const postDilatOpt = f.PostDilatOpt.value;
-        const postDilat = postDilatOpt === '__none__'
-            ? 'Not performed'
-            : ('A ' + (f.PostDilatSize.value.trim() || '?') + ' balloon');
+        let postDilat = '';
+        let postDilatExtra = '';
+        if (postDilatOpt === '__custom__') {
+            postDilat = 'A ' + (f.PostDilatSize.value.trim() || '?') + ' balloon';
+        } else if (postDilatOpt === '__bilateral__') {
+            postDilat = 'Not performed';
+            postDilatExtra = '- Due to bilateral carotid stenosis, full post-dilatation was withheld considering the risk of hyperperfusion syndrome. Follow-up angiography in one to three months is suggested to determine whether post-dilatation would be required.';
+        } else if (postDilatOpt === '__stroke__') {
+            postDilat = 'Not performed';
+            postDilatExtra = '- Due to recent history of stroke and tight stenosis before stenting, post-dilatation was withheld considering the risk of reperfusion injury. Follow-up angiography in one to three months is suggested to determine whether post-dilatation would be required.';
+        } else {
+            postDilat = 'Not performed';
+        }
         // Complications
         const event = f.Event.value;
         let interventions = [];
@@ -472,11 +506,23 @@
         lines.push(`- Pre-dilatation: ${preDilat}.`);
         lines.push(`- Stenting was performed from proximal ICA to distal CCA with a ${stentDesc}.${lot ? ' ( LOT ' + lot + ')' : ''}`);
         lines.push(`- Post-dilatation: ${postDilat}.`);
+        if (postDilatExtra) lines.push(postDilatExtra);
         if (complicationLine) lines.push(complicationLine);
         lines.push(`- Satisfactory stenting effect was noted with a ${residual}% residual stenosis.`);
         lines.push('- No immediate complication and new neurologic deficit were noted.');
         lines.push('');
         lines.push(`- Hemostasis was achieved by ${closureText}.`);
+        // Postoperative ACT
+        const postACTDone = f.PostACTDone.checked;
+        if (postACTDone) {
+            const postACT = f.PostACT.value;
+            const protamine = f.Protamine.checked;
+            if (protamine) {
+                lines.push(`- Postoperative ACT was ${postACT} sec (>200 sec). Protamine was administered to reverse anticoagulation.`);
+            } else {
+                lines.push(`- Postoperative ACT was ${postACT} sec.`);
+            }
+        }
         if (postNotes) {
             lines.push('Other notes:');
             lines.push(`- ${postNotes}`);
