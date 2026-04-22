@@ -174,6 +174,17 @@
             <strong style="color: var(--primary-color)">Additional Findings & Impression</strong>
           </div>
           <div class="level-content">
+            <div class="field-row" style="align-items:center; flex-wrap:wrap;">
+              <span class="field-label" style="min-width:auto; margin-right:10px;">Global Alignment:</span>
+              <select id="global_alignment" class="hl" style="margin-right:20px;">
+                  <option value="none">Normal curvature</option>
+                  <option value="Loss of lumbar lordosis.">Loss of lumbar lordosis</option>
+                  <option value="Straightening of lumbar curvature.">Straightening of lumbar curvature</option>
+                  <option value="Hyperextension of lumbar spine.">Hyperextension of lumbar spine</option>
+              </select>
+              <label><input type="checkbox" id="scoliosis_check" /> Scoliosis</label>
+            </div>
+            <hr class="dashed" style="margin: 10px 0;">
             <div class="field-row">
               <label><input type="checkbox" id="conus" checked /> The conus medullaris is in normal location and normal appearance.</label>
             </div>
@@ -220,11 +231,11 @@
             </div>
             <div class="level-content" id="content_${safeLevel}">
                 
-                <!-- Row 0: Alignment -->
+                <!-- Row 0: Listhesis -->
                 <div class="field-row">
-                    <span class="field-label">Alignment:</span>
+                    <span class="field-label">Listhesis:</span>
                     <select id="listhesis_${safeLevel}" style="margin-right:20px;" onchange="document.getElementById('listhesis_grade_'+'${safeLevel}').disabled = (this.value === 'none')">
-                        <option value="none">Normal</option>
+                        <option value="none">None</option>
                         <option value="spondylolisthesis">Spondylolisthesis</option>
                         <option value="retrolisthesis">Retrolisthesis</option>
                     </select>
@@ -271,9 +282,7 @@
                     <span class="sub-label">CCS</span>
                     <select id="ccs_${safeLevel}" style="margin-right:20px;">
                         <option value="none">Normal</option>
-                        <option value="mild">Mild</option>
-                        <option value="moderate">Moderate</option>
-                        <option value="severe">Severe</option>
+                        <option value="present">Present</option>
                     </select>
                     <span class="sub-label">Lateral Recess (LRS)</span>
                     <select id="lrs_${safeLevel}" onchange="syncRootLRS('${safeLevel}')">
@@ -308,15 +317,15 @@
                 <!-- Row 5: NFS -->
                 <div class="field-row">
                     <span class="field-label">Neural Foraminal Stenosis (NFS):</span>
-                    <span class="sub-label">Left</span>
-                    <select id="nfs_l_${safeLevel}" style="margin-right:15px;" onchange="syncRightNfs(this, '${safeLevel}')">
+                    <span class="sub-label">Right</span>
+                    <select id="nfs_r_${safeLevel}" style="margin-right:15px;" onchange="syncLeftNfs(this, '${safeLevel}')">
                         <option value="none">Normal</option>
                         <option value="mild">Mild</option>
                         <option value="present">Present</option>
                     </select>
                     
-                    <span class="sub-label">Right</span>
-                    <select id="nfs_r_${safeLevel}" style="margin-right:15px;" onchange="syncNfsUI('${safeLevel}')">
+                    <span class="sub-label">Left</span>
+                    <select id="nfs_l_${safeLevel}" style="margin-right:15px;" onchange="syncNfsUI('${safeLevel}')">
                         <option value="none">Normal</option>
                         <option value="mild">Mild</option>
                         <option value="present">Present</option>
@@ -342,10 +351,10 @@
         container.innerHTML += html;
       });
       // UI Helpers
-      function syncRightNfs(leftSelect, safeLevel) {
-          const rightSelect = document.getElementById(`nfs_r_${safeLevel}`);
-          if (leftSelect.value !== 'none' && rightSelect.value === 'none') {
-              rightSelect.value = leftSelect.value;
+      function syncLeftNfs(rightSelect, safeLevel) {
+          const leftSelect = document.getElementById(`nfs_l_${safeLevel}`);
+          if (rightSelect.value !== 'none' && leftSelect.value === 'none') {
+              leftSelect.value = rightSelect.value;
           }
           syncNfsUI(safeLevel);
       }
@@ -502,7 +511,7 @@
           if (!isCanalNormal) {
               let canalArr = [];
               if (tsc !== 'none') canalArr.push(tsc === 'mild' ? 'mild thecal sac compression' : 'thecal sac compression');
-              if (ccs !== 'none') canalArr.push(ccs === 'mild' ? 'mild central canal stenosis' : ccs === 'moderate' ? 'moderate central canal stenosis' : 'severe central canal stenosis');
+              if (ccs !== 'none') canalArr.push('central canal stenosis');
               if (lrs !== 'none') canalArr.push(lrs === 'bilateral' ? 'bilateral lateral recess stenosis' : `${lrs} lateral recess stenosis`);
               
               let comb = '';
@@ -534,13 +543,13 @@
           } else {
               isAllNormal = false;
               if (nfsL === nfsR) {
-                  nfsText = `${nfsL === 'present' ? '' : nfsL + ' '}bilateral neural foraminal stenosis`;
+                  nfsText = `${nfsR === 'present' ? '' : nfsR + ' '}bilateral neural foraminal stenosis`;
               } else if (nfsL !== 'none' && nfsR !== 'none') {
-                  nfsText = `${nfsL === 'present' ? '' : nfsL + ' '}left and ${nfsR === 'present' ? '' : nfsR + ' '}right neural foraminal stenosis`;
-              } else if (nfsL !== 'none') {
-                  nfsText = `${nfsL === 'present' ? '' : nfsL + ' '}left neural foraminal stenosis`;
-              } else {
+                  nfsText = `${nfsR === 'present' ? '' : nfsR + ' '}right and ${nfsL === 'present' ? '' : nfsL + ' '}left neural foraminal stenosis`;
+              } else if (nfsR !== 'none') {
                   nfsText = `${nfsR === 'present' ? '' : nfsR + ' '}right neural foraminal stenosis`;
+              } else {
+                  nfsText = `${nfsL === 'present' ? '' : nfsL + ' '}left neural foraminal stenosis`;
               }
               
               nfsText = nfsText.trim();
@@ -577,6 +586,17 @@
         });
         // Append non-level findings
         lines.push('');
+        const globalAlignment = document.getElementById("global_alignment").value;
+        const hasScoliosis = document.getElementById("scoliosis_check").checked;
+        if (globalAlignment !== 'none' || hasScoliosis) {
+            isAllNormal = false;
+            let alignParts = [];
+            if (globalAlignment !== 'none') alignParts.push(globalAlignment.replace('.', ''));
+            if (hasScoliosis) alignParts.push("scoliosis");
+            let alignText = alignParts.join(" and ");
+            alignText = alignText.charAt(0).toUpperCase() + alignText.slice(1);
+            lines.push(`- ${alignText}.`);
+        }
         if (document.getElementById("conus").checked) {
             lines.push("- The conus medullaris is in normal location and normal appearance.");
         }
