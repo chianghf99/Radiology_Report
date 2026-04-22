@@ -560,11 +560,7 @@
           }
           // Default negative fallback formatting
           if (tsc === 'none' && ccs === 'none' && lrs === 'none' && nfsText === 'none' && rootSource === 'none') {
-              if (level === 'L1-L2') {
-                  sentences.push('No thecal sac compression, central canal stenosis or bilateral neural foraminal stenosis.');
-              } else {
-                  sentences.push('No significant thecal sac compression, central canal stenosis or bilateral neural foraminal stenosis.');
-              }
+              sentences.push('No significant thecal sac compression, central canal stenosis or bilateral neural foraminal stenosis.');
           } else {
               // Explicit negatives if mixed parts exist
               if (tsc === 'none' && ccs === 'none' && lrs === 'none') {
