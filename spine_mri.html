@@ -16,7 +16,6 @@
         --highlight: #fff9e6;
         --highlight-border: #ffc107;
       }
-
       body {
         font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
         background-color: var(--bg-color);
@@ -25,7 +24,6 @@
         padding: 20px;
         line-height: 1.6;
       }
-
       .container {
         max-width: 1100px;
         margin: 0 auto;
@@ -34,7 +32,6 @@
         border-radius: 12px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
       }
-
       h1 {
         color: var(--primary-color);
         border-bottom: 2px solid var(--accent-color);
@@ -42,7 +39,6 @@
         margin-bottom: 30px;
         font-size: 1.8rem;
       }
-
       .level-card {
         background: #fff;
         border: 1px solid var(--border-color);
@@ -50,7 +46,6 @@
         margin-bottom: 20px;
         overflow: hidden;
       }
-
       .level-header {
         background: #f0f4f8;
         padding: 12px 20px;
@@ -59,11 +54,9 @@
         display: flex;
         align-items: center;
       }
-
       .level-content {
         padding: 20px;
       }
-
       label {
         cursor: pointer;
         margin-right: 12px;
@@ -71,7 +64,6 @@
         align-items: center;
         gap: 4px;
       }
-
       input[type="checkbox"],
       input[type="radio"] {
         transform: scale(1.1);
@@ -84,12 +76,10 @@
         font-family: inherit;
         font-size: 0.95rem;
       }
-
       .hl {
         background: var(--highlight);
         border: 1px solid var(--highlight-border) !important;
       }
-
       .field-row {
         display: flex;
         align-items: center;
@@ -97,14 +87,12 @@
         margin-bottom: 15px;
         flex-wrap: wrap;
       }
-
       .field-label {
         font-weight: 600;
         color: #444;
         min-width: 110px;
         display: inline-block;
       }
-
       .btn-group {
         display: flex;
         gap: 15px;
@@ -112,7 +100,6 @@
         padding-top: 20px;
         border-top: 1px solid #eee;
       }
-
       button {
         padding: 12px 24px;
         border: none;
@@ -122,12 +109,10 @@
         cursor: pointer;
         transition: opacity 0.2s;
       }
-
       .btn-primary { background-color: var(--accent-color); color: white; }
       .btn-secondary { background-color: #95a5a6; color: white; }
       .btn-success { background-color: #27ae60; color: white; width: 100%; margin-top: 15px; }
       button:hover { opacity: 0.85; }
-
       #Final_Report {
         width: 100%;
         padding: 15px;
@@ -141,7 +126,6 @@
         margin-top: 10px;
         resize: vertical;
       }
-
       hr.dashed {
         border: 0;
         border-top: 1px dashed #ddd;
@@ -164,7 +148,6 @@
         style="display: inline-flex; align-items: center; gap: 6px; color: #2980b9; text-decoration: none; font-size: 0.9rem; margin-bottom: 15px;"
       >← Back to Home</a>
       <h1>Lumbar Spine MRI Report Template</h1>
-
       <form name="form" id="spineForm">
         <!-- Intro -->
         <div class="level-card" style="padding: 15px 20px">
@@ -184,9 +167,7 @@
             />
           </div>
         </div>
-
         <div id="levels-container"></div>
-
         <!-- Outro -->
         <div class="level-card" id="outro_card">
           <div class="level-header" style="border-left-color: #95a5a6">
@@ -214,27 +195,22 @@
             </div>
           </div>
         </div>
-
         <div class="btn-group">
           <button type="button" class="btn-primary" onclick="generateReport()">📄 Generate Report</button>
           <button type="button" class="btn-secondary" onclick="window.location.reload()">🗑️ Clear</button>
         </div>
       </form>
-
       <div style="margin-top: 30px">
         <button class="btn-success" onclick="copyReport()">📋 Copy Final Report</button>
         <p style="font-weight: bold; margin-bottom: 5px">Final Report:</p>
         <textarea rows="22" id="Final_Report"></textarea>
       </div>
     </div>
-
     <script>
       const levels = ["L1-L2", "L2-L3", "L3-L4", "L4-L5", "L5-S1"];
       const container = document.getElementById("levels-container");
-
       levels.forEach((level) => {
         const safeLevel = level.replace("-", "");
-
         const html = `
         <div class="level-card" id="card_${safeLevel}">
             <div class="level-header">
@@ -244,6 +220,25 @@
             </div>
             <div class="level-content" id="content_${safeLevel}">
                 
+                <!-- Row 0: Alignment -->
+                <div class="field-row">
+                    <span class="field-label">Alignment:</span>
+                    <select id="listhesis_${safeLevel}" style="margin-right:20px;" onchange="document.getElementById('listhesis_grade_'+'${safeLevel}').disabled = (this.value === 'none')">
+                        <option value="none">Normal</option>
+                        <option value="spondylolisthesis">Spondylolisthesis</option>
+                        <option value="retrolisthesis">Retrolisthesis</option>
+                    </select>
+                    
+                    <span class="sub-label">Grade:</span>
+                    <select id="listhesis_grade_${safeLevel}" disabled>
+                        <option value="">Unspecified</option>
+                        <option value="grade I">Grade I</option>
+                        <option value="grade II">Grade II</option>
+                        <option value="grade III">Grade III</option>
+                        <option value="grade IV">Grade IV</option>
+                    </select>
+                </div>
+                <hr class="dashed" style="margin: 10px 0;">
                 <!-- Row 1: Disc -->
                 <div class="field-row">
                     <span class="field-label">Disc Status:</span>
@@ -253,20 +248,16 @@
                         <option value="protrusion">Protrusion</option>
                         <option value="extrusion">Extrusion</option>
                     </select>
-
                     <span class="sub-label">Modifier:</span>
                     <input type="text" id="disc_prefix_${safeLevel}" placeholder="e.g. Mild, Broad-based" style="width:220px; margin-right:20px;">
                 </div>
-
                 <!-- Row 2: Posterior -->
                 <div class="field-row">
                     <span class="field-label">Posterior:</span>
                     <label><input type="checkbox" id="lf_${safeLevel}"> LF hypertrophy</label>
                     <label style="margin-left: 15px;"><input type="checkbox" id="facet_${safeLevel}"> Bilateral facet arthropathy</label>
                 </div>
-
                 <hr class="dashed" style="margin: 10px 0;">
-
                 <!-- Row 3: TSC & CCS & LRS -->
                 <div class="field-row">
                     <span class="field-label">Spinal Canal:</span>
@@ -277,7 +268,6 @@
                         <option value="mild">Mild</option>
                         <option value="present">Present</option>
                     </select>
-
                     <span class="sub-label">CCS</span>
                     <select id="ccs_${safeLevel}" style="margin-right:20px;">
                         <option value="none">Normal</option>
@@ -285,7 +275,6 @@
                         <option value="moderate">Moderate</option>
                         <option value="severe">Severe</option>
                     </select>
-
                     <span class="sub-label">Lateral Recess (LRS)</span>
                     <select id="lrs_${safeLevel}" onchange="syncRootLRS('${safeLevel}')">
                         <option value="none">Normal</option>
@@ -294,7 +283,6 @@
                         <option value="right">Right</option>
                     </select>
                 </div>
-
                 <!-- Row 4: Nerve Root -->
                 <div class="field-row">
                     <span class="field-label">Root Conflict:</span>
@@ -304,13 +292,11 @@
                         <option value="lrs">Due to LRS</option>
                         <option value="disc">Due to Disc</option>
                     </select>
-
                     <span class="sub-label">Effect</span>
                     <select id="root_effect_${safeLevel}" style="margin-right:15px;" disabled>
                         <option value="abut">Abutting</option>
                         <option value="compress">Compressing</option>
                     </select>
-
                     <span class="sub-label">Side</span>
                     <select id="root_side_${safeLevel}" disabled>
                         <option value="bilateral">Bilateral</option>
@@ -318,9 +304,7 @@
                         <option value="right">Right</option>
                     </select>
                 </div>
-
                 <hr class="dashed" style="margin: 10px 0;">
-
                 <!-- Row 5: NFS -->
                 <div class="field-row">
                     <span class="field-label">Neural Foraminal Stenosis (NFS):</span>
@@ -337,7 +321,6 @@
                         <option value="mild">Mild</option>
                         <option value="present">Present</option>
                     </select>
-
                     <span style="border-left:1px solid #ccc; padding-left:15px; margin-left:5px; display:inline-flex; align-items:center;">
                         <span class="sub-label">Root Effect</span>
                         <select id="nfs_root_effect_${safeLevel}" style="margin-right:10px;" onchange="syncNfsRootUI('${safeLevel}')">
@@ -345,7 +328,6 @@
                             <option value="abut">Abutting</option>
                             <option value="compress">Compressing</option>
                         </select>
-
                         <span class="sub-label">Side</span>
                         <select id="nfs_root_side_${safeLevel}" disabled>
                             <option value="bilateral">Bilateral</option>
@@ -359,7 +341,6 @@
         `;
         container.innerHTML += html;
       });
-
       // UI Helpers
       function syncRightNfs(leftSelect, safeLevel) {
           const rightSelect = document.getElementById(`nfs_r_${safeLevel}`);
@@ -368,20 +349,17 @@
           }
           syncNfsUI(safeLevel);
       }
-
       function syncNfsUI(safeLevel) {
           const left = document.getElementById(`nfs_l_${safeLevel}`).value;
           const right = document.getElementById(`nfs_r_${safeLevel}`).value;
           const rootEffect = document.getElementById(`nfs_root_effect_${safeLevel}`).value;
           const rootSide = document.getElementById(`nfs_root_side_${safeLevel}`);
-
           if (rootEffect === 'none') {
               if (left !== 'none' && right !== 'none') rootSide.value = 'bilateral';
               else if (left !== 'none') rootSide.value = 'left';
               else if (right !== 'none') rootSide.value = 'right';
           }
       }
-
       function syncNfsRootUI(safeLevel) {
           const effect = document.getElementById(`nfs_root_effect_${safeLevel}`).value;
           const side = document.getElementById(`nfs_root_side_${safeLevel}`);
@@ -392,7 +370,6 @@
               syncNfsUI(safeLevel);
           }
       }
-
       function toggleQuickNegative(isNegative) {
           const container = document.getElementById("levels-container");
           const outro = document.getElementById("outro_card");
@@ -412,7 +389,6 @@
              }
           }
       }
-
       function syncRootLRS(safeLevel) {
           const lrs = document.getElementById(`lrs_${safeLevel}`).value;
           const rootSource = document.getElementById(`root_source_${safeLevel}`);
@@ -425,9 +401,7 @@
           }
           updateRootUI(safeLevel);
       }
-
       function syncNormal(safeLevel) {}
-
       function updateRootUI(safeLevel) {
         const rootSource = document.getElementById(`root_source_${safeLevel}`).value;
         const effectSel = document.getElementById(`root_effect_${safeLevel}`);
@@ -441,7 +415,6 @@
             sideSel.disabled = false;
         }
       }
-
       function generateReport() {
         let lines = [];
         const intro = document.getElementById("intro_text").value.trim();
@@ -457,14 +430,11 @@
             document.getElementById("Final_Report").value = lines.join("\n");
             return;
         }
-
         if (intro) {
           lines.push(intro);
           lines.push("");
         }
-
         let isAllNormal = true;
-
         levels.forEach((level) => {
           const safeLevel = level.replace("-", "");
           const discBase = document.getElementById(`disc_base_${safeLevel}`).value;
@@ -493,7 +463,14 @@
           discStr += '.';
           
           let sentences = [discStr];
-
+          const listhesis = document.getElementById(`listhesis_${safeLevel}`).value;
+          if (listhesis !== 'none') {
+              isAllNormal = false;
+              const grade = document.getElementById(`listhesis_grade_${safeLevel}`).value;
+              let listhesisText = grade ? `${grade} ${listhesis}.` : `${listhesis}.`;
+              listhesisText = listhesisText.charAt(0).toUpperCase() + listhesisText.slice(1);
+              sentences.unshift(listhesisText);
+          }
           const tsc = document.getElementById(`tsc_${safeLevel}`).value;
           const ccs = document.getElementById(`ccs_${safeLevel}`).value;
           const lrs = document.getElementById(`lrs_${safeLevel}`).value;
@@ -511,7 +488,6 @@
           
           let rootTextLrs = '';
           let rootTextDisc = '';
-
           if (rootSource !== 'none') {
               const nerveDesc = rootSource === 'lrs' ? 'descending' : 'traversing';
               const sideWord = rootSide === 'bilateral' ? 'bilateral' : rootSide;
@@ -522,7 +498,6 @@
               const verb = rootEffect === 'abut' ? 'abuts' : 'compresses';
               rootTextDisc = `${verb} the ${sideWord} ${nerveDesc} ${rootName} nerve ${plural}`;
           }
-
           // Combine TSC, CCS & LRS
           if (!isCanalNormal) {
               let canalArr = [];
@@ -534,7 +509,6 @@
               if (canalArr.length === 1) comb = canalArr[0];
               else if (canalArr.length === 2) comb = `${canalArr[0]} and ${canalArr[1]}`;
               else if (canalArr.length === 3) comb = `${canalArr[0]}, ${canalArr[1]} and ${canalArr[2]}`;
-
               comb = comb.charAt(0).toUpperCase() + comb.slice(1);
               
               if (rootSource === 'lrs') {
@@ -544,14 +518,12 @@
               }
               sentences.push(comb);
           }
-
           // Standalone root sentence for Disc
           if (rootSource === 'disc') {
               const actionMap = { 'bulging': 'bulging', 'protrusion': 'protruded', 'extrusion': 'extruded', 'intact': 'intact' };
               const subject = isIntact ? 'The disc' : `The ${actionMap[discBase]} disc`;
               sentences.push(`${subject} ${rootTextDisc}.`);
           }
-
           // 3. NFS logic
           const nfsL = document.getElementById(`nfs_l_${safeLevel}`).value;
           const nfsR = document.getElementById(`nfs_r_${safeLevel}`).value;
@@ -572,7 +544,6 @@
               }
               
               nfsText = nfsText.trim();
-
               const nfsRootEffect = document.getElementById(`nfs_root_effect_${safeLevel}`).value;
               if (nfsRootEffect !== 'none') {
                   const nfsRootSide = document.getElementById(`nfs_root_side_${safeLevel}`).value;
@@ -583,12 +554,10 @@
                   const actionMap = { 'abut': 'abutting', 'compress': 'compressing' };
                   const sideMap = { 'bilateral': 'bilateral', 'left': 'left', 'right': 'right' };
                   const plural = nfsRootSide === 'bilateral' ? 'roots' : 'root';
-
                   nfsText += `, ${actionMap[nfsRootEffect]} the ${sideMap[nfsRootSide]} exiting ${exitingRootName} nerve ${plural}`;
               }
               nfsText += '.';
           }
-
           // Default negative fallback formatting
           if (tsc === 'none' && ccs === 'none' && lrs === 'none' && nfsText === 'none' && rootSource === 'none') {
               if (level === 'L1-L2') {
@@ -608,10 +577,8 @@
                   sentences.push(nfsText);
               }
           }
-
           lines.push(`${level}: ${sentences.join(' ')}`);
         });
-
         // Append non-level findings
         lines.push('');
         if (document.getElementById("conus").checked) {
@@ -631,40 +598,38 @@
         if (otherFindings) {
             lines.push(`- ${otherFindings}`);
         }
-
         lines.push('');
-        lines.push('IMP:');
-
         // Impression logic
         const customImp = document.getElementById("custom_imp").value.trim();
         if (customImp) {
+            lines.push('IMP:');
             lines.push(customImp);
         } else {
             if (isAllNormal && !document.getElementById("ddd").checked && !otherFindings) {
                 // Completely pure normal
-                lines.push("No significant abnormal finding of the lumbar spine MRI study.");
+                lines.push("IMP: No significant abnormal finding of the lumbar spine MRI study.");
             } else {
-                let impCounter = 1;
-
+                let impArray = [];
                 if (!isAllNormal || document.getElementById("ddd").checked) {
-                    lines.push(`${impCounter}. Degenerative changes of the lumbar spine, please refer to the description.`);
-                    impCounter++;
+                    impArray.push("Degenerative changes of the lumbar spine, please refer to the description.");
                 }
-
                 if (otherFindings) {
-                    lines.push(`${impCounter}. ${otherFindings}`);
-                    impCounter++;
+                    impArray.push(otherFindings);
                 }
-
-                if (impCounter === 1) { // Fallback
-                    lines.push("No significant abnormal finding of the lumbar spine MRI study.");
+                if (impArray.length === 0) { // Fallback
+                    lines.push("IMP: No significant abnormal finding of the lumbar spine MRI study.");
+                } else if (impArray.length === 1) {
+                    lines.push(`IMP: ${impArray[0]}`);
+                } else {
+                    lines.push('IMP:');
+                    impArray.forEach((item, idx) => {
+                        lines.push(`${idx + 1}. ${item}`);
+                    });
                 }
             }
         }
-
         document.getElementById("Final_Report").value = lines.join("\n");
       }
-
       function copyReport() {
         const el = document.getElementById("Final_Report");
         el.select();
