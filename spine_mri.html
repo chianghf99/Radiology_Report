@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spine MRI Report</title>
+    <style>
+      :root {
+        --primary-color: #1a3a5c;
+        --accent-color: #2980b9;
+        --bg-color: #f4f6f8;
+        --card-bg: #ffffff;
+        --border-color: #e0e0e0;
+        --text-main: #333;
+        --text-sub: #666;
+        --highlight: #fff9e6;
+        --highlight-border: #ffc107;
+      }
+
+      body {
+        font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        margin: 0;
+        padding: 20px;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        background: var(--card-bg);
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      }
+
+      h1 {
+        color: var(--primary-color);
+        border-bottom: 2px solid var(--accent-color);
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+        font-size: 1.8rem;
+      }
+
+      .level-card {
+        background: #fff;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        margin-bottom: 20px;
+        overflow: hidden;
+      }
+
+      .level-header {
+        background: #f0f4f8;
+        padding: 12px 20px;
+        border-bottom: 1px solid var(--border-color);
+        border-left: 4px solid var(--accent-color);
+        display: flex;
+        align-items: center;
+      }
+
+      .level-content {
+        padding: 20px;
+      }
+
+      label {
+        cursor: pointer;
+        margin-right: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      input[type="checkbox"],
+      input[type="radio"] {
+        transform: scale(1.1);
+      }
+      
+      select, input[type="text"] {
+        padding: 6px 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-family: inherit;
+        font-size: 0.95rem;
+      }
+
+      .hl {
+        background: var(--highlight);
+        border: 1px solid var(--highlight-border) !important;
+      }
+
+      .field-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+      }
+
+      .field-label {
+        font-weight: 600;
+        color: #444;
+        min-width: 110px;
+        display: inline-block;
+      }
+
+      .btn-group {
+        display: flex;
+        gap: 15px;
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+      }
+
+      button {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.2s;
+      }
+
+      .btn-primary { background-color: var(--accent-color); color: white; }
+      .btn-secondary { background-color: #95a5a6; color: white; }
+      .btn-success { background-color: #27ae60; color: white; width: 100%; margin-top: 15px; }
+      button:hover { opacity: 0.85; }
+
+      #Final_Report {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #34495e;
+        border-radius: 8px;
+        background: #f8f9fa;
+        font-family: monospace;
+        font-size: 0.95rem;
+        color: #2c3e50;
+        box-sizing: border-box;
+        margin-top: 10px;
+        resize: vertical;
+      }
+
+      hr.dashed {
+        border: 0;
+        border-top: 1px dashed #ddd;
+        margin: 15px 0;
+      }
+      .sub-label {
+        font-size: 0.85rem;
+        color: #7f8c8d;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-right: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a
+        href="index.html"
+        style="display: inline-flex; align-items: center; gap: 6px; color: #2980b9; text-decoration: none; font-size: 0.9rem; margin-bottom: 15px;"
+      >← Back to Home</a>
+      <h1>Lumbar Spine MRI Report Template</h1>
+
+      <form name="form" id="spineForm">
+        <!-- Intro -->
+        <div class="level-card" style="padding: 15px 20px">
+          <div class="field-row" style="margin: 0; margin-bottom:15px; padding-bottom:15px; border-bottom:1px dashed #ddd;">
+            <label style="font-weight:bold; color:#27ae60; cursor:pointer;">
+              <input type="checkbox" id="quick_negative" onchange="toggleQuickNegative(this.checked)" /> 🟢 Quick Normal / Negative Study
+            </label>
+          </div>
+          <div class="field-row" style="margin: 0">
+            <span class="field-label" style="min-width: auto; margin-right: 10px">Header Text:</span>
+            <input
+              type="text"
+              id="intro_text"
+              class="hl"
+              style="flex: 1; padding: 8px"
+              value="MRI of the lumbar spine study is performed without contrast enhancement in T1WI, T2WI and STIR sequence on sagittal sections as well as T1WI and T2WI on transverse section:"
+            />
+          </div>
+        </div>
+
+        <div id="levels-container"></div>
+
+        <!-- Outro -->
+        <div class="level-card" id="outro_card">
+          <div class="level-header" style="border-left-color: #95a5a6">
+            <strong style="color: var(--primary-color)">Additional Findings & Impression</strong>
+          </div>
+          <div class="level-content">
+            <div class="field-row">
+              <label><input type="checkbox" id="conus" checked /> The conus medullaris is in normal location and normal appearance.</label>
+            </div>
+            <div class="field-row">
+              <label><input type="checkbox" id="ddd" /> Decreased water content at intervertebral discs, suggesting degeneration disc disease.</label>
+            </div>
+            <div class="field-row" style="align-items:center; flex-wrap:wrap;">
+              <label><input type="checkbox" id="modic_check" onchange="document.getElementById('modic_text').disabled = !this.checked; if(this.checked) document.getElementById('modic_text').focus();" /> Modic endplate changes are noted at</label>
+              <input type="text" id="modic_text" class="hl" placeholder="e.g. L4-L5" style="width:200px; margin-left:8px;" disabled>
+            </div>
+            <div class="field-row" style="margin-top:15px; align-items:flex-start;">
+              <span class="field-label" style="min-width:auto; margin-right:10px;">Other findings:</span>
+              <textarea id="other_findings" class="hl" rows="2" style="flex:1; padding:8px; width:100%; border:1px solid #ccc; border-radius:4px;" placeholder="Optional findings to append..."></textarea>
+            </div>
+            <hr class="dashed">
+            <div class="field-row" style="align-items:flex-start;">
+              <span class="field-label" style="min-width:auto; margin-right:10px;">Impression (IMP):</span>
+              <textarea id="custom_imp" class="hl" rows="2" style="flex:1; padding:8px; width:100%; border:1px solid #ccc; border-radius:4px;" placeholder="Leave empty for auto-generation..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button type="button" class="btn-primary" onclick="generateReport()">📄 Generate Report</button>
+          <button type="button" class="btn-secondary" onclick="window.location.reload()">🗑️ Clear</button>
+        </div>
+      </form>
+
+      <div style="margin-top: 30px">
+        <button class="btn-success" onclick="copyReport()">📋 Copy Final Report</button>
+        <p style="font-weight: bold; margin-bottom: 5px">Final Report:</p>
+        <textarea rows="22" id="Final_Report"></textarea>
+      </div>
+    </div>
+
+    <script>
+      const levels = ["L1-L2", "L2-L3", "L3-L4", "L4-L5", "L5-S1"];
+      const container = document.getElementById("levels-container");
+
+      levels.forEach((level) => {
+        const safeLevel = level.replace("-", "");
+
+        const html = `
+        <div class="level-card" id="card_${safeLevel}">
+            <div class="level-header">
+                <label style="font-size: 1.25rem; font-weight: bold; color: var(--primary-color); margin:0;">
+                    ${level}
+                </label>
+            </div>
+            <div class="level-content" id="content_${safeLevel}">
+                
+                <!-- Row 1: Disc -->
+                <div class="field-row">
+                    <span class="field-label">Disc Status:</span>
+                    <select id="disc_base_${safeLevel}" style="margin-right:20px;" class="hl" onchange="syncNormal('${safeLevel}')">
+                        <option value="intact">Intact</option>
+                        <option value="bulging">Bulging</option>
+                        <option value="protrusion">Protrusion</option>
+                        <option value="extrusion">Extrusion</option>
+                    </select>
+
+                    <span class="sub-label">Modifier:</span>
+                    <input type="text" id="disc_prefix_${safeLevel}" placeholder="e.g. Mild, Broad-based" style="width:220px; margin-right:20px;">
+                </div>
+
+                <!-- Row 2: Posterior -->
+                <div class="field-row">
+                    <span class="field-label">Posterior:</span>
+                    <label><input type="checkbox" id="lf_${safeLevel}"> LF hypertrophy</label>
+                    <label style="margin-left: 15px;"><input type="checkbox" id="facet_${safeLevel}"> Bilateral facet arthropathy</label>
+                </div>
+
+                <hr class="dashed" style="margin: 10px 0;">
+
+                <!-- Row 3: TSC & CCS & LRS -->
+                <div class="field-row">
+                    <span class="field-label">Spinal Canal:</span>
+                    
+                    <span class="sub-label">Thecal Sac Compression</span>
+                    <select id="tsc_${safeLevel}" style="margin-right:20px;">
+                        <option value="none">Normal</option>
+                        <option value="mild">Mild</option>
+                        <option value="present">Present</option>
+                    </select>
+
+                    <span class="sub-label">CCS</span>
+                    <select id="ccs_${safeLevel}" style="margin-right:20px;">
+                        <option value="none">Normal</option>
+                        <option value="mild">Mild</option>
+                        <option value="moderate">Moderate</option>
+                        <option value="severe">Severe</option>
+                    </select>
+
+                    <span class="sub-label">Lateral Recess (LRS)</span>
+                    <select id="lrs_${safeLevel}" onchange="syncRootLRS('${safeLevel}')">
+                        <option value="none">Normal</option>
+                        <option value="bilateral">Bilateral</option>
+                        <option value="left">Left</option>
+                        <option value="right">Right</option>
+                    </select>
+                </div>
+
+                <!-- Row 4: Nerve Root -->
+                <div class="field-row">
+                    <span class="field-label">Root Conflict:</span>
+                    <span class="sub-label">Source</span>
+                    <select id="root_source_${safeLevel}" style="margin-right:15px;" onchange="updateRootUI('${safeLevel}')">
+                        <option value="none">None</option>
+                        <option value="lrs">Due to LRS</option>
+                        <option value="disc">Due to Disc</option>
+                    </select>
+
+                    <span class="sub-label">Effect</span>
+                    <select id="root_effect_${safeLevel}" style="margin-right:15px;" disabled>
+                        <option value="abut">Abutting</option>
+                        <option value="compress">Compressing</option>
+                    </select>
+
+                    <span class="sub-label">Side</span>
+                    <select id="root_side_${safeLevel}" disabled>
+                        <option value="bilateral">Bilateral</option>
+                        <option value="left">Left</option>
+                        <option value="right">Right</option>
+                    </select>
+                </div>
+
+                <hr class="dashed" style="margin: 10px 0;">
+
+                <!-- Row 5: NFS -->
+                <div class="field-row">
+                    <span class="field-label">Neural Foraminal Stenosis (NFS):</span>
+                    <span class="sub-label">Left</span>
+                    <select id="nfs_l_${safeLevel}" style="margin-right:15px;" onchange="syncRightNfs(this, '${safeLevel}')">
+                        <option value="none">Normal</option>
+                        <option value="mild">Mild</option>
+                        <option value="present">Present</option>
+                    </select>
+                    
+                    <span class="sub-label">Right</span>
+                    <select id="nfs_r_${safeLevel}" style="margin-right:15px;" onchange="syncNfsUI('${safeLevel}')">
+                        <option value="none">Normal</option>
+                        <option value="mild">Mild</option>
+                        <option value="present">Present</option>
+                    </select>
+
+                    <span style="border-left:1px solid #ccc; padding-left:15px; margin-left:5px; display:inline-flex; align-items:center;">
+                        <span class="sub-label">Root Effect</span>
+                        <select id="nfs_root_effect_${safeLevel}" style="margin-right:10px;" onchange="syncNfsRootUI('${safeLevel}')">
+                            <option value="none">None</option>
+                            <option value="abut">Abutting</option>
+                            <option value="compress">Compressing</option>
+                        </select>
+
+                        <span class="sub-label">Side</span>
+                        <select id="nfs_root_side_${safeLevel}" disabled>
+                            <option value="bilateral">Bilateral</option>
+                            <option value="left">Left</option>
+                            <option value="right">Right</option>
+                        </select>
+                    </span>
+                </div>
+            </div>
+        </div>
+        `;
+        container.innerHTML += html;
+      });
+
+      // UI Helpers
+      function syncRightNfs(leftSelect, safeLevel) {
+          const rightSelect = document.getElementById(`nfs_r_${safeLevel}`);
+          if (leftSelect.value !== 'none' && rightSelect.value === 'none') {
+              rightSelect.value = leftSelect.value;
+          }
+          syncNfsUI(safeLevel);
+      }
+
+      function syncNfsUI(safeLevel) {
+          const left = document.getElementById(`nfs_l_${safeLevel}`).value;
+          const right = document.getElementById(`nfs_r_${safeLevel}`).value;
+          const rootEffect = document.getElementById(`nfs_root_effect_${safeLevel}`).value;
+          const rootSide = document.getElementById(`nfs_root_side_${safeLevel}`);
+
+          if (rootEffect === 'none') {
+              if (left !== 'none' && right !== 'none') rootSide.value = 'bilateral';
+              else if (left !== 'none') rootSide.value = 'left';
+              else if (right !== 'none') rootSide.value = 'right';
+          }
+      }
+
+      function syncNfsRootUI(safeLevel) {
+          const effect = document.getElementById(`nfs_root_effect_${safeLevel}`).value;
+          const side = document.getElementById(`nfs_root_side_${safeLevel}`);
+          if (effect === 'none') {
+              side.disabled = true;
+          } else {
+              side.disabled = false;
+              syncNfsUI(safeLevel);
+          }
+      }
+
+      function toggleQuickNegative(isNegative) {
+          const container = document.getElementById("levels-container");
+          const outro = document.getElementById("outro_card");
+          if(isNegative) {
+             container.style.opacity = '0.4';
+             container.style.pointerEvents = 'none';
+             if(outro) {
+                 outro.style.opacity = '0.4';
+                 outro.style.pointerEvents = 'none';
+             }
+          } else {
+             container.style.opacity = '1';
+             container.style.pointerEvents = 'auto';
+             if(outro) {
+                 outro.style.opacity = '1';
+                 outro.style.pointerEvents = 'auto';
+             }
+          }
+      }
+
+      function syncRootLRS(safeLevel) {
+          const lrs = document.getElementById(`lrs_${safeLevel}`).value;
+          const rootSource = document.getElementById(`root_source_${safeLevel}`);
+          const rootSide = document.getElementById(`root_side_${safeLevel}`);
+          if (lrs !== 'none' && rootSource.value === 'none') {
+              rootSource.value = 'lrs';
+              rootSide.value = lrs;
+          } else if (lrs === 'none' && rootSource.value === 'lrs') {
+              rootSource.value = 'none';
+          }
+          updateRootUI(safeLevel);
+      }
+
+      function syncNormal(safeLevel) {}
+
+      function updateRootUI(safeLevel) {
+        const rootSource = document.getElementById(`root_source_${safeLevel}`).value;
+        const effectSel = document.getElementById(`root_effect_${safeLevel}`);
+        const sideSel = document.getElementById(`root_side_${safeLevel}`);
+        
+        if (rootSource === 'none') {
+            effectSel.disabled = true;
+            sideSel.disabled = true;
+        } else {
+            effectSel.disabled = false;
+            sideSel.disabled = false;
+        }
+      }
+
+      function generateReport() {
+        let lines = [];
+        const intro = document.getElementById("intro_text").value.trim();
+        
+        if (document.getElementById("quick_negative").checked) {
+            if (intro) lines.push(intro, "");
+            lines.push("- No abnormal signal intensity is noted in the bony lumbar spine.");
+            lines.push("- The conus medullaris is in normal location and normal appearance.");
+            lines.push("- No disc bulging is noted at the lumbar spine.");
+            lines.push("- No any grade of spondylolisthesis.");
+            lines.push("");
+            lines.push("IMP: No significant abnormal finding of the lumbar spine MRI study.");
+            document.getElementById("Final_Report").value = lines.join("\n");
+            return;
+        }
+
+        if (intro) {
+          lines.push(intro);
+          lines.push("");
+        }
+
+        let isAllNormal = true;
+
+        levels.forEach((level) => {
+          const safeLevel = level.replace("-", "");
+          const discBase = document.getElementById(`disc_base_${safeLevel}`).value;
+          let discPrefix = document.getElementById(`disc_prefix_${safeLevel}`).value.trim();
+          
+          let discStr = '';
+          const isIntact = (discBase === 'intact');
+          
+          if (isIntact) {
+              discStr = discPrefix ? `${discPrefix} intact disc` : 'Intact disc';
+          } else {
+              discStr = discPrefix ? `${discPrefix} disc ${discBase}` : `Disc ${discBase}`;
+              isAllNormal = false;
+          }
+          
+          discStr = discStr.charAt(0).toUpperCase() + discStr.slice(1);
+          
+          let posts = [];
+          if (document.getElementById(`lf_${safeLevel}`).checked) posts.push('ligamentum flavum hypertrophy');
+          if (document.getElementById(`facet_${safeLevel}`).checked) posts.push('bilateral facet arthropathy');
+          
+          if (posts.length > 0) {
+              discStr += ` with ${posts.join(' and ')}`;
+              isAllNormal = false;
+          }
+          discStr += '.';
+          
+          let sentences = [discStr];
+
+          const tsc = document.getElementById(`tsc_${safeLevel}`).value;
+          const ccs = document.getElementById(`ccs_${safeLevel}`).value;
+          const lrs = document.getElementById(`lrs_${safeLevel}`).value;
+          
+          let isCanalNormal = (tsc === 'none' && ccs === 'none' && lrs === 'none');
+          if (!isCanalNormal) isAllNormal = false;
+          
+          const rootSource = document.getElementById(`root_source_${safeLevel}`).value;
+          const rootEffect = document.getElementById(`root_effect_${safeLevel}`).value;
+          const rootSide = document.getElementById(`root_side_${safeLevel}`).value;
+          
+          const rootName = {
+            'L1-L2': 'L2', 'L2-L3': 'L3', 'L3-L4': 'L4', 'L4-L5': 'L5', 'L5-S1': 'S1'
+          }[level];
+          
+          let rootTextLrs = '';
+          let rootTextDisc = '';
+
+          if (rootSource !== 'none') {
+              const nerveDesc = rootSource === 'lrs' ? 'descending' : 'traversing';
+              const sideWord = rootSide === 'bilateral' ? 'bilateral' : rootSide;
+              const plural = rootSide === 'bilateral' ? 'roots' : 'root';
+              const participle = rootEffect === 'abut' ? 'abutting' : 'compressing';
+              rootTextLrs = `, ${participle} the ${sideWord} ${nerveDesc} ${rootName} nerve ${plural}`;
+              // Disc context (explicit sentence)
+              const verb = rootEffect === 'abut' ? 'abuts' : 'compresses';
+              rootTextDisc = `${verb} the ${sideWord} ${nerveDesc} ${rootName} nerve ${plural}`;
+          }
+
+          // Combine TSC, CCS & LRS
+          if (!isCanalNormal) {
+              let canalArr = [];
+              if (tsc !== 'none') canalArr.push(tsc === 'mild' ? 'mild thecal sac compression' : 'thecal sac compression');
+              if (ccs !== 'none') canalArr.push(ccs === 'mild' ? 'mild central canal stenosis' : ccs === 'moderate' ? 'moderate central canal stenosis' : 'severe central canal stenosis');
+              if (lrs !== 'none') canalArr.push(lrs === 'bilateral' ? 'bilateral lateral recess stenosis' : `${lrs} lateral recess stenosis`);
+              
+              let comb = '';
+              if (canalArr.length === 1) comb = canalArr[0];
+              else if (canalArr.length === 2) comb = `${canalArr[0]} and ${canalArr[1]}`;
+              else if (canalArr.length === 3) comb = `${canalArr[0]}, ${canalArr[1]} and ${canalArr[2]}`;
+
+              comb = comb.charAt(0).toUpperCase() + comb.slice(1);
+              
+              if (rootSource === 'lrs') {
+                  comb += `${rootTextLrs}.`;
+              } else {
+                  comb += `.`;
+              }
+              sentences.push(comb);
+          }
+
+          // Standalone root sentence for Disc
+          if (rootSource === 'disc') {
+              const actionMap = { 'bulging': 'bulging', 'protrusion': 'protruded', 'extrusion': 'extruded', 'intact': 'intact' };
+              const subject = isIntact ? 'The disc' : `The ${actionMap[discBase]} disc`;
+              sentences.push(`${subject} ${rootTextDisc}.`);
+          }
+
+          // 3. NFS logic
+          const nfsL = document.getElementById(`nfs_l_${safeLevel}`).value;
+          const nfsR = document.getElementById(`nfs_r_${safeLevel}`).value;
+          
+          let nfsText = '';
+          if (nfsL === 'none' && nfsR === 'none') {
+              nfsText = 'none';
+          } else {
+              isAllNormal = false;
+              if (nfsL === nfsR) {
+                  nfsText = `${nfsL === 'present' ? '' : nfsL + ' '}bilateral neural foraminal stenosis`;
+              } else if (nfsL !== 'none' && nfsR !== 'none') {
+                  nfsText = `${nfsL === 'present' ? '' : nfsL + ' '}left and ${nfsR === 'present' ? '' : nfsR + ' '}right neural foraminal stenosis`;
+              } else if (nfsL !== 'none') {
+                  nfsText = `${nfsL === 'present' ? '' : nfsL + ' '}left neural foraminal stenosis`;
+              } else {
+                  nfsText = `${nfsR === 'present' ? '' : nfsR + ' '}right neural foraminal stenosis`;
+              }
+              
+              nfsText = nfsText.trim();
+
+              const nfsRootEffect = document.getElementById(`nfs_root_effect_${safeLevel}`).value;
+              if (nfsRootEffect !== 'none') {
+                  const nfsRootSide = document.getElementById(`nfs_root_side_${safeLevel}`).value;
+                  const exitingRootName = {
+                      'L1-L2': 'L1', 'L2-L3': 'L2', 'L3-L4': 'L3', 'L4-L5': 'L4', 'L5-S1': 'L5'
+                  }[level];
+                  
+                  const actionMap = { 'abut': 'abutting', 'compress': 'compressing' };
+                  const sideMap = { 'bilateral': 'bilateral', 'left': 'left', 'right': 'right' };
+                  const plural = nfsRootSide === 'bilateral' ? 'roots' : 'root';
+
+                  nfsText += `, ${actionMap[nfsRootEffect]} the ${sideMap[nfsRootSide]} exiting ${exitingRootName} nerve ${plural}`;
+              }
+              nfsText += '.';
+          }
+
+          // Default negative fallback formatting
+          if (tsc === 'none' && ccs === 'none' && lrs === 'none' && nfsText === 'none' && rootSource === 'none') {
+              if (level === 'L1-L2') {
+                  sentences.push('No thecal sac compression, central canal stenosis or bilateral neural foraminal stenosis.');
+              } else {
+                  sentences.push('No significant thecal sac compression, central canal stenosis or bilateral neural foraminal stenosis.');
+              }
+          } else {
+              // Explicit negatives if mixed parts exist
+              if (tsc === 'none' && ccs === 'none' && lrs === 'none') {
+                  sentences.push('No significant thecal sac compression or central canal stenosis.');
+              }
+              if (nfsText === 'none') {
+                  sentences.push('No bilateral neural foraminal stenosis.');
+              } else {
+                  nfsText = nfsText.charAt(0).toUpperCase() + nfsText.slice(1);
+                  sentences.push(nfsText);
+              }
+          }
+
+          lines.push(`${level}: ${sentences.join(' ')}`);
+        });
+
+        // Append non-level findings
+        lines.push('');
+        if (document.getElementById("conus").checked) {
+            lines.push("- The conus medullaris is in normal location and normal appearance.");
+        }
+        if (document.getElementById("ddd").checked) {
+            lines.push("- Decreased water content at intervertebral discs, suggesting degeneration disc disease.");
+        }
+        if (document.getElementById("modic_check").checked) {
+            const modicLevels = document.getElementById("modic_text").value.trim();
+            if (modicLevels) {
+                lines.push(`- Modic endplate changes are noted at ${modicLevels}.`);
+                isAllNormal = false;
+            }
+        }
+        const otherFindings = document.getElementById("other_findings").value.trim();
+        if (otherFindings) {
+            lines.push(`- ${otherFindings}`);
+        }
+
+        lines.push('');
+        lines.push('IMP:');
+
+        // Impression logic
+        const customImp = document.getElementById("custom_imp").value.trim();
+        if (customImp) {
+            lines.push(customImp);
+        } else {
+            if (isAllNormal && !document.getElementById("ddd").checked && !otherFindings) {
+                // Completely pure normal
+                lines.push("No significant abnormal finding of the lumbar spine MRI study.");
+            } else {
+                let impCounter = 1;
+
+                if (!isAllNormal || document.getElementById("ddd").checked) {
+                    lines.push(`${impCounter}. Degenerative changes of the lumbar spine, please refer to the description.`);
+                    impCounter++;
+                }
+
+                if (otherFindings) {
+                    lines.push(`${impCounter}. ${otherFindings}`);
+                    impCounter++;
+                }
+
+                if (impCounter === 1) { // Fallback
+                    lines.push("No significant abnormal finding of the lumbar spine MRI study.");
+                }
+            }
+        }
+
+        document.getElementById("Final_Report").value = lines.join("\n");
+      }
+
+      function copyReport() {
+        const el = document.getElementById("Final_Report");
+        el.select();
+        el.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(el.value);
+      }
+    </script>
+  </body>
+</html>
