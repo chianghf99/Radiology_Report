@@ -456,8 +456,11 @@
         <!-- 右側：健保紀錄與輸出 -->
         <div class="right-col">
             <div class="card">
-                <h2>健保給付規定參考 (點擊查看)</h2>
-                <div>
+                <h2 class="collapsible-header" @click="policiesOpen = !policiesOpen">
+                    健保給付規定參考 (點擊查看)
+                    <span class="toggle-icon">{{ policiesOpen ? '▲' : '▼' }}</span>
+                </h2>
+                <div v-show="policiesOpen">
                     <button 
                         v-for="policy in nhiPolicies" 
                         :key="policy.id" 
@@ -638,6 +641,7 @@
             const showModal = ref(false);
             const selectedPolicy = ref(null);
             const contactsOpen = ref(false);
+            const policiesOpen = ref(false);
 
             // 載入 localStorage 已儲存的資料
             const saved = localStorage.getItem('medDeviceInventory');
@@ -824,6 +828,7 @@
                 nhiPolicies,
                 businessContacts,
                 contactsOpen,
+                policiesOpen,
                 showModal,
                 selectedPolicy,
                 totalPrice,
