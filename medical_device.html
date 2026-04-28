@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>醫材與健保給付紀錄小幫手 (Medical Device & NHI Tool)</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        :root {
+            --primary-color: #1a3a5c;
+            --accent-color: #2980b9;
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --text-main: #333;
+            --text-sub: #666;
+            --highlight: #fff9e6;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', "Microsoft JhengHei", sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            color: var(--text-main);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: var(--primary-color);
+            margin: 0 0 10px 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* 左側：醫材清單 */
+        .category-block {
+            margin-bottom: 25px;
+        }
+
+        .category-title {
+            background: var(--primary-color);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .device-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px dashed var(--border-color);
+            transition: background 0.2s;
+        }
+
+        .device-row:hover {
+            background: var(--highlight);
+        }
+
+        .device-info {
+            flex: 2;
+        }
+
+        .device-name {
+            font-weight: bold;
+            font-size: 1.05rem;
+        }
+
+        .device-code {
+            color: var(--text-sub);
+            font-size: 0.85rem;
+        }
+
+        .device-price {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .price-input {
+            width: 80px;
+            padding: 5px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .device-qty {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 5px;
+        }
+
+        .qty-btn {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--text-main);
+        }
+
+        .qty-btn:hover {
+            background: var(--border-color);
+        }
+
+        .qty-input {
+            width: 50px;
+            text-align: center;
+            padding: 5px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        /* 健保紀錄區塊 */
+        .nhi-row {
+            margin-bottom: 15px;
+        }
+
+        .nhi-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+            text-transform: capitalize;
+        }
+
+        .nhi-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            resize: vertical;
+            font-size: 0.95rem;
+        }
+
+        .nhi-textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        /* 輸出結果區塊 */
+        .output-textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: #fafafa;
+            font-family: monospace;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 250px;
+            margin-bottom: 15px;
+        }
+
+        .copy-btn {
+            width: 100%;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #1f6391;
+        }
+
+        .top-actions {
+            margin-bottom: 15px;
+            text-align: right;
+        }
+        
+        .add-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .add-btn:hover {
+            background: #219653;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div class="header">
+        <h1>醫材與健保紀錄小幫手</h1>
+        <p>快速勾選醫材數量、紀錄健保給付標準，並產生文字格式</p>
+    </div>
+
+    <div class="container">
+        <!-- 左側：醫材清單 -->
+        <div class="left-col">
+            <div class="card">
+                <h2>醫材清單 (填寫數量與自費單價)</h2>
+                
+                <div class="category-block" v-for="(items, category) in groupedInventory" :key="category">
+                    <div class="category-title">{{ category }}</div>
+                    <div class="device-row" v-for="item in items" :key="item.code">
+                        <div class="device-info">
+                            <div class="device-name">{{ item.name }}</div>
+                            <div class="device-code">{{ item.code }}</div>
+                        </div>
+                        <div class="device-price">
+                            $ <input type="number" v-model.number="item.price" class="price-input" min="0" placeholder="單價">
+                        </div>
+                        <div class="device-qty">
+                            <button class="qty-btn" @click="decrement(item)">-</button>
+                            <input type="number" v-model.number="item.qty" class="qty-input" min="0">
+                            <button class="qty-btn" @click="increment(item)">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右側：健保紀錄與輸出 -->
+        <div class="right-col">
+            <div class="card">
+                <h2>部分特殊醫材健保給付標準</h2>
+                <div class="nhi-row" v-for="cat in nhiCategories" :key="cat">
+                    <label class="nhi-label">{{ cat }}</label>
+                    <textarea v-model="nhiRecords[cat]" class="nhi-textarea" rows="2" placeholder="請輸入給付標準備註..."></textarea>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>輸出結果</h2>
+                <textarea class="output-textarea" readonly :value="generatedOutput"></textarea>
+                <button class="copy-btn" @click="copyOutput">📋 複製文字提供給其他人填寫</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const { createApp, ref, computed } = Vue;
+
+    const app = createApp({
+        setup() {
+            // 初始化醫材清單，您可以隨時在這邊新增、修改分類或品項
+            const inventory = ref([
+                { category: 'Coils', name: 'Galaxy Spectra', code: '534362', price: 0, qty: 0 },
+                { category: 'Coils', name: 'Galaxy G3mini', code: '534361', price: 0, qty: 0 },
+                { category: 'Stents', name: 'Enterprise II', code: '53472', price: 0, qty: 0 },
+                { category: 'Closure Devices', name: 'Angioseal', code: '53462', price: 0, qty: 0 },
+                { category: 'Closure Devices', name: 'Exoseal', code: '54888', price: 0, qty: 0 },
+                { category: 'Medications', name: 'Aggrastat', code: '34866', price: 0, qty: 0 }
+            ]);
+
+            const nhiCategories = [
+                'coil', 
+                'stent', 
+                'flow diverter', 
+                'intracranial stent', 
+                'vascular closure device', 
+                'others'
+            ];
+            
+            const nhiRecords = ref({
+                'coil': '',
+                'stent': '',
+                'flow diverter': '',
+                'intracranial stent': '',
+                'vascular closure device': '',
+                'others': ''
+            });
+
+            const groupedInventory = computed(() => {
+                const groups = {};
+                inventory.value.forEach(item => {
+                    if (!groups[item.category]) groups[item.category] = [];
+                    groups[item.category].push(item);
+                });
+                return groups;
+            });
+
+            const selectedItems = computed(() => {
+                return inventory.value.filter(item => item.qty > 0);
+            });
+
+            const totalPrice = computed(() => {
+                return selectedItems.value.reduce((sum, item) => {
+                    const price = Number(item.price) || 0;
+                    return sum + (price * item.qty);
+                }, 0);
+            });
+
+            const generatedOutput = computed(() => {
+                let out = [];
+                
+                // 1. 醫材清單
+                if (selectedItems.value.length > 0) {
+                    selectedItems.value.forEach(item => {
+                        out.push(`${item.name}(${item.code}) x${item.qty}`);
+                    });
+                    
+                    if (totalPrice.value > 0) {
+                        out.push(`\n預估自費總價：$${totalPrice.value.toLocaleString()}`);
+                    }
+                }
+
+                // 2. 健保紀錄
+                let hasNhi = false;
+                let nhiOut = ['\n[健保給付標準]'];
+                nhiCategories.forEach(cat => {
+                    if (nhiRecords.value[cat] && nhiRecords.value[cat].trim() !== '') {
+                        hasNhi = true;
+                        nhiOut.push(`${cat}:\n${nhiRecords.value[cat].trim()}`);
+                    }
+                });
+
+                if (hasNhi) {
+                    if (out.length > 0) out.push(''); // 空行分隔
+                    out = out.concat(nhiOut);
+                }
+
+                return out.join('\n');
+            });
+
+            const copyOutput = () => {
+                if (!generatedOutput.value) {
+                    alert('目前沒有內容可以複製');
+                    return;
+                }
+                navigator.clipboard.writeText(generatedOutput.value).then(() => {
+                    alert('已成功複製到剪貼簿！');
+                }).catch(err => {
+                    alert('複製失敗，請手動全選複製。');
+                });
+            };
+
+            const increment = (item) => { 
+                item.qty = Number(item.qty) + 1; 
+            };
+            const decrement = (item) => { 
+                if (item.qty > 0) item.qty = Number(item.qty) - 1; 
+            };
+
+            return {
+                inventory,
+                groupedInventory,
+                nhiCategories,
+                nhiRecords,
+                generatedOutput,
+                copyOutput,
+                increment,
+                decrement
+            };
+        }
+    });
+    app.mount('#app');
+</script>
+
+</body>
+</html>
