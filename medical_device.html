@@ -188,6 +188,18 @@
             margin-bottom: 15px;
         }
 
+        .price-display {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #c0392b;
+            background: #fdf2f2;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            text-align: center;
+            border: 1px solid #fadbd8;
+        }
+
         .copy-btn {
             width: 100%;
             background: var(--accent-color);
@@ -372,8 +384,11 @@
 
             <div class="card">
                 <h2>輸出結果</h2>
+                <div class="price-display" v-if="totalPrice > 0">
+                    預估自費總價：${{ totalPrice.toLocaleString() }}
+                </div>
                 <textarea class="output-textarea" readonly :value="generatedOutput"></textarea>
-                <button class="copy-btn" @click="copyOutput">📋 複製文字提供給其他人填寫</button>
+                <button class="copy-btn" @click="copyOutput">📋 複製文字</button>
             </div>
         </div>
     </div>
@@ -541,10 +556,6 @@
                     selectedItems.value.forEach(item => {
                         out.push(`${item.name}(${item.code}) x${item.qty}`);
                     });
-                    
-                    if (totalPrice.value > 0) {
-                        out.push(`\n預估自費總價：$${totalPrice.value.toLocaleString()}`);
-                    }
                 }
 
                 return out.join('\n');
