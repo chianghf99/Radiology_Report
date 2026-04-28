@@ -61,7 +61,8 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            height: 180px;
+            height: auto;
+            min-height: 120px;
         }
 
         .tool-card:hover {
@@ -80,10 +81,7 @@
         }
 
         .card-desc {
-            font-size: 0.9rem;
-            color: var(--text-sub);
-            line-height: 1.5;
-            flex-grow: 1;
+            display: none;
         }
 
         .card-arrow {
@@ -116,9 +114,6 @@
                 <div>
                     <div class="card-icon">🧠</div>
                     <div class="card-title">Endovascular Thrombectomy</div>
-                    <div class="card-desc">
-                        Standardized reporting platform for acute ischemic stroke and thrombectomy procedures.
-                    </div>
                 </div>
                 <div class="card-arrow">Open Tool →</div>
             </a>
@@ -127,9 +122,6 @@
                 <div>
                     <div class="card-icon">🦴</div>
                     <div class="card-title">Bone Densitometry (DXA)</div>
-                    <div class="card-desc">
-                        Structured reporting template for bone mineral density (DXA) studies with automated interpretation.
-                    </div>
                 </div>
                 <div class="card-arrow">Open Tool →</div>
             </a>
@@ -138,9 +130,6 @@
                 <div>
                     <div class="card-icon">🩸</div>
                     <div class="card-title">Carotid Artery Stenting (CAS)</div>
-                    <div class="card-desc">
-                        Structured reporting platform for percutaneous transluminal angioplasty and carotid stenting procedures.
-                    </div>
                 </div>
                 <div class="card-arrow">Open Tool →</div>
             </a>
@@ -149,9 +138,6 @@
                 <div>
                     <div class="card-icon">🩻</div>
                     <div class="card-title">Lumbar Spine MRI Report</div>
-                    <div class="card-desc">
-                        Standardized reporting template for lumbar spine MRI to document disc levels and findings efficiently.
-                    </div>
                 </div>
                 <div class="card-arrow">Open Tool →</div>
             </a>
@@ -159,10 +145,7 @@
             <a href="medical_device.html" class="tool-card">
                 <div>
                     <div class="card-icon">🏥</div>
-                    <div class="card-title">Medical Device & NHI Tool</div>
-                    <div class="card-desc">
-                        快速勾選醫材數量、紀錄健保給付標準，並產生文字格式以供填寫。
-                    </div>
+                    <div class="card-title">Medical Device &amp; NHI Tool</div>
                 </div>
                 <div class="card-arrow">Open Tool →</div>
             </a>
