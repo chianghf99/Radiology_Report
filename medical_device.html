@@ -141,6 +141,40 @@
             border-radius: 4px;
         }
 
+        /* 聯絡人區塊 */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .contact-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-left: 4px solid var(--accent-color);
+            border-radius: 4px;
+        }
+
+        .contact-product {
+            font-weight: 600;
+            color: var(--text-main);
+            font-size: 0.9rem;
+        }
+
+        .contact-name {
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            margin-left: 10px;
+            background: #eef2f5;
+            padding: 3px 8px;
+            border-radius: 12px;
+        }
+
         .device-qty {
             flex: 1;
             display: flex;
@@ -383,6 +417,16 @@
             </div>
 
             <div class="card">
+                <h2>廠商業務聯絡資訊 (LINE)</h2>
+                <div class="contact-grid">
+                    <div class="contact-item" v-for="contact in businessContacts" :key="contact.product">
+                        <div class="contact-product">{{ contact.product }}</div>
+                        <div class="contact-name">{{ contact.name }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
                 <h2>輸出結果</h2>
                 <div class="price-display" v-if="totalPrice > 0">
                     預估自費總價：${{ totalPrice.toLocaleString() }}
@@ -515,6 +559,17 @@
                 }
             ]);
 
+            const businessContacts = ref([
+                { product: 'Biotronik coronary stent', name: '唐玉玶 Riley' },
+                { product: 'GORE VIABAHN stent', name: '張家豪 或 簡敬恆 James' },
+                { product: 'Boston Ranger PTA Balloon', name: 'Claire 王言心' },
+                { product: 'Fortress sheath', name: 'Anson' },
+                { product: '博兒美 (JJ)', name: 'Kevin' },
+                { product: '喬昕 (Heartcare)', name: '台北找 Vivian' },
+                { product: '銀鐸 (Medtronics)', name: 'James' },
+                { product: '六霖 (Stryker)', name: '何比維' }
+            ]);
+
             const showModal = ref(false);
             const selectedPolicy = ref(null);
 
@@ -584,6 +639,7 @@
                 inventory,
                 groupedInventory,
                 nhiPolicies,
+                businessContacts,
                 showModal,
                 selectedPolicy,
                 generatedOutput,
