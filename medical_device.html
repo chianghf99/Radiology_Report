@@ -326,7 +326,7 @@
     <div class="header">
         <a href="index.html" class="back-link">← 回到首頁</a>
         <h1>醫材與健保紀錄小幫手</h1>
-        <p>快速勾選醫材數量、查閱健保給付規定，並產生文字格式</p>
+        <p>快速勾選醫材數量、查閱健保給付規定，並產生文字格式<br><span style="font-size: 0.85rem; color: var(--text-sub);">(Updated: 2026/04/28)</span></p>
     </div>
 
     <div class="container">
@@ -405,34 +405,34 @@
             // 初始化醫材清單，您可以隨時在這邊新增、修改分類或品項
             const inventory = ref([
                 // Coil
-                { category: 'Coil', name: 'Galaxy Spectra', code: '534362', price: 0, qty: 0 },
-                { category: 'Coil', name: 'Galaxy G3mini', code: '534361', price: 0, qty: 0 },
-                { category: 'Coil', name: 'Target', code: '534831', price: 0, qty: 0 },
-                { category: 'Coil', name: 'Prime', code: '534971', price: 0, qty: 0 },
-                { category: 'Coil', name: 'PGLA', code: '534611', price: 0, qty: 0 },
-                { category: 'Coil', name: 'Microvention', code: '53436', price: 0, qty: 0 },
+                { category: 'Coil', name: 'Galaxy Spectra', code: '534362', price: 19660, qty: 0 },
+                { category: 'Coil', name: 'Galaxy G3mini', code: '534361', price: 19660, qty: 0 },
+                { category: 'Coil', name: 'Target', code: '534831', price: 19660, qty: 0 },
+                { category: 'Coil', name: 'Prime', code: '534971', price: 18700, qty: 0 },
+                { category: 'Coil', name: 'PGLA', code: '534611', price: 21320, qty: 0 },
+                { category: 'Coil', name: 'Microvention', code: '53436', price: 19660, qty: 0 },
                 { category: 'Coil', name: 'Wallaby', code: '5340137', price: 0, qty: 0 },
 
                 // Stent
-                { category: 'Stent', name: 'Neuroform Atlas', code: '53447', price: 0, qty: 0 },
-                { category: 'Stent', name: 'Enterprise II', code: '53472', price: 0, qty: 0 },
-                { category: 'Stent', name: 'LVIS', code: '534721', price: 0, qty: 0 },
-                { category: 'Stent', name: 'Solitaire AB', code: '534471', price: 0, qty: 0 },
+                { category: 'Stent', name: 'Neuroform Atlas', code: '53447', price: 112800, qty: 0 },
+                { category: 'Stent', name: 'Enterprise II', code: '53472', price: 112800, qty: 0 },
+                { category: 'Stent', name: 'LVIS', code: '534721', price: 112800, qty: 0 },
+                { category: 'Stent', name: 'Solitaire AB', code: '534471', price: 112800, qty: 0 },
 
                 // Flow diverter
-                { category: 'Flow Diverter', name: 'Pipeline', code: '534992', price: 0, qty: 0 },
-                { category: 'Flow Diverter', name: 'Surpass Evolve', code: '534993', price: 0, qty: 0 },
-                { category: 'Flow Diverter', name: 'FRED', code: '534991', price: 0, qty: 0 },
+                { category: 'Flow Diverter', name: 'Pipeline', code: '534992', price: 392640, qty: 0 },
+                { category: 'Flow Diverter', name: 'Surpass Evolve', code: '534993', price: 392640, qty: 0 },
+                { category: 'Flow Diverter', name: 'FRED', code: '534991', price: 392640, qty: 0 },
 
                 // Intracranial stenting device
-                { category: 'Intracranial Stenting Device', name: 'Gateway Balloon', code: '54886', price: 0, qty: 0 },
-                { category: 'Intracranial Stenting Device', name: 'Wingspan Stent', code: '54887', price: 0, qty: 0 },
+                { category: 'Intracranial Stenting Device', name: 'Gateway Balloon', code: '54886', price: 24600, qty: 0 },
+                { category: 'Intracranial Stenting Device', name: 'Wingspan Stent', code: '54887', price: 161860, qty: 0 },
 
                 // Vascular closure device
-                { category: 'Vascular Closure Device', name: 'Angio-Seal', code: '53462', price: 0, qty: 1 },
-                { category: 'Vascular Closure Device', name: 'StarClose', code: '50881', price: 0, qty: 0 },
-                { category: 'Vascular Closure Device', name: 'Obtura', code: '534621', price: 0, qty: 0 },
-                { category: 'Vascular Closure Device', name: 'Exoseal', code: '54888', price: 0, qty: 0 },
+                { category: 'Vascular Closure Device', name: 'Angio-Seal', code: '53462', price: 12000, qty: 1 },
+                { category: 'Vascular Closure Device', name: 'StarClose', code: '50881', price: 11500, qty: 0 },
+                { category: 'Vascular Closure Device', name: 'Obtura', code: '534621', price: 15000, qty: 0 },
+                { category: 'Vascular Closure Device', name: 'Exoseal', code: '54888', price: 11000, qty: 0 },
 
                 // Other Stents
                 { category: 'Other Stents', name: 'Graftmaster coronary stent', code: '53268', price: 59400, qty: 0 },
@@ -443,8 +443,8 @@
                 { category: 'Other Stents', name: 'Boston Ranger PTA Balloon Catheter', code: '533972', price: 58733, qty: 0 },
 
                 // Glue & Medications (保留上一版提到的藥物)
-                { category: 'Others', name: 'HISTOACRYL組織粘膠 (Glue)', code: '54906', price: 0, qty: 0 },
-                { category: 'Others', name: 'Aggrastat', code: '34866', price: 0, qty: 1 }
+                { category: 'Others', name: 'HISTOACRYL組織粘膠 (Glue)', code: '54906', price: 2480, qty: 0 },
+                { category: 'Others', name: 'Aggrastat', code: '34866', price: 8120, qty: 1 }
             ]);
 
             const nhiPolicies = ref([
