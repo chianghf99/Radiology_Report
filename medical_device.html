@@ -655,6 +655,14 @@
                 } catch(e) {}
             }
 
+            const savedPolicies = localStorage.getItem('medDevicePolicies');
+            if (savedPolicies) {
+                try {
+                    const parsed = JSON.parse(savedPolicies);
+                    if (Array.isArray(parsed)) nhiPolicies.value = parsed;
+                } catch(e) {}
+            }
+
             const openModal = (policy) => {
                 selectedPolicy.value = policy;
                 showModal.value = true;
@@ -725,10 +733,18 @@
                 XLSX.utils.book_append_sheet(wb, wsInv, '醫材清單');
 
                 // Sheet2: 廠商聯絡人
-                const contactData = [['\u5ee0商品項', '\u806f絡人']];
+                const contactData = [['廠商品項', '聯絡人']];
                 businessContacts.value.forEach(c => contactData.push([c.product, c.name]));
                 const wsContact = XLSX.utils.aoa_to_sheet(contactData);
                 XLSX.utils.book_append_sheet(wb, wsContact, '廠商聯絡人');
+
+                // Sheet3: 健保給付規定
+                const policyData = [['ID', '按鈕標題', '條文名稱', '生效日期', '給付規定內容', '來源文件', '更新日期', '官方連結']];
+                nhiPolicies.value.forEach(p => {
+                    policyData.push([p.id, p.title, p.name, p.effectiveDate, p.content, p.sourceDoc, p.updateDate, p.url]);
+                });
+                const wsPolicy = XLSX.utils.aoa_to_sheet(policyData);
+                XLSX.utils.book_append_sheet(wb, wsPolicy, '健保給付規定');
 
                 XLSX.writeFile(wb, '醫材與健保設定資料.xlsx');
             };
@@ -767,6 +783,25 @@
                                 name: r['聯絡人'] || ''
                             }));
                             localStorage.setItem('medDeviceContacts', JSON.stringify(businessContacts.value));
+                        }
+                    }
+
+                    // Sheet3: 健保給付規定
+                    const wsPolicy = wb.Sheets['健保給付規定'];
+                    if (wsPolicy) {
+                        const rows = XLSX.utils.sheet_to_json(wsPolicy);
+                        if (rows.length > 0) {
+                            nhiPolicies.value = rows.map(r => ({
+                                id: String(r['ID'] || ''),
+                                title: r['按鈕標題'] || '',
+                                name: r['條文名稱'] || '',
+                                effectiveDate: r['生效日期'] || '',
+                                content: r['給付規定內容'] || '',
+                                sourceDoc: r['來源文件'] || '',
+                                updateDate: r['更新日期'] || '',
+                                url: r['官方連結'] || ''
+                            }));
+                            localStorage.setItem('medDevicePolicies', JSON.stringify(nhiPolicies.value));
                         }
                     }
 
