@@ -14,6 +14,7 @@
             --text-main: #333;
             --text-sub: #666;
         }
+
         body {
             font-family: 'Inter', "Microsoft JhengHei", sans-serif;
             background-color: var(--bg-color);
@@ -24,6 +25,7 @@
             flex-direction: column;
             min-height: 100vh;
         }
+
         /* 頂部標題區 */
         header {
             background-color: var(--primary-color);
@@ -32,17 +34,20 @@
             text-align: center;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+
         header h1 {
             margin: 0;
             font-size: 2.5rem;
             font-weight: 800;
             letter-spacing: 1px;
         }
+
         header p {
             margin-top: 10px;
             font-size: 1.1rem;
             opacity: 0.8;
         }
+
         /* 主要內容區 */
         main {
             flex: 1;
@@ -52,12 +57,14 @@
             width: 100%;
             box-sizing: border-box;
         }
+
         /* 卡片網格系統 - 自動適應螢幕 */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 25px;
         }
+
         /* 卡片設計 */
         .tool-card {
             background: white;
@@ -73,33 +80,39 @@
             justify-content: space-between;
             height: 180px; /* 固定高度讓排版整齊 */
         }
+
         .tool-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
             border-color: var(--accent-color);
         }
+
         .card-icon {
             font-size: 2.5rem;
             margin-bottom: 15px;
         }
+
         .card-title {
             font-size: 1.25rem;
             font-weight: 600;
             margin-bottom: 10px;
             color: var(--primary-color);
         }
+
         .card-desc {
             font-size: 0.9rem;
             color: var(--text-sub);
             line-height: 1.5;
             flex-grow: 1;
         }
+
         .card-arrow {
             text-align: right;
             color: var(--accent-color);
             font-weight: bold;
             margin-top: 15px;
         }
+
         /* 頁尾 */
         footer {
             text-align: center;
@@ -111,10 +124,12 @@
     </style>
 </head>
 <body>
+
     <header>
         <h1>Radiology Report</h1>
         <p>Automated Reporting Tools & Utilities</p>
     </header>
+
     <main>
         <div class="grid-container">
             
@@ -128,6 +143,7 @@
                 </div>
                 <div class="card-arrow">Open Tool →</div>
             </a>
+
             <a href="dxa.html" class="tool-card">
                 <div>
                     <div class="card-icon">🦴</div>
@@ -138,6 +154,7 @@
                 </div>
                 <div class="card-arrow">Open Tool →</div>
             </a>
+
             <a href="CAS.html" class="tool-card">
                 <div>
                     <div class="card-icon">🩸</div>
@@ -148,6 +165,7 @@
                 </div>
                 <div class="card-arrow">Open Tool →</div>
             </a>
+
             <a href="spine_mri.html" class="tool-card">
                 <div>
                     <div class="card-icon">🩻</div>
@@ -158,10 +176,24 @@
                 </div>
                 <div class="card-arrow">Open Tool →</div>
             </a>
+
+            <a href="medical_device.html" class="tool-card">
+                <div>
+                    <div class="card-icon">🏥</div>
+                    <div class="card-title">Medical Device & NHI Tool</div>
+                    <div class="card-desc">
+                        快速勾選醫材數量、紀錄健保給付標準，並產生文字格式以供填寫。
+                    </div>
+                </div>
+                <div class="card-arrow">Open Tool →</div>
+            </a>
+
         </div>
     </main>
+
     <footer>
         &copy; 2025 Radiology Report Hub. Hosted on GitHub Pages.
     </footer>
+
 </body>
 </html>
