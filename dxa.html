@@ -3,41 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Smart DXA Reporter</title>
+    <title>DXA Bone Densitometry Reporter</title>
+    <link rel="stylesheet" href="shared.css">
     <style>
-        body { font-family: "Microsoft JhengHei", "Segoe UI", sans-serif; padding: 20px; background-color: #f4f6f8; color: #333; }
-        .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        
-        /* Status Bar */
-        #status-bar { margin: 15px 0; padding: 10px; border-radius: 6px; font-weight: bold; text-align: center; display: none; }
+        body { padding: 20px; }
 
-        /* Form Grid */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+        }
+
         .form-grid { display: flex; gap: 15px; flex-wrap: wrap; }
-        .form-card { flex: 1; min-width: 260px; background: #fafafa; padding: 15px; border-radius: 8px; border: 1px solid #eee; }
-        .form-card h3 { margin: 0 0 15px 0; font-size: 1.1em; color: #444; border-bottom: 2px solid #ddd; padding-bottom: 8px; }
-        
+        .form-card {
+            flex: 1; min-width: 260px;
+            background: #fafafa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        .form-card h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.1em;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
         .field-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .field-row input { width: 80px; padding: 5px; text-align: center; border: 1px solid #ccc; border-radius: 4px; font-weight: bold; }
 
-        textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: monospace; height: 150px; margin-top: 20px; box-sizing: border-box;}
-        
-        /* Buttons */
-        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
-        .btn-action { flex: 1; padding: 12px; border: none; border-radius: 6px; font-size: 1.1em; font-weight: bold; cursor: pointer; color: white; }
-        .btn-gen { background: #1976d2; }
-        .btn-gen:hover { background: #1565c0; }
-        .btn-clear { background: #757575; }
-        .btn-clear:hover { background: #616161; }
-        .btn-copy { background: #388e3c; margin-top: 20px; width: 100%; }
-
+        textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: monospace; height: 150px; margin-top: 20px; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <a href="index.html" style="display:inline-flex; align-items:center; gap:6px; color:#2e7d32; text-decoration:none; font-size:0.9rem; margin-bottom:15px;">← Back to Home</a>
-    <h2 style="text-align:center; color:#444; margin-bottom:20px;">AI Smart DXA Reporter</h2>
-    
+    <a href="index.html" class="back-link">← Back to Home</a>
+    <h1>DXA Bone Densitometry Reporter
+        <span style="font-size:0.55em; color:#888; font-weight:normal;">(Updated: 2026/04/28)</span>
+    </h1>
 
     <form name="form">
         <div style="background: #fff8e1; padding: 10px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #ffecb3;">
@@ -78,13 +94,14 @@
         <textarea name="Others" rows="2" style="height:50px;" placeholder="Nil"></textarea>
 
         <div class="btn-group">
-            <button type="button" class="btn-action btn-gen" onclick="activeFunction()">↻ 更新報告文字</button>
-            <button type="button" class="btn-action btn-clear" onclick="clearForm()">🗑️ 清除重來 (Clear)</button>
+            <button type="button" class="btn-primary" onclick="activeFunction()">📄 Generate Report</button>
+            <button type="button" class="btn-secondary" onclick="clearForm()">🗑️ Clear</button>
         </div>
     </form>
 
-    <button class="btn-action btn-copy" onclick="copyFunction()">📋 複製最終報告</button>
-    <textarea id="Final_Report" placeholder="最終報告將顯示於此..."></textarea>
+    <button class="btn-success" onclick="copyFunction()">📋 Copy Final Report</button>
+    <p style="font-weight:bold; margin-bottom:5px;">Final Report:</p>
+    <textarea id="Final_Report" placeholder="Final report will appear here..."></textarea>
 </div>
 
 <script>

@@ -6,24 +6,10 @@
     <title>Endovascular Thrombectomy Report</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="shared.css">
     <style>
-        :root {
-            --primary-color: #2c3e50;
-            --accent-color: #3498db;
-            --bg-color: #f4f6f8;
-            --card-bg: #ffffff;
-            --border-color: #e0e0e0;
-            --text-main: #333;
-            --text-sub: #666;
-        }
-        body {
-            font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-            line-height: 1.5;
-        }
+        body { padding: 20px; }
+
         .container {
             max-width: 1100px;
             margin: 0 auto;
@@ -32,6 +18,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
+
         h1 {
             color: var(--primary-color);
             border-bottom: 2px solid var(--accent-color);
@@ -39,69 +26,14 @@
             margin-bottom: 30px;
             font-size: 1.8rem;
         }
-        /* 區塊卡片設計 */
-        .section-card {
-            background: #fff;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
-        .section-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 6px;
-            border-left: 4px solid var(--accent-color);
-        }
-        /* 表單元素美化 */
-        label {
-            cursor: pointer;
-            margin-right: 15px;
-            display: inline-flex;
-            align-items: center;
-        }
-        
-        input[type="checkbox"], input[type="radio"] {
-            margin-right: 5px;
-            transform: scale(1.1);
-        }
-        input[type="text"], select, textarea {
-            padding: 8px 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-family: inherit;
-            font-size: 0.95rem;
-        }
-        input[type="text"]:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-        }
-        /* 自動計算欄位的樣式 (視覺提示) */
-        input[name="Hypo_index"] {
-            background-color: #e8f5e9;
-            border-color: #a5d6a7;
-            color: #2e7d32;
-            font-weight: bold;
-        }
-        /* Grid 佈局系統 */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        
+
         /* CTP 數據專用佈局 */
         .ctp-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 10px;
             align-items: center;
-            margin-bottom: 15px; /* 增加行距 */
+            margin-bottom: 15px;
         }
         .ctp-item {
             background: #fafafa;
@@ -114,74 +46,21 @@
             align-items: center;
         }
         .ctp-item input { width: 60px; text-align: center; }
-        /* 器材清單佈局 */
-        .device-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+
+        input[name="Hypo_index"] {
+            background-color: #e8f5e9;
+            border-color: #a5d6a7;
+            color: #2e7d32;
+            font-weight: bold;
         }
-        .device-group label {
-            background: #fdfdfd;
-            padding: 5px 10px;
-            border: 1px solid #eee;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-        .device-group label:hover {
-            background: #eef6fc;
-            border-color: #bbdefb;
-        }
-        /* 按鈕群組 */
-        .btn-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-        button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-        .btn-primary { background-color: var(--accent-color); color: white; }
-        .btn-secondary { background-color: #95a5a6; color: white; }
-        .btn-success { background-color: #27ae60; color: white; width: 100%; margin-top: 15px;}
-        
-        button:hover { opacity: 0.9; }
-        /* 最終報告區域 */
-        #Final_Report {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #34495e;
-            border-radius: 8px;
-            background: #f8f9fa;
-            font-family: monospace;
-            font-size: 1rem;
-            color: #2c3e50;
-            box-sizing: border-box;
-            margin-top: 10px;
-        }
-        
-        textarea[name="Others"] {
-            width: 100%;
-            box-sizing: border-box;
-            resize: vertical; /* 允許垂直調整大小 */
-        }
+
         .helper-link { color: var(--accent-color); text-decoration: none; font-size: 0.9rem; }
         .helper-link:hover { text-decoration: underline; }
-        /* 時間選擇器微調 */
+
         .datetime-picker { width: 160px; text-align: center; }
-        
-        /* 小標題 */
-        .sub-label { font-weight: bold; margin-bottom: 5px; display: block; color: #555; margin-top: 10px;}
-        
-        /* 說明文字列表 */
+
+        textarea[name="Others"] { width: 100%; box-sizing: border-box; resize: vertical; }
+
         .info-list {
             margin: 5px 0 0 0;
             padding-left: 20px;
@@ -191,11 +70,13 @@
         }
         .info-list li { margin-bottom: 2px; }
     </style>
-</head>
+
 <body>
+
 <div class="container">
-    <a href="index.html" style="display:inline-flex; align-items:center; gap:6px; color:#3498db; text-decoration:none; font-size:0.9rem; margin-bottom:15px;">← Back to Home</a>
+    <a href="index.html" class="back-link">← Back to Home</a>
     <h1>Endovascular Thrombectomy Reporting Platform <span style="font-size:0.6em; color:#888; font-weight:normal;">(Updated: 2025/12/30)</span></h1>
+
     <form name="form">
         
         <div class="section-card">
@@ -212,6 +93,7 @@
                 ]</span>
             </div>
         </div>
+
         <div class="section-card">
             <div class="section-title">🧠 Imaging Assessment</div>
             
@@ -246,7 +128,9 @@
                     </div>
                 </div>
             </div>
+
             <hr style="margin: 20px 0; border:0; border-top:1px dashed #ddd;">
+
             <div class="sub-label">Multiphase Brain CTA</div>
             <div>
                 Collateral Grading Score (0-5): 
@@ -264,7 +148,9 @@
                 </ul>
                 <p style="font-size:0.85em; color:#999; margin-top:5px;">Referring to Radiology. 2015;275:510-520</p>
             </div>
+
             <hr style="margin: 20px 0; border:0; border-top:1px dashed #ddd;">
+
             <div class="sub-label">CTP Results (RAPID)</div>
             
             <div style="font-weight:bold; color:#2c3e50; margin-bottom:5px;">1. Tmax Parameters (Time)</div>
@@ -277,6 +163,7 @@
                     Hypo Index: <input name="Hypo_index" type="text" placeholder="Auto" readonly>
                 </div>
             </div>
+
             <div style="font-weight:bold; color:#2c3e50; margin-bottom:5px;">2. CBF Parameters (Flow)</div>
             <div class="ctp-grid">
                 <div class="ctp-item">CBF &lt; 20%: <input name="CBF20" type="text"> ml</div>
@@ -284,6 +171,7 @@
                 <div class="ctp-item">CBF &lt; 34%: <input name="CBF34" type="text"> ml</div>
                 <div class="ctp-item">CBF &lt; 38%: <input name="CBF38" type="text"> ml</div>
             </div>
+
             <div style="font-weight:bold; color:#2c3e50; margin-bottom:5px;">3. CBV Parameters (Volume)</div>
             <div class="ctp-grid">
                 <div class="ctp-item">CBV &lt; 34%: <input name="CBV34" type="text"> ml</div>
@@ -294,6 +182,7 @@
                 </div>
             </div>
         </div>
+
         <div class="section-card">
             <div class="section-title">⏱️ Time & Approach</div>
             <div class="grid-2">
@@ -335,6 +224,7 @@
                 <label><input name="Thrombus" type="checkbox" value="BA">BA</label>
             </div>
         </div>
+
         <div class="section-card">
             <div class="section-title">🔧 Devices & Technique</div>
             
@@ -351,6 +241,7 @@
                 <label><input name="Guiding" type="radio" value="Envoy 6Fr">Envoy 6Fr</label>
                 <label><input name="Guiding" type="radio" value="Diagnostic catheter">Diagnostic</label>
             </div>
+
             <div class="sub-label">Intermediate Catheter</div>
             <div class="device-group">
                 <label><input name="Intermediate" type="radio" value="Not used" checked>None</label>
@@ -359,6 +250,7 @@
                 <label><input name="Intermediate" type="radio" value="Extraflex 5Fr.">Extraflex 5Fr</label>
                 <label><input name="Intermediate" type="radio" value="Extraflex 6Fr.">Extraflex 6Fr</label>
             </div>
+
             <div class="sub-label">Microcatheter</div>
             <div class="device-group">
                 <label><input name="Microcatheter" type="checkbox" value="Headway 17">Headway 17</label>
@@ -372,6 +264,7 @@
                 <label><input name="Microcatheter" type="checkbox" value="Phenom 027">Phenom 027</label>
                 <label><input name="Microcatheter" type="checkbox" value="Marksman">Marksman</label>
             </div>
+
             <div class="sub-label">Microguidewire</div>
             <div class="device-group">
                 <label><input name="Microguidewire" type="checkbox" value="Transend EX 14 Soft Tip">Transend EX 14 Soft</label>
@@ -380,6 +273,7 @@
                 <label><input name="Microguidewire" type="checkbox" value="Asahi Chikai 14">Chikai 14</label>
                 <label><input name="Microguidewire" type="checkbox" value="Synchro">Synchro</label>
             </div>
+
             <div class="sub-label">Aspiration Tube</div>
             <div class="device-group">
                 <label><input name="Aspiration_tube" type="checkbox" value="Sofia 5Fr.">Sofia 5</label>
@@ -409,6 +303,7 @@
                     <option value="8">8</option><option value="9">9</option><option value="10">10</option>
                 </select> pass
             </div>
+
             <div class="sub-label">Stent-retriever</div>
             <div class="device-group">
                 <label><input name="Stent" type="checkbox" value="Solitaire 3x20mm">Solitaire 3x20</label>
@@ -420,6 +315,7 @@
                 <label><input name="Stent" type="checkbox" value="Embotrap 5x22mm">Embotrap 5x22</label>
                 <label><input name="Stent" type="checkbox" value="Embotrap 5x37mm">Embotrap 5x37</label>
             </div>
+
             <div style="margin-top:10px;">
                 <b>Stent retriever conducted:</b>
                 <select name="Stent_pass" style="width:60px;">
@@ -428,6 +324,7 @@
                     <option value="8">8</option><option value="9">9</option><option value="10">10</option>
                 </select> pass
             </div>
+
             <div style="margin-top:15px; padding:10px; background:#f0f4f8; border-radius:6px;">
                 <b>Technique used:</b> 
                 <label><input name="Technique" type="checkbox" value="Simple suction">Simple suction</label>
@@ -435,6 +332,7 @@
                 <label><input name="Technique" type="checkbox" value="Combined technique">Combined technique</label>
             </div>
         </div>
+
         <div class="section-card">
             <div class="section-title">🏁 Results & Outcome</div>
             
@@ -459,11 +357,14 @@
                     </div>
                 </div>
             </div>
+
             <div style="margin-top:15px;">
                 <p>Time of First Contact: <input type="text" class="datetime-picker" name="contacttime" placeholder="Select Time"></p>
                 <p>Procedure End Time: <input type="text" class="datetime-picker" name="endtime" placeholder="Select Time"></p>
             </div>
+
             <hr style="margin: 15px 0; border:0; border-top:1px solid #eee;">
+
             <div class="sub-label">On-table CT Findings</div>
             <div style="display:flex; flex-direction:column; gap:5px;">
                 <label><input name="CT" type="radio" value="Not performed">Not performed</label>
@@ -473,6 +374,7 @@
                 <label><input name="CT" type="radio" value="Both hemorrhage and contrast parenchymal enhancement">Both hemorrhage and contrast parenchymal enhancement</label>
                 <label><input name="CT" type="radio" value="Uncertain hyperdensities">Uncertain hyperdensities</label>
             </div>
+
             <div style="margin-top:15px;">
                 <span class="sub-label">Closure Device:</span>
                 <label><input name="Closure" type="radio" value="Not used" checked>Not used</label>
@@ -486,17 +388,22 @@
                 <textarea rows="10" name="Others" placeholder="Optional notes..."></textarea>
             </div>
         </div>
+
         <div class="btn-group">
-            <button type="button" class="btn-primary" onclick="activeFunction()">📄 Show Final Report</button>
+            <button type="button" class="btn-primary" onclick="activeFunction()">📄 Generate Report</button>
             <button type="button" class="btn-secondary" onclick="refresh()">🗑️ Clear</button>
         </div>
+
     </form>
+
     <div style="margin-top: 30px;">
         <button class="btn-success" onclick="copyFunction()">📋 Copy Final Report</button>
         <p style="font-weight:bold; margin-bottom:5px;">Final Report:</p>
         <textarea rows="20" id="Final_Report" name="Final_Report"></textarea>
     </div>
+
 </div>
+
 <script>
     // 初始化 Flatpickr 24小時制選擇器
     document.addEventListener('DOMContentLoaded', function() {
@@ -519,6 +426,7 @@
         const tmax10Input = document.getElementsByName('Tmax10')[0];
         const tmax6Input = document.getElementsByName('Tmax6')[0];
         const hypoIndexInput = document.getElementsByName('Hypo_index')[0];
+
         function calcHI() {
             const v10 = parseFloat(tmax10Input.value);
             const v6 = parseFloat(tmax6Input.value);
@@ -528,19 +436,23 @@
                 hypoIndexInput.value = (v10 / v6).toFixed(1);
             }
         }
+
         // 當輸入改變時即時觸發
         tmax10Input.addEventListener('input', calcHI);
         tmax6Input.addEventListener('input', calcHI);
     }
+
     function refresh() {
         window.location.reload();
     }
+
     function copyFunction() {
         var copyText = document.getElementById("Final_Report");
         copyText.select();
         copyText.setSelectionRange(0, 99999);
         navigator.clipboard.writeText(copyText.value);
     }
+
     // 此函式邏輯完全未更動，確保產出格式與原本一致
     function activeFunction() {
         var IV_Medication = document.form.IV_Medication;

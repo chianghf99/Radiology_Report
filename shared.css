@@ -1,0 +1,213 @@
+/* ============================================
+   shared.css - Radiology Report Hub
+   共用樣式表，所有頁面引用
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+/* ── 設計 Token ── */
+:root {
+    --primary-color: #1a3a5c;
+    --accent-color:  #2980b9;
+    --bg-color:      #f4f6f8;
+    --card-bg:       #ffffff;
+    --border-color:  #e0e0e0;
+    --text-main:     #333;
+    --text-sub:      #666;
+    --highlight:     #fff9e6;
+    --highlight-border: #ffc107;
+}
+
+/* ── Reset & Base ── */
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Inter', "Microsoft JhengHei", "Segoe UI", sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+/* ── Back to Home Link ── */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--accent-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+.back-link:hover { text-decoration: underline; }
+
+/* ── Section Card & Title ── */
+.section-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 1.05rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    background: #f0f4f8;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border-left: 4px solid var(--accent-color);
+}
+
+/* ── Form Elements ── */
+label {
+    cursor: pointer;
+    margin-right: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    transform: scale(1.1);
+}
+
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+    padding: 7px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(41, 128, 185, 0.2);
+}
+
+/* Highlighted (required) fields */
+.hl {
+    background: var(--highlight);
+    border: 1px solid var(--highlight-border) !important;
+}
+
+/* ── Device / Option Pills ── */
+.device-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.device-group label {
+    background: #fdfdfd;
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    margin-right: 0;
+}
+
+.device-group label:hover {
+    background: #e8f4fd;
+    border-color: #90caf9;
+}
+
+/* ── Layout Helpers ── */
+.field-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.field-label {
+    font-weight: 600;
+    color: #444;
+    min-width: 160px;
+}
+
+.sub-label {
+    font-weight: bold;
+    color: #555;
+    margin: 12px 0 6px;
+    display: block;
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+
+hr.dashed { border: 0; border-top: 1px dashed #ddd; margin: 15px 0; }
+
+/* ── Buttons ── */
+.btn-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    font-family: inherit;
+}
+
+.btn-primary   { background-color: var(--accent-color); color: white; }
+.btn-secondary { background-color: #95a5a6; color: white; }
+.btn-success   { background-color: #27ae60; color: white; width: 100%; margin-top: 15px; }
+button:hover   { opacity: 0.85; }
+
+/* ── Final Report Textarea ── */
+#Final_Report {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #34495e;
+    border-radius: 8px;
+    background: #f8f9fa;
+    font-family: monospace;
+    font-size: 0.95rem;
+    color: #2c3e50;
+    box-sizing: border-box;
+    margin-top: 10px;
+    resize: vertical;
+}
+
+/* ── Report Page Container (CAS / EVT / DXA / Spine MRI) ── */
+.report-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.report-container h1 {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+    font-size: 1.8rem;
+}

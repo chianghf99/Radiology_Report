@@ -4,26 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carotid Artery Stenting Report</title>
+    <link rel="stylesheet" href="shared.css">
     <style>
-        :root {
-            --primary-color: #1a3a5c;
-            --accent-color: #2980b9;
-            --bg-color: #f4f6f8;
-            --card-bg: #ffffff;
-            --border-color: #e0e0e0;
-            --text-main: #333;
-            --text-sub: #666;
-            --highlight: #fff9e6;
-            --highlight-border: #ffc107;
-        }
-        body {
-            font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-            line-height: 1.6;
-        }
+        body { padding: 20px; }
+
         .container {
             max-width: 1100px;
             margin: 0 auto;
@@ -32,6 +16,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
+
         h1 {
             color: var(--primary-color);
             border-bottom: 2px solid var(--accent-color);
@@ -39,146 +24,36 @@
             margin-bottom: 30px;
             font-size: 1.8rem;
         }
-        .section-card {
-            background: #fff;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .section-title {
-            font-size: 1.05rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            background: #f0f4f8;
-            padding: 10px 12px;
-            border-radius: 6px;
-            border-left: 4px solid var(--accent-color);
-        }
-        label {
-            cursor: pointer;
-            margin-right: 12px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-        input[type="checkbox"], input[type="radio"] {
-            transform: scale(1.1);
-        }
-        input[type="text"], input[type="number"], select, textarea {
-            padding: 7px 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-family: inherit;
-            font-size: 0.95rem;
-        }
-        input[type="text"]:focus, input[type="number"]:focus,
-        select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 2px rgba(41, 128, 185, 0.2);
-        }
-        /* 黃色高亮欄位 */
-        .hl {
-            background: var(--highlight);
-            border: 1px solid var(--highlight-border) !important;
-        }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .field-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-        }
-        .field-label {
-            font-weight: 600;
-            color: #444;
-            min-width: 160px;
-        }
-        .device-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .device-group label {
-            background: #fdfdfd;
-            padding: 5px 10px;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-        .device-group label:hover {
-            background: #e8f4fd;
-            border-color: #90caf9;
-        }
-        .sub-label {
-            font-weight: bold;
-            color: #555;
-            margin: 12px 0 6px;
-            display: block;
-        }
-        .btn-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-        button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-        .btn-primary   { background-color: var(--accent-color); color: white; }
-        .btn-secondary { background-color: #95a5a6; color: white; }
-        .btn-success   { background-color: #27ae60; color: white; width: 100%; margin-top: 15px; }
-        button:hover   { opacity: 0.85; }
-        #Final_Report {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #34495e;
-            border-radius: 8px;
-            background: #f8f9fa;
-            font-family: monospace;
-            font-size: 0.95rem;
-            color: #2c3e50;
-            box-sizing: border-box;
-            margin-top: 10px;
-            resize: vertical;
-        }
-        hr.dashed { border: 0; border-top: 1px dashed #ddd; margin: 15px 0; }
+
         .size-label { font-size: 0.85rem; color: #888; margin-left: 4px; }
-        /* hidden by default */
-        .custom-sheath-row { display: none; margin-top: 8px; }
+
+        .custom-sheath-row  { display: none; margin-top: 8px; }
         .custom-guiding-row { display: none; margin-top: 8px; }
-        .spider-options { display: none; margin-top: 10px; padding: 10px 14px; background: #f8f9ff; border: 1px solid #c5cae9; border-radius: 6px; }
-        .manual-pad-row { display: none; margin-top: 8px; }
+        .spider-options     { display: none; margin-top: 10px; padding: 10px 14px; background: #f8f9ff; border: 1px solid #c5cae9; border-radius: 6px; }
+        .manual-pad-row     { display: none; margin-top: 8px; }
     </style>
+
 </head>
 <body>
+
 <div class="container">
-    <a href="index.html" style="display:inline-flex; align-items:center; gap:6px; color:#2980b9; text-decoration:none; font-size:0.9rem; margin-bottom:15px;">← Back to Home</a>
+    <a href="index.html" class="back-link">← Back to Home</a>
     <h1>Carotid Artery Stenting (CAS) Reporting Platform
-        <span style="font-size:0.55em; color:#888; font-weight:normal;">(v1.1)</span>
+        <span style="font-size:0.55em; color:#888; font-weight:normal;">(Updated: 2026/04/28)</span>
     </h1>
+
     <form name="form">
+
         <!-- ① Access -->
         <div class="section-card">
             <div class="section-title">🩺 Access & Sheath</div>
+
             <div class="field-row">
                 <span class="field-label">Approach:</span>
                 <label><input name="Approach" type="radio" value="right" checked> Right femoral</label>
                 <label><input name="Approach" type="radio" value="left"> Left femoral</label>
             </div>
+
             <div class="field-row">
                 <span class="field-label">Sheath:</span>
                 <label><input name="SheathOpt" type="radio" value="7Fr. 25cm peripheral sheath" checked onchange="onSheathChange(this)"> 7Fr.</label>
@@ -189,20 +64,24 @@
             <div class="custom-sheath-row" id="customSheathRow">
                 <input name="SheathCustom" type="text" class="hl" style="width:300px;" placeholder="e.g. 8Fr. Fortress 45cm">
             </div>
+
             <div class="field-row" style="margin-top:8px;">
                 <span class="field-label">Ultrasound guidance:</span>
                 <label><input name="Ultrasound" type="radio" value="" checked> No</label>
                 <label><input name="Ultrasound" type="radio" value=" under ultrasound guidance"> Yes</label>
             </div>
         </div>
+
         <!-- ② Target Stenosis -->
         <div class="section-card">
             <div class="section-title">🎯 Target Stenosis</div>
+
             <div class="field-row">
                 <span class="field-label">Side:</span>
                 <label><input name="Side" type="radio" value="right" checked> Right</label>
                 <label><input name="Side" type="radio" value="left"> Left</label>
             </div>
+
             <div class="field-row">
                 <span class="field-label">Location:</span>
                 <div class="device-group">
@@ -211,12 +90,14 @@
                     <label><input name="Location" type="radio" value="subclavian artery"> Subclavian artery</label>
                 </div>
             </div>
+
             <div class="field-row">
                 <span class="field-label">Stenosis severity:</span>
                 <input name="Stenosis" type="number" min="0" max="100" style="width:80px;" class="hl">
                 <span>%</span>
             </div>
         </div>
+
         <!-- ③ Guiding Catheter -->
         <div class="section-card" id="guidingSection">
             <div class="section-title">🔧 Guiding Catheter</div>
@@ -229,7 +110,9 @@
             <div class="custom-guiding-row" id="customGuidingRow">
                 <input name="GuidingCustom" type="text" class="hl" style="width:280px;">
             </div>
+
         </div>
+
         <!-- ④ ACT & Heparin -->
         <div class="section-card">
             <div class="section-title">💉 Anticoagulation</div>
@@ -248,6 +131,7 @@
                 </div>
             </div>
         </div>
+
         <!-- ⑤ Distal Protection Device -->
         <div class="section-card">
             <div class="section-title">🛡️ Distal Protection Device</div>
@@ -269,16 +153,20 @@
                 <label><input name="SpiderWire" type="radio" value="CHOICE PT Floppy"> CHOICE PT Floppy</label>
             </div>
         </div>
+
         <!-- ⑥ Dilatation & Stenting -->
         <div class="section-card">
             <div class="section-title">🩹 Dilatation & Stenting</div>
+
             <span class="sub-label">Pre-dilatation</span>
             <div class="field-row">
                 <label><input name="PreDilatOpt" type="radio" value="__none__" checked onchange="toggleDilatSize('pre', false)"> Not performed</label>
                 <label><input name="PreDilatOpt" type="radio" value="__custom__" onchange="toggleDilatSize('pre', true)"> Balloon size:</label>
                 <input name="PreDilatSize" type="text" class="hl" id="preDilatSize" style="width:110px; display:none;" value="4.0x20mm">
             </div>
+
             <hr class="dashed">
+
             <span class="sub-label">Stent</span>
             <div class="device-group">
                 <label><input name="StentType" type="radio" value="Closed-cell carotid Wallstent" checked onchange="setStentSize('7x40mm')"> Wallstent (Closed-cell)</label>
@@ -292,7 +180,9 @@
                 <span style="margin-left:15px; font-weight:600;">LOT #:</span>
                 <input name="LOT" type="text" class="hl" style="width:140px;">
             </div>
+
             <hr class="dashed">
+
             <span class="sub-label">Post-dilatation</span>
             <div style="display:flex; flex-direction:column; gap:8px;">
                 <div>
@@ -312,30 +202,36 @@
                 </div>
             </div>
         </div>
+
         <!-- ⑦ Complications -->
         <div class="section-card">
             <div class="section-title">⚠️ Complications during procedure</div>
+
             <div class="field-row">
                 <span class="field-label">Event:</span>
                 <label><input name="Event" type="radio" value="__none__" checked> None</label>
                 <label><input name="Event" type="radio" value="Bradycardia"> Bradycardia</label>
                 <label><input name="Event" type="radio" value="Asystole"> Asystole</label>
             </div>
+
             <div class="field-row" style="margin-top:6px;">
                 <span class="field-label">Interventions:</span>
                 <label><input name="Intervention" type="checkbox" value="Encourage cough"> Encourage cough</label>
                 <label><input name="Intervention" type="checkbox" value="Chest tapping"> Chest tapping</label>
                 <label><input name="Intervention" type="checkbox" value="Atropine 1mg IV push"> Atropine 1mg IV push</label>
             </div>
+
             <div class="field-row" style="margin-top:10px;">
                 <span class="field-label">Residual stenosis:</span>
                 <input name="Residual" type="number" min="0" max="100" class="hl" style="width:80px;" value="30">
                 <span>%</span>
             </div>
         </div>
+
         <!-- ⑧ Post Procedure -->
         <div class="section-card">
             <div class="section-title">📋 Post Procedure</div>
+
             <span class="sub-label">Closure Device</span>
             <div class="device-group">
                 <label><input name="Closure" type="radio" value="__angioseal__" checked onchange="toggleManualPad(false)"> Angio-Seal</label>
@@ -347,6 +243,7 @@
                 <label><input name="ManualPad" type="radio" value="__none__" checked> Manual compression only</label>
                 <label><input name="ManualPad" type="radio" value="__pad__"> + Hemostatic pad</label>
             </div>
+
             <span class="sub-label" style="margin-top:15px;">Postoperative ACT <span style="font-size:0.8rem; color:#888; font-weight:normal;">(if measured)</span></span>
             <div class="field-row">
                 <label><input name="PostACTDone" type="checkbox" id="postACTDone" onchange="togglePostACT(this.checked)"> Measured</label>
@@ -356,20 +253,25 @@
                     <label style="margin-left:10px;"><input name="Protamine" type="checkbox" value="1"> → Protamine administered</label>
                 </span>
             </div>
+
             <span class="sub-label" style="margin-top:15px;">Other Notes <span style="font-size:0.8rem; color:#888; font-weight:normal;">(optional)</span></span>
             <textarea name="PostNotes" rows="2" style="width:100%; box-sizing:border-box;" placeholder="Optional..."></textarea>
         </div>
+
         <div class="btn-group">
             <button type="button" class="btn-primary" onclick="generateReport()">📄 Generate Report</button>
             <button type="button" class="btn-secondary" onclick="window.location.reload()">🗑️ Clear</button>
         </div>
+
     </form>
+
     <div style="margin-top: 30px;">
         <button class="btn-success" onclick="copyReport()">📋 Copy Final Report</button>
         <p style="font-weight:bold; margin-bottom:5px;">Final Report:</p>
         <textarea rows="20" id="Final_Report"></textarea>
     </div>
 </div>
+
 <script>
     // --- Toggle helpers ---
     function onSheathChange(radio) {
@@ -379,27 +281,35 @@
         // Hide guiding catheter section when Shuttle is used
         document.getElementById('guidingSection').style.display   = isShuttle ? 'none'  : 'block';
     }
+
     function toggleCustomGuiding(show) {
         document.getElementById('customGuidingRow').style.display = show ? 'block' : 'none';
     }
+
     function toggleDilatSize(which, show) {
         document.getElementById(which + 'DilatSize').style.display = show ? 'inline-block' : 'none';
     }
+
     function setStentSize(size) {
         document.form.StentSize.value = size;
     }
+
     function toggleSpiderOptions(show) {
         document.getElementById('spiderOptions').style.display = show ? 'block' : 'none';
     }
+
     function toggleManualPad(show) {
         document.getElementById('manualPadRow').style.display = show ? 'block' : 'none';
     }
+
     function togglePostACT(show) {
         document.getElementById('postACTFields').style.display = show ? 'flex' : 'none';
     }
+
     // --- Report generation ---
     function generateReport() {
         const f = document.form;
+
         // Sheath
         const sheathOpt   = f.SheathOpt.value;
         const isShuttle   = sheathOpt === '__shuttle__';
@@ -407,22 +317,27 @@
             ? (f.SheathCustom.value.trim() || '[sheath]')
             : isShuttle ? '6Fr. Shuttle long sheath'
             : sheathOpt;
+
         // Approach & ultrasound
         const approach   = f.Approach.value;
         const ultrasound = f.Ultrasound.value;
+
         // Target
         const side     = f.Side.value;
         const location = f.Location.value;
         const stenosis = f.Stenosis.value;
+
         // Guiding (skip if Shuttle)
         const guidingOpt = f.GuidingOpt.value;
         const guiding = guidingOpt === '__custom__'
             ? (f.GuidingCustom.value.trim() || '[guiding catheter]')
             : guidingOpt;
+
         // ACT & Heparin
         const baseACT = f.BaseACT.value;
         const heparin = f.Heparin.value;
         const preACT  = f.PreACT.value;
+
         // Protection sentence
         const protOpt = f.Protection.value;
         let protectionLine = '';
@@ -435,16 +350,19 @@
         } else if (protOpt === '__moma__') {
             protectionLine = '- Mo.Ma ultra Proximal cerebral protection device was used.';
         }
+
         // Pre-dilatation
         const preDilatOpt = f.PreDilatOpt.value;
         const preDilat = preDilatOpt === '__none__'
             ? 'Not performed'
             : ('A ' + (f.PreDilatSize.value.trim() || '?') + ' balloon');
+
         // Stent
         const stentType = f.StentType.value;
         const stentSize = f.StentSize.value.trim();
         const lot       = f.LOT.value.trim();
         const stentDesc = `${stentSize} ${stentType}`;
+
         // Post-dilatation
         const postDilatOpt = f.PostDilatOpt.value;
         let postDilat = '';
@@ -460,10 +378,12 @@
         } else {
             postDilat = 'Not performed';
         }
+
         // Complications
         const event = f.Event.value;
         let interventions = [];
         f.Intervention.forEach(cb => { if (cb.checked) interventions.push(cb.value); });
+
         let complicationLine = '';
         if (event !== '__none__') {
             const ivList = interventions.length > 0 ? interventions.join(' / ') : null;
@@ -473,7 +393,9 @@
                 complicationLine = `- ${event} was noted during PTA.`;
             }
         }
+
         const residual = f.Residual.value;
+
         // Closure
         const closureOpt = f.Closure.value;
         let closureText = '';
@@ -489,7 +411,9 @@
                 ? 'manual compression with hemostatic pad'
                 : 'manual compression';
         }
+
         const postNotes = f.PostNotes.value.trim();
+
         // --- Assemble ---
         let lines = [];
         lines.push('Percutaneous transluminal angioplasty and stenting for carotid stenosis:');
@@ -503,17 +427,23 @@
         lines.push(`- Baseline ACT was ${baseACT} sec.`);
         lines.push(`- Heparin ${heparin}U was given before stenting procedure.`);
         lines.push(`- Preprocedure ACT was ${preACT} sec.`);
+
         if (protectionLine) lines.push(protectionLine);
+
         lines.push(`- Pre-dilatation: ${preDilat}.`);
         lines.push(`- Stenting was performed from proximal ICA to distal CCA with a ${stentDesc}.${lot ? ' ( LOT ' + lot + ')' : ''}`);
         lines.push(`- Post-dilatation: ${postDilat}.`);
         if (postDilatExtra) lines.push(postDilatExtra);
+
         if (complicationLine) lines.push(complicationLine);
+
         const isPartial = (postDilatOpt === '__bilateral__' || postDilatOpt === '__stroke__');
         const effectWord = isPartial ? 'Partial' : 'Satisfactory';
+
         lines.push(`- ${effectWord} stenting effect was noted with a ${residual}% residual stenosis.`);
         lines.push('- No immediate complication and new neurologic deficit were noted.');
         lines.push('');
+
         // Postoperative ACT (before hemostasis)
         const postACTDone = f.PostACTDone.checked;
         if (postACTDone) {
@@ -525,12 +455,16 @@
                 lines.push(`- Postoperative ACT was ${postACT} sec.`);
             }
         }
+
         lines.push(`- Hemostasis was achieved by ${closureText}.`);
+
         if (postNotes) {
             lines.push('Other notes:');
             lines.push(`- ${postNotes}`);
         }
+
         lines.push('');
+
         // IMP
         if (isPartial) {
             // Strip the leading "- " from postDilatExtra for bullet use
@@ -541,8 +475,10 @@
         } else {
             lines.push(`IMP: Successful angioplasty and stenting of ${side} internal carotid stenosis with a ${stentDesc}.`);
         }
+
         document.getElementById('Final_Report').value = lines.join('\n');
     }
+
     function copyReport() {
         const el = document.getElementById('Final_Report');
         el.select();
@@ -550,5 +486,6 @@
         navigator.clipboard.writeText(el.value);
     }
 </script>
+
 </body>
 </html>

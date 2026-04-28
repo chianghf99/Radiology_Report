@@ -4,29 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Radiology Report Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared.css">
     <style>
-        :root {
-            --primary-color: #2c3e50; /* 深藍色主調 */
-            --accent-color: #3498db;  /* 亮藍色點綴 */
-            --bg-color: #f8f9fa;      /* 淺灰背景 */
-            --card-hover: #ffffff;
-            --text-main: #333;
-            --text-sub: #666;
-        }
-
         body {
-            font-family: 'Inter', "Microsoft JhengHei", sans-serif;
-            background-color: var(--bg-color);
-            margin: 0;
             padding: 0;
-            color: var(--text-main);
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
-        /* 頂部標題區 */
         header {
             background-color: var(--primary-color);
             color: white;
@@ -48,7 +34,6 @@
             opacity: 0.8;
         }
 
-        /* 主要內容區 */
         main {
             flex: 1;
             max-width: 1000px;
@@ -58,14 +43,12 @@
             box-sizing: border-box;
         }
 
-        /* 卡片網格系統 - 自動適應螢幕 */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 25px;
         }
 
-        /* 卡片設計 */
         .tool-card {
             background: white;
             border-radius: 12px;
@@ -78,7 +61,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            height: 180px; /* 固定高度讓排版整齊 */
+            height: 180px;
         }
 
         .tool-card:hover {
@@ -87,10 +70,7 @@
             border-color: var(--accent-color);
         }
 
-        .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-        }
+        .card-icon { font-size: 2.5rem; margin-bottom: 15px; }
 
         .card-title {
             font-size: 1.25rem;
@@ -113,7 +93,6 @@
             margin-top: 15px;
         }
 
-        /* 頁尾 */
         footer {
             text-align: center;
             padding: 20px;
@@ -149,7 +128,7 @@
                     <div class="card-icon">🦴</div>
                     <div class="card-title">Bone Densitometry (DXA)</div>
                     <div class="card-desc">
-                        AI-powered OCR tool to extract data from DXA images and generate structured reports automatically.
+                        Structured reporting template for bone mineral density (DXA) studies with automated interpretation.
                     </div>
                 </div>
                 <div class="card-arrow">Open Tool →</div>
