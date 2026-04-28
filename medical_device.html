@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>醫材與健保給付紀錄小幫手 (Medical Device & NHI Tool)</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
     <style>
         :root {
             --primary-color: #1a3a5c;
@@ -142,10 +143,27 @@
         }
 
         /* 聯絡人區塊 */
+        .collapsible-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            margin-top: 0;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .collapsible-header:hover { color: var(--accent-color); }
+        .toggle-icon { font-size: 0.9rem; transition: transform 0.2s; }
+
         .contact-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 10px;
+            margin-top: 12px;
         }
 
         .contact-item {
@@ -174,6 +192,40 @@
             padding: 3px 8px;
             border-radius: 12px;
         }
+
+        /* 資料管理按鈕 */
+        .data-mgmt-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .export-btn {
+            flex: 1;
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .export-btn:hover { background: #219653; }
+        .import-label {
+            flex: 1;
+            background: #8e44ad;
+            color: white;
+            padding: 10px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.2s;
+        }
+        .import-label:hover { background: #7d3c98; }
+        #importFile { display: none; }
 
         .device-qty {
             flex: 1;
@@ -417,13 +469,26 @@
             </div>
 
             <div class="card">
-                <h2>廠商業務聯絡資訊 (LINE)</h2>
-                <div class="contact-grid">
+                <h2 class="collapsible-header" @click="contactsOpen = !contactsOpen">
+                    廠商業務聯絡資訊 (LINE)
+                    <span class="toggle-icon">{{ contactsOpen ? '▲' : '▼' }}</span>
+                </h2>
+                <div class="contact-grid" v-show="contactsOpen">
                     <div class="contact-item" v-for="contact in businessContacts" :key="contact.product">
                         <div class="contact-product">{{ contact.product }}</div>
                         <div class="contact-name">{{ contact.name }}</div>
                     </div>
                 </div>
+            </div>
+
+            <div class="card">
+                <h2>資料管理</h2>
+                <div class="data-mgmt-bar">
+                    <button class="export-btn" @click="exportExcel">📥 匯出 Excel 修改檔</button>
+                    <label class="import-label" for="importFile">📤 載入 Excel 更新檔</label>
+                    <input type="file" id="importFile" accept=".xlsx" @change="importExcel">
+                </div>
+                <p style="font-size:0.82rem;color:var(--text-sub);margin:0;">匯出後，在 Excel 中修改欄位（勿改第一列標題），存檔後再點「載入更新檔」即可。</p>
             </div>
 
             <div class="card">
@@ -572,6 +637,23 @@
 
             const showModal = ref(false);
             const selectedPolicy = ref(null);
+            const contactsOpen = ref(false);
+
+            // 載入 localStorage 已儲存的資料
+            const saved = localStorage.getItem('medDeviceInventory');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    if (Array.isArray(parsed)) inventory.value = parsed;
+                } catch(e) {}
+            }
+            const savedContacts = localStorage.getItem('medDeviceContacts');
+            if (savedContacts) {
+                try {
+                    const parsed = JSON.parse(savedContacts);
+                    if (Array.isArray(parsed)) businessContacts.value = parsed;
+                } catch(e) {}
+            }
 
             const openModal = (policy) => {
                 selectedPolicy.value = policy;
@@ -628,6 +710,72 @@
                 });
             };
 
+            // 匯出 Excel
+            const exportExcel = () => {
+                const wb = XLSX.utils.book_new();
+
+                // Sheet1: 醫材清單
+                const invData = [
+                    ['類別', '品名', '代碼', '自費單價', '預設數量']
+                ];
+                inventory.value.forEach(item => {
+                    invData.push([item.category, item.name, item.code, item.price, item.qty]);
+                });
+                const wsInv = XLSX.utils.aoa_to_sheet(invData);
+                XLSX.utils.book_append_sheet(wb, wsInv, '醫材清單');
+
+                // Sheet2: 廠商聯絡人
+                const contactData = [['\u5ee0商品項', '\u806f絡人']];
+                businessContacts.value.forEach(c => contactData.push([c.product, c.name]));
+                const wsContact = XLSX.utils.aoa_to_sheet(contactData);
+                XLSX.utils.book_append_sheet(wb, wsContact, '廠商聯絡人');
+
+                XLSX.writeFile(wb, '醫材與健保設定資料.xlsx');
+            };
+
+            // 載入 Excel
+            const importExcel = (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const wb = XLSX.read(e.target.result, { type: 'binary' });
+
+                    // Sheet1: 醫材清單
+                    const wsInv = wb.Sheets['醫材清單'];
+                    if (wsInv) {
+                        const rows = XLSX.utils.sheet_to_json(wsInv);
+                        if (rows.length > 0) {
+                            inventory.value = rows.map(r => ({
+                                category: r['類別'] || '',
+                                name: r['品名'] || '',
+                                code: String(r['代碼'] || ''),
+                                price: Number(r['自費單價']) || 0,
+                                qty: Number(r['預設數量']) || 0
+                            }));
+                            localStorage.setItem('medDeviceInventory', JSON.stringify(inventory.value));
+                        }
+                    }
+
+                    // Sheet2: 廠商聯絡人
+                    const wsContact = wb.Sheets['廠商聯絡人'];
+                    if (wsContact) {
+                        const rows = XLSX.utils.sheet_to_json(wsContact);
+                        if (rows.length > 0) {
+                            businessContacts.value = rows.map(r => ({
+                                product: r['廠商品項'] || '',
+                                name: r['聯絡人'] || ''
+                            }));
+                            localStorage.setItem('medDeviceContacts', JSON.stringify(businessContacts.value));
+                        }
+                    }
+
+                    alert('資料已成功載入並儲存！下次開啟網頁會自動讀取最新版本。');
+                    event.target.value = '';
+                };
+                reader.readAsBinaryString(file);
+            };
+
             const increment = (item) => { 
                 item.qty = Number(item.qty) + 1; 
             };
@@ -640,10 +788,14 @@
                 groupedInventory,
                 nhiPolicies,
                 businessContacts,
+                contactsOpen,
                 showModal,
                 selectedPolicy,
+                totalPrice,
                 generatedOutput,
                 copyOutput,
+                exportExcel,
+                importExcel,
                 increment,
                 decrement,
                 openModal,
