@@ -232,6 +232,101 @@
         .add-btn:hover {
             background: #219653;
         }
+
+        /* Modal 視窗設計 */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            line-height: 1.6;
+        }
+
+        .modal-body p {
+            margin-top: 0;
+            white-space: pre-wrap;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border-color);
+            background: #fafafa;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            border-radius: 0 0 8px 8px;
+        }
+
+        .modal-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .modal-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* 健保條文按鈕 */
+        .policy-btn {
+            display: inline-block;
+            background: #eef2f5;
+            border: 1px solid var(--accent-color);
+            color: var(--primary-color);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+        }
+
+        .policy-btn:hover {
+            background: var(--accent-color);
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -271,7 +366,20 @@
         <!-- 右側：健保紀錄與輸出 -->
         <div class="right-col">
             <div class="card">
-                <h2>部分特殊醫材健保給付標準</h2>
+                <h2>健保給付規定參考 (點擊查看)</h2>
+                <div>
+                    <button 
+                        v-for="policy in nhiPolicies" 
+                        :key="policy.id" 
+                        class="policy-btn" 
+                        @click="openModal(policy)">
+                        {{ policy.title }}
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>部分特殊醫材健保給付標準 (個人備註)</h2>
                 <div class="nhi-row" v-for="cat in nhiCategories" :key="cat">
                     <label class="nhi-label">{{ cat }}</label>
                     <textarea v-model="nhiRecords[cat]" class="nhi-textarea" rows="2" placeholder="請輸入給付標準備註..."></textarea>
@@ -285,6 +393,24 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal 視窗 -->
+    <div class="modal-overlay" v-if="showModal" @click.self="closeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>{{ selectedPolicy.name }} ({{ selectedPolicy.effectiveDate }})</h3>
+                <button class="close-btn" @click="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>{{ selectedPolicy.content }}</p>
+            </div>
+            <div class="modal-footer">
+                <div>來源文件：{{ selectedPolicy.sourceDoc }}</div>
+                <div>官方更新：{{ selectedPolicy.updateDate }}</div>
+                <div>官方連結：<a :href="selectedPolicy.url" target="_blank">{{ selectedPolicy.url }}</a></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -294,13 +420,74 @@
         setup() {
             // 初始化醫材清單，您可以隨時在這邊新增、修改分類或品項
             const inventory = ref([
-                { category: 'Coils', name: 'Galaxy Spectra', code: '534362', price: 0, qty: 0 },
-                { category: 'Coils', name: 'Galaxy G3mini', code: '534361', price: 0, qty: 0 },
-                { category: 'Stents', name: 'Enterprise II', code: '53472', price: 0, qty: 0 },
-                { category: 'Closure Devices', name: 'Angioseal', code: '53462', price: 0, qty: 0 },
-                { category: 'Closure Devices', name: 'Exoseal', code: '54888', price: 0, qty: 0 },
-                { category: 'Medications', name: 'Aggrastat', code: '34866', price: 0, qty: 0 }
+                // Coil
+                { category: 'Coil', name: 'Galaxy Spectra', code: '534362', price: 0, qty: 0 },
+                { category: 'Coil', name: 'Galaxy G3mini', code: '534361', price: 0, qty: 0 },
+                { category: 'Coil', name: 'Target', code: '534831', price: 0, qty: 0 },
+                { category: 'Coil', name: 'Prime', code: '534971', price: 0, qty: 0 },
+                { category: 'Coil', name: 'PGLA', code: '534611', price: 0, qty: 0 },
+                { category: 'Coil', name: 'Microvention', code: '53436', price: 0, qty: 0 },
+                { category: 'Coil', name: 'Wallaby', code: '5340137', price: 0, qty: 0 },
+
+                // Stent
+                { category: 'Stent', name: 'Neuroform Atlas', code: '53447', price: 0, qty: 0 },
+                { category: 'Stent', name: 'Enterprise II', code: '53472', price: 0, qty: 0 },
+                { category: 'Stent', name: 'LVIS', code: '534721', price: 0, qty: 0 },
+                { category: 'Stent', name: 'Solitaire AB', code: '534471', price: 0, qty: 0 },
+
+                // Flow diverter
+                { category: 'Flow Diverter', name: 'Pipeline', code: '534992', price: 0, qty: 0 },
+                { category: 'Flow Diverter', name: 'Surpass Evolve', code: '534993', price: 0, qty: 0 },
+                { category: 'Flow Diverter', name: 'FRED', code: '534991', price: 0, qty: 0 },
+
+                // Intracranial stenting device
+                { category: 'Intracranial Stenting Device', name: 'Gateway Balloon', code: '54886', price: 0, qty: 0 },
+                { category: 'Intracranial Stenting Device', name: 'Wingspan Stent', code: '54887', price: 0, qty: 0 },
+
+                // Vascular closure device
+                { category: 'Vascular Closure Device', name: 'Angio-Seal', code: '53462', price: 0, qty: 0 },
+                { category: 'Vascular Closure Device', name: 'StarClose', code: '50881', price: 0, qty: 0 },
+                { category: 'Vascular Closure Device', name: 'Obtura', code: '534621', price: 0, qty: 0 },
+                { category: 'Vascular Closure Device', name: 'Exoseal', code: '54888', price: 0, qty: 0 },
+
+                // Other Stents
+                { category: 'Other Stents', name: 'Graftmaster coronary stent', code: '53268', price: 59400, qty: 0 },
+                { category: 'Other Stents', name: 'Biotronik coronary stent', code: '532681', price: 59400, qty: 0 },
+                { category: 'Other Stents', name: 'GORE VIABAHN stent 5cm', code: '509163', price: 78750, qty: 0 },
+                { category: 'Other Stents', name: 'GORE VIABAHN stent 10cm', code: '509164', price: 93130, qty: 0 },
+                { category: 'Other Stents', name: 'GORE VIABAHN stent 15cm', code: '509165', price: 112710, qty: 0 },
+                { category: 'Other Stents', name: 'Boston Ranger PTA Balloon Catheter', code: '533972', price: 58733, qty: 0 },
+
+                // Glue & Medications (保留上一版提到的藥物)
+                { category: 'Others', name: 'HISTOACRYL組織粘膠 (Glue)', code: '54906', price: 0, qty: 0 },
+                { category: 'Others', name: 'Aggrastat', code: '34866', price: 0, qty: 0 }
             ]);
+
+            const nhiPolicies = ref([
+                {
+                    id: 'I203-2',
+                    title: 'I203-2｜白金纖維環COIL｜2021-05-01 ~ 2910-12-31',
+                    name: '白金纖維環COIL',
+                    effectiveDate: '自110.05.01起生效',
+                    content: `本項特材須事前審查，審查原則如下：\n一、執行醫師資格：需符合以下二項規定：(一)限放射線(診斷)專科醫師、神經外科或神經科專科醫師執行。(二)限接受並通過下列任一學會之相關腦神經血管內介入治療專長訓練與認證之醫師執行:\n1.中華民國放射線醫學會授權之中華民國神經放射線醫學會。\n2.台灣神經外科醫學會授權之台灣神經血管外科與介入治療醫學會。\n3.台灣神經學會授權之台灣腦中風學會。\n二、適應症：(一)後循環腦血管動脈瘤(二)前循環腦血管動脈瘤及顱內深部動靜脈廔管，經神經外科專科醫師評估為困難手術者。(三)雙側性或多發性動脈瘤，單次栓塞術可治癒者。(四)顱內動脈瘤，經治療未痊癒，需再進一步治療，但再度施行手術困難者。(五)顱內動脈瘤患者具有系統性疾病，不適合施行開顱手術者。\n三、申請事前審查之醫院，於申請首例時應併提臨床治療路徑，嗣後若未變更得免重複提供。`,
+                    sourceDoc: '全民健康保險特殊材料給付規定（11503.ods）',
+                    updateDate: '115-02-24',
+                    url: 'https://www.nhi.gov.tw/ch/cp-11366-1966b-3410-1.html'
+                }
+            ]);
+
+            const showModal = ref(false);
+            const selectedPolicy = ref(null);
+
+            const openModal = (policy) => {
+                selectedPolicy.value = policy;
+                showModal.value = true;
+            };
+
+            const closeModal = () => {
+                showModal.value = false;
+                selectedPolicy.value = null;
+            };
 
             const nhiCategories = [
                 'coil', 
@@ -396,10 +583,15 @@
                 groupedInventory,
                 nhiCategories,
                 nhiRecords,
+                nhiPolicies,
+                showModal,
+                selectedPolicy,
                 generatedOutput,
                 copyOutput,
                 increment,
-                decrement
+                decrement,
+                openModal,
+                closeModal
             };
         }
     });
