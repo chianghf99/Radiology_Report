@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>醫材與健保給付紀錄小幫手 (Medical Device & NHI Tool)</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="shared.css">
     <style>
         body {
@@ -181,40 +180,6 @@
             border-radius: 12px;
         }
 
-        /* 資料管理按鈕 */
-        .data-mgmt-bar {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .export-btn {
-            flex: 1;
-            background: #27ae60;
-            color: white;
-            border: none;
-            padding: 10px;
-            font-size: 0.95rem;
-            font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .export-btn:hover { background: #219653; }
-        .import-label {
-            flex: 1;
-            background: #8e44ad;
-            color: white;
-            padding: 10px;
-            font-size: 0.95rem;
-            font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-            text-align: center;
-            transition: background 0.2s;
-        }
-        .import-label:hover { background: #7d3c98; }
-        #importFile { display: none; }
-
         .device-qty {
             flex: 1;
             display: flex;
@@ -252,8 +217,6 @@
             font-size: 0.95rem;
             box-sizing: border-box;
         }
-
-/* 健保紀錄區塊（已移除，保留預防未來需要） */
 
         /* 輸出結果區塊 */
         .output-textarea {
@@ -296,25 +259,6 @@
 
         .copy-btn:hover {
             background: #1f6391;
-        }
-
-        .top-actions {
-            margin-bottom: 15px;
-            text-align: right;
-        }
-        
-        .add-btn {
-            background: #27ae60;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-
-        .add-btn:hover {
-            background: #219653;
         }
 
         /* Modal 視窗設計 */
@@ -419,7 +363,7 @@
     <div class="header">
         <a href="index.html" class="back-link">← 回到首頁</a>
         <h1>醫材與健保紀錄小幫手</h1>
-        <p>快速勾選醫材數量、查閱健保給付規定，並產生文字格式<br><span style="font-size: 0.85rem; color: var(--text-sub);">(Updated: 2026/04/29)</span></p>
+        <p>快速勾選醫材數量、查閱健保給付規定，並產生文字格式<br><span style="font-size: 0.85rem; color: var(--text-sub);">(Updated: 2026/05/01)</span></p>
     </div>
 
     <div class="container">
@@ -480,16 +424,6 @@
             </div>
 
             <div class="card">
-                <h2>資料管理</h2>
-                <div class="data-mgmt-bar">
-                    <button class="export-btn" @click="exportExcel">📥 匯出 Excel 修改檔</button>
-                    <label class="import-label" for="importFile">📤 載入 Excel 更新檔</label>
-                    <input type="file" id="importFile" accept=".xlsx" @change="importExcel">
-                </div>
-                <p style="font-size:0.82rem;color:var(--text-sub);margin:0;">匯出後，在 Excel 中修改欄位（勿改第一列標題），存檔後再點「載入更新檔」即可。</p>
-            </div>
-
-            <div class="card">
                 <h2>輸出結果</h2>
                 <div class="price-display" v-if="totalPrice > 0">
                     預估自費總價：${{ totalPrice.toLocaleString() }}
@@ -524,113 +458,110 @@
 
     const app = createApp({
         setup() {
-            // 初始化醫材清單，您可以隨時在這邊新增、修改分類或品項
+            // 初始化資料 (標準版資料，若需修改請直接聯繫管理員更新程式碼)
             const inventory = ref([
-                // Coil
-                { category: 'Coil', name: 'Galaxy Spectra', code: '534362', price: 19660, qty: 0 },
-                { category: 'Coil', name: 'Galaxy G3mini', code: '534361', price: 19660, qty: 0 },
-                { category: 'Coil', name: 'Target', code: '534831', price: 19660, qty: 0 },
-                { category: 'Coil', name: 'Prime', code: '534971', price: 18700, qty: 0 },
-                { category: 'Coil', name: 'PGLA', code: '534611', price: 21320, qty: 0 },
-                { category: 'Coil', name: 'Microvention', code: '53436', price: 19660, qty: 0 },
-                { category: 'Coil', name: 'Wallaby', code: '5340137', price: 0, qty: 0 },
-
-                // Stent
-                { category: 'Stent', name: 'Neuroform Atlas', code: '53447', price: 112800, qty: 0 },
-                { category: 'Stent', name: 'Enterprise II', code: '53472', price: 112800, qty: 0 },
-                { category: 'Stent', name: 'LVIS', code: '534721', price: 112800, qty: 0 },
-                { category: 'Stent', name: 'Solitaire AB', code: '534471', price: 112800, qty: 0 },
-
-                // Flow diverter
-                { category: 'Flow Diverter', name: 'Pipeline', code: '534992', price: 392640, qty: 0 },
-                { category: 'Flow Diverter', name: 'Surpass Evolve', code: '534993', price: 392640, qty: 0 },
-                { category: 'Flow Diverter', name: 'FRED', code: '534991', price: 392640, qty: 0 },
-
-                // Intracranial stenting device
-                { category: 'Intracranial Stenting Device', name: 'Gateway Balloon', code: '54886', price: 24600, qty: 0 },
-                { category: 'Intracranial Stenting Device', name: 'Wingspan Stent', code: '54887', price: 161860, qty: 0 },
-
-                // Vascular closure device
-                { category: 'Vascular Closure Device', name: 'Angio-Seal', code: '53462', price: 12000, qty: 1 },
-                { category: 'Vascular Closure Device', name: 'StarClose', code: '50881', price: 11500, qty: 0 },
-                { category: 'Vascular Closure Device', name: 'Obtura', code: '534621', price: 15000, qty: 0 },
-                { category: 'Vascular Closure Device', name: 'Exoseal', code: '54888', price: 11000, qty: 0 },
-
-                // Other Stents
-                { category: 'Other Stents', name: 'Graftmaster coronary stent', code: '53268', price: 59400, qty: 0 },
-                { category: 'Other Stents', name: 'Biotronik coronary stent', code: '532681', price: 59400, qty: 0 },
-                { category: 'Other Stents', name: 'GORE VIABAHN stent 5cm', code: '509163', price: 78750, qty: 0 },
-                { category: 'Other Stents', name: 'GORE VIABAHN stent 10cm', code: '509164', price: 93130, qty: 0 },
-                { category: 'Other Stents', name: 'GORE VIABAHN stent 15cm', code: '509165', price: 112710, qty: 0 },
-                { category: 'Other Stents', name: 'Boston Ranger PTA Balloon Catheter', code: '533972', price: 58733, qty: 0 },
-
-                // Glue & Medications (保留上一版提到的藥物)
-                { category: 'Others', name: 'HISTOACRYL組織粘膠 (Glue)', code: '54906', price: 2480, qty: 0 },
-                { category: 'Others', name: 'Aggrastat', code: '34866', price: 8120, qty: 1 }
+                {"category": "Coil (I203-2)", "name": "Galaxy Spectra", "code": "534362", "price": 19660, "qty": 0},
+                {"category": "Coil (I203-2)", "name": "Galaxy G3mini", "code": "534361", "price": 19660, "qty": 0},
+                {"category": "Coil (I203-2)", "name": "Target", "code": "534831", "price": 19660, "qty": 0},
+                {"category": "Coil (I203-2)", "name": "Prime", "code": "534971", "price": 18700, "qty": 0},
+                {"category": "Coil (I203-2)", "name": "PGLA", "code": "534611", "price": 21320, "qty": 0},
+                {"category": "Coil (I203-2)", "name": "Microvention", "code": "53436", "price": 19660, "qty": 0},
+                {"category": "Coil (I203-2)", "name": "Wallaby", "code": "5340137", "price": 0, "qty": 0},
+                {"category": "Stent (I203-7/20)", "name": "Neuroform Atlas", "code": "53447", "price": 112800, "qty": 0},
+                {"category": "Stent (I203-7/20)", "name": "Enterprise II", "code": "53472", "price": 112800, "qty": 0},
+                {"category": "Stent (I203-7/20)", "name": "LVIS", "code": "534721", "price": 112800, "qty": 0},
+                {"category": "Stent (I203-7/20)", "name": "Solitaire AB", "code": "534471", "price": 112800, "qty": 0},
+                {"category": "Flow Diverter (I203-15)", "name": "Pipeline", "code": "534992", "price": 392640, "qty": 0},
+                {"category": "Flow Diverter (I203-15)", "name": "Surpass Evolve", "code": "534993", "price": 392640, "qty": 0},
+                {"category": "Flow Diverter (I203-15)", "name": "FRED", "code": "534991", "price": 392640, "qty": 0},
+                {"category": "Intracranial Stenting Device (I203-20)", "name": "Gateway Balloon", "code": "54886", "price": 24600, "qty": 0},
+                {"category": "Intracranial Stenting Device (I203-20)", "name": "Wingspan Stent", "code": "54887", "price": 161860, "qty": 0},
+                {"category": "Vascular Closure Device", "name": "Angio-Seal", "code": "53462", "price": 12000, "qty": 1},
+                {"category": "Vascular Closure Device", "name": "StarClose", "code": "50881", "price": 11500, "qty": 0},
+                {"category": "Vascular Closure Device", "name": "Obtura", "code": "534621", "price": 15000, "qty": 0},
+                {"category": "Vascular Closure Device", "name": "Exoseal", "code": "54888", "price": 11000, "qty": 0},
+                {"category": "Other Stents (A220-1/9)", "name": "Graftmaster coronary stent", "code": "53268", "price": 59400, "qty": 0},
+                {"category": "Other Stents (A220-1/9)", "name": "Biotronik coronary stent", "code": "532681", "price": 59400, "qty": 0},
+                {"category": "Other Stents (A220-1/9)", "name": "GORE VIABAHN stent 5cm", "code": "509163", "price": 78750, "qty": 0},
+                {"category": "Other Stents (A220-1/9)", "name": "GORE VIABAHN stent 10cm", "code": "509164", "price": 93130, "qty": 0},
+                {"category": "Other Stents (A220-1/9)", "name": "GORE VIABAHN stent 15cm", "code": "509165", "price": 112710, "qty": 0},
+                {"category": "Other Stents (A220-1/9)", "name": "Boston Ranger PTA Balloon Catheter", "code": "533972", "price": 58733, "qty": 0},
+                {"category": "Others", "name": "HISTOACRYL組織粘膠 (Glue)", "code": "54906", "price": 2480, "qty": 0},
+                {"category": "Others", "name": "Aggrastat", "code": "34866", "price": 8120, "qty": 1}
             ]);
 
             const nhiPolicies = ref([
                 {
-                    id: 'I203-2',
-                    title: 'I203-2｜白金纖維環COIL｜2021-05-01 ~ 2910-12-31',
-                    name: '白金纖維環COIL',
-                    effectiveDate: '自110.05.01起生效',
-                    content: `本項特材須事前審查，審查原則如下：\n一、執行醫師資格：需符合以下二項規定：(一)限放射線(診斷)專科醫師、神經外科或神經科專科醫師執行。(二)限接受並通過下列任一學會之相關腦神經血管內介入治療專長訓練與認證之醫師執行:\n1.中華民國放射線醫學會授權之中華民國神經放射線醫學會。\n2.台灣神經外科醫學會授權之台灣神經血管外科與介入治療醫學會。\n3.台灣神經學會授權之台灣腦中風學會。\n二、適應症：(一)後循環腦血管動脈瘤(二)前循環腦血管動脈瘤及顱內深部動靜脈廔管，經神經外科專科醫師評估為困難手術者。(三)雙側性或多發性動脈瘤，單次栓塞術可治癒者。(四)顱內動脈瘤，經治療未痊癒，需再進一步治療，但再度施行手術困難者。(五)顱內動脈瘤患者具有系統性疾病，不適合施行開顱手術者。\n三、申請事前審查之醫院，於申請首例時應併提臨床治療路徑，嗣後若未變更得免重複提供。`,
-                    sourceDoc: '全民健康保險特殊材料給付規定（11503.ods）',
-                    updateDate: '115-02-24',
-                    url: 'https://www.nhi.gov.tw/ch/cp-11366-1966b-3410-1.html'
+                                "id": "I203-2",
+                                "title": "I203-2｜白金纖維環COIL｜2021-05-01 ~ 2910-12-31",
+                                "name": "白金纖維環COIL",
+                                "effectiveDate": "生效區間：2021-05-01 ～ 2910-12-31",
+                                "content": "本項特材須事前審查，審查原則如下：\n一、執行醫師資格：需符合以下二項規定：(一)限放射線(診斷)專科醫師、神經外科或神經科專科醫師執行。(二)限接受並通過下列任一學會之相關腦神經血管內介入治療專長訓練與認證之醫師執行:\n1.中華民國放射線醫學會授權之中華民國神經放射線醫學會。\n2.台灣神經外科醫學會授權之台灣神經血管外科與介入治療醫學會。\n3.台灣神經學會授權之台灣腦中風學會。\n二、適應症：(一)後循環腦血管動脈瘤(二)前循環腦血管動脈瘤及顱內深部動靜脈廔管，經神經外科專科醫師評估為困難手術者。(三)雙側性或多發性動脈瘤，單次栓塞術可治癒者。(四)顱內動脈瘤，經治療未痊癒，需再進一步治療，但再度施行手術困難者。(五)顱內動脈瘤患者具有系統性疾病，不適合施行開顱手術者。\n三、申請事前審查之醫院，於申請首例時應併提臨床治療路徑，嗣後若未變更得免重複提供。",
+                                "sourceDoc": "全民健康保險特殊材料給付規定（11503.ods）",
+                                "updateDate": "115-02-24",
+                                "url": "https://www.nhi.gov.tw/ch/cp-11366-1966b-3410-1.html"
                 },
                 {
-                    id: 'I203-20',
-                    title: 'I203-20｜顱內支架系統｜2024-03-01 ~ 2910-12-31',
-                    name: '顱內支架系統',
-                    effectiveDate: '生效區間：2024-03-01 ～ 2910-12-31',
-                    content: `一、執行醫師資格：需符合以下二項規定：\n(一)限放射線(診斷)專科醫師、神經外科或神經科專科醫師執行。\n(二)限接受並通過下列任一學會之相關腦神經血管內介入治療專長訓練與認證之醫師執行：\n1.中華民國放射線醫學會授權之中華民國神經放射線醫學會。\n2.台灣神經外科醫學會授權之台灣神經血管外科與介入治療醫學會。\n3.台灣神經學會授權之台灣腦中風學會。\n二、需事前審查。\n三、需符合主要適應症：\n(一)已進行積極性藥物治療，仍有動脈硬化性血管管徑狹窄(75%以上)並有明顯的血液循環障礙。\n(二)腦缺血或中風之區域非屬穿通枝型。\n(三)距最近一次中風超過7天之病人，且接受治療時之雷氏修正量表小於等於3分。\n四、同一次手術中顱內動脈支架及塗藥球囊導管限擇一使用。`,
-                    sourceDoc: '全民健康保險特殊材料給付規定（11503.ods）',
-                    updateDate: '115-02-24',
-                    url: 'https://www.nhi.gov.tw/ch/cp-11366-1966b-3410-1.html'
+                                "id": "I203-7",
+                                "title": "I203-7｜血管栓塞輔助支架及傳輸裝置｜2014-10-01 ~ 2910-12-31",
+                                "name": "血管栓塞輔助支架及傳輸裝置",
+                                "effectiveDate": "生效區間：2014-10-01 ～ 2910-12-31",
+                                "content": "血管栓塞輔助支架及傳輸裝置給付規定(103/10/01):\n一、顱內寬頸動脈瘤，即動脈瘤之頸部大於4mm或動脈瘤之頸/體部比率大於0.5之顱內動脈瘤栓塞治療。\n二、顱內梭狀動脈瘤(fusiform aneurysm)之栓塞治療。\n三、顱內剝離性動脈瘤(dissecting aneurysm)之栓塞治療。\n四、使用線圈栓塞顱內動脈瘤時線圈突出或移位至母動脈(需檢附血管攝影照片佐證)。\n五、每次限用一支。\n六、第1至3項需事前審查。",
+                                "sourceDoc": "全民健康保險特殊材料給付規定（11503.ods）",
+                                "updateDate": "115-02-24",
+                                "url": "https://www.nhi.gov.tw/ch/cp-11366-1966b-3410-1.html"
                 },
                 {
-                    id: 'I203-15',
-                    title: 'I203-15｜分流支架栓塞裝置｜2018-03-01 ~ 2910-12-31',
-                    name: '分流支架栓塞裝置',
-                    effectiveDate: '生效區間：2018-03-01 ～ 2910-12-31',
-                    content: `(自1070301生效)\n一、僅適用於顱內之內頸動脈岩骨段至垂體上段，且符合下列情況之一：\n(一)動脈瘤最大徑大於15mm 者。\n(二)梭狀動脈瘤(fusiform aneurysm) 最大徑大於10mm 者。\n(三)剝離性動脈瘤(dissecting aneurysm)最大徑大於10mm。\n(四)動脈瘤經線圈栓塞治療後復發，其最大徑大於10mm 者。\n(五)同一支血管中發現2 顆顱內動脈瘤。\n二、每次限用一支；如同時申請線圈者，以5 個為限。\n三、需事前審查。`,
-                    sourceDoc: '全民健康保險特殊材料給付規定（11503.ods）',
-                    updateDate: '115-02-24',
-                    url: 'https://www.nhi.gov.tw/ch/cp-11366-1966b-3410-1.html'
+                                "id": "I203-20",
+                                "title": "I203-20｜顱內支架系統｜2024-03-01 ~ 2910-12-31",
+                                "name": "顱內支架系統",
+                                "effectiveDate": "生效區間：2024-03-01 ～ 2910-12-31",
+                                "content": "一、執行醫師資格：需符合以下二項規定：\n(一)限放射線(診斷)專科醫師、神經外科或神經科專科醫師執行。\n(二)限接受並通過下列任一學會之相關腦神經血管內介入治療專長訓練與認證之醫師執行：\n1.中華民國放射線醫學會授權之中華民國神經放射線醫學會。\n2.台灣神經外科醫學會授權之台灣神經血管外科與介入治療醫學會。\n3.台灣神經學會授權之台灣腦中風學會。\n二、需事前審查。\n三、需符合主要適應症：\n(一)已進行積極性藥物治療，仍有動脈硬化性血管管徑狹窄(75%以上)並有明顯的血液循環障礙。\n(二)腦缺血或中風之區域非屬穿通枝型。\n(三)距最近一次中風超過7天之病人，且接受治療時之雷氏修正量表小於等於3分。\n四、同一次手術中顱內動脈支架及塗藥球囊導管限擇一使用。",
+                                "sourceDoc": "全民健康保險特殊材料給付規定（11503.ods）",
+                                "updateDate": "115-02-24",
+                                "url": "https://www.nhi.gov.tw/ch/cp-11366-1966b-3410-1.html"
                 },
                 {
-                    id: 'A220-1',
-                    title: 'A220-1｜頸動脈支架CAROTID STENT｜2023-01-01 ~ 2910-12-31',
-                    name: '頸動脈支架CAROTID STENT',
-                    effectiveDate: '生效區間：2023-01-01 ～ 2910-12-31',
-                    content: `頸動脈支架之使用規範及實施醫師資格(自112.1.1起生效)\n一、使用規範如下：\n（一）無症狀的頸動脈狹窄大於80%以上。\n（二）有症狀的頸動脈狹窄大於60%以上。\n（三）放射線治療後之頭頸部動脈狹窄（含頸動脈、椎動脈及鎖骨下動脈）。\n（四）頸動脈或椎動脈剝離所引起之狹窄或剝離性動脈瘤。\n（五）因嚴重心肺疾病，不適合外科頸動脈內膜剝離術或全身麻醉者。\n二、實施醫師之資格，必須具有下列醫師資格之一：\n(一)放射線專科或神經專科或神經外科專科醫師資格者。\n(二)中華民國心臟學會、台灣胸腔及心臟血管外科學會、台灣血管外科學會各自認定之專科醫師。\n三、以上醫師須具有頭頸部血管攝影三十例以上操作經驗，及三例頭頸動脈支架之操作經驗,並取得由專業醫學會舉辦之置放頸動脈支架之技術訓練研討會訓練證書者。`,
-                    sourceDoc: '全民健康保險特殊材料給付規定（11503.ods）',
-                    updateDate: '115-02-24',
-                    url: 'https://www.nhi.gov.tw/ch/cp-11366-1966b-3410-1.html'
+                                "id": "I203-15",
+                                "title": "I203-15｜分流支架栓塞裝置｜2018-03-01 ~ 2910-12-31",
+                                "name": "分流支架栓塞裝置",
+                                "effectiveDate": "生效區間：2018-03-01 ～ 2910-12-31",
+                                "content": "(自1070301生效)\n一、僅適用於顱內之內頸動脈岩骨段至垂體上段，且符合下列情況之一：\n(一)動脈瘤最大徑大於15mm 者。\n(二)梭狀動脈瘤(fusiform aneurysm) 最大徑大於10mm 者。\n(三)剝離性動脈瘤(dissecting aneurysm)最大徑大於10mm。\n(四)動脈瘤經線圈栓塞治療後復發，其最大徑大於10mm 者。\n(五)同一支血管中發現2 顆顱內動脈瘤。\n二、每次限用一支；如同時申請線圈者，以5 個為限。\n三、需事前審查。",
+                                "sourceDoc": "全民健康保險特殊材料給付規定（11503.ods）",
+                                "updateDate": "115-02-24",
+                                "url": "https://www.nhi.gov.tw/ch/cp-11366-1966b-3410-1.html"
                 },
                 {
-                    id: 'A220-9',
-                    title: 'A220-9｜周邊血管支架(自膨式支架含人工血管)之給付規定｜2017-07-01 ~ 2910-12-31',
-                    name: '周邊血管支架(自膨式支架含人工血管)',
-                    effectiveDate: '生效區間：2017-07-01 ～ 2910-12-31',
-                    content: `周邊血管支架(含人工血管)之給付規定(自1060701生效)\n1.周邊血管動脈瘤。\n2.周邊血管非典型動脈瘤，包括偽動脈瘤、動脈瘤合併感染、動靜脈瘻管。\n3.周邊血管先天性或創傷性動靜脈異常交通。\n4.主動脈人工血管支架手術中用以維持重要分枝血管暢通。\n5.洗腎用人工血管動靜脈瘻管之人工血管與靜脈接合處狹窄，經氣球擴張後，回縮性病灶在三個月內須作兩次以上之氣球擴張者。\n6.下肢動脈阻塞性疾病，符合下列二者之一：\n(1)藥物無法改善之間歇性跛行(ABI<0.7)：影像檢查顯示為狹窄程度大於75%且長度大於16cm之淺股動脈(SFA)病灶，且必須於血管攝影下至少有一條通往足部之血管或合併進行膝下血管整形術。\n(2)危急性肢體缺血(ABI<0.4,resting pain or poor wound healing)：為保留肢體免於截肢，但必須於血管攝影下至少有一條通往足部之血管或合併進行膝下血管整形術。\n7.主動脈至雙側總髂動脈完全阻塞。`,
-                    sourceDoc: '全民健康保險特殊材料給付規定（11503.ods）',
-                    updateDate: '115-02-24',
-                    url: 'https://www.nhi.gov.tw/ch/cp-11366-1966b-3410-1.html'
+                                "id": "A220-1",
+                                "title": "A220-1｜頸動脈支架CAROTID STENT｜2023-01-01 ~ 2910-12-31",
+                                "name": "頸動脈支架CAROTID STENT",
+                                "effectiveDate": "生效區間：2023-01-01 ～ 2910-12-31",
+                                "content": "頸動脈支架之使用規範及實施醫師資格(自112.1.1起生效)\n一、使用規範如下：\n（一）無症狀的頸動脈狹窄大於80%以上。\n（二）有症狀的頸動脈狹窄大於60%以上。\n（三）放射線治療後之頭頸部動脈狹窄（含頸動脈、椎動脈及鎖骨下動脈）。\n（四）頸動脈或椎動脈剝離所引起之狹窄或剝離性動脈瘤。\n（五）因嚴重心肺疾病，不適合外科頸動脈內膜剝離術或全身麻醉者。\n二、實施醫師之資格，必須具有下列醫師資格之一：\n(一)放射線專科 or 神經專科 or 神經外科專科醫師資格者。\n(二)中華民國心臟學會、台灣胸腔及心臟血管外科學會、台灣血管外科學會各自認定之專科醫師。\n三、以上醫師須具有頭頸部血管攝影三十例以上操作經驗，及三例頭頸動脈支架之操作經驗,並取得由專業醫學會舉辦之置放頸動脈支架之技術訓練研討會訓練證書者。",
+                                "sourceDoc": "全民健康保險特殊材料給付規定（11503.ods）",
+                                "updateDate": "115-02-24",
+                                "url": "https://www.nhi.gov.tw/ch/cp-11366-1966b-3410-1.html"
+                },
+                {
+                                "id": "A220-9",
+                                "title": "A220-9｜周邊血管支架(自膨式支架含人工血管)之給付規定｜2017-07-01 ~ 2910-12-31",
+                                "name": "周邊血管支架(自膨式支架含人工血管)",
+                                "effectiveDate": "生效區間：2017-07-01 ～ 2910-12-31",
+                                "content": "周邊血管支架(含人工血管)之給付規定(自1060701生效)\n1.周邊血管動脈瘤。\n2.周邊血管非典型動脈瘤，包括偽動脈瘤、動脈瘤合併感染、動靜脈瘻管。\n3.周邊血管先天性或創傷性動靜脈異常交通。\n4.主動脈人工血管支架手術中用以維持重要分枝血管暢通。\n5.洗腎用人工血管動靜脈瘻管之人工血管與靜脈接合處狹窄，經氣球擴張後，回縮性病灶在三個月內須作兩次以上之氣球擴張者。\n6.下肢動脈阻塞性疾病，符合下列二者之一：\n(1)藥物無法改善之間歇性跛行(ABI<0.7)：影像檢查顯示為狹窄程度大於75%且長度大於16cm之淺股動脈(SFA)病灶，且必須於血管攝影下至少有一條通往足部之血管或合併進行膝下血管整形術。\n(2)危急性肢體缺血(ABI<0.4,resting pain or poor wound healing)：為保留肢體免於截肢，但必須於血管攝影下至少有一條通往足部之血管或合併進行膝下血管整形術。\n7.主動脈至雙側總髂動脈完全阻塞。",
+                                "sourceDoc": "全民健康保險特殊材料給付規定（11503.ods）",
+                                "updateDate": "115-02-24",
+                                "url": "https://www.nhi.gov.tw/ch/cp-11366-1966b-3410-1.html"
                 }
             ]);
 
             const businessContacts = ref([
-                { product: 'Biotronik coronary stent', name: '唐玉玶 Riley' },
-                { product: 'GORE VIABAHN stent', name: '張家豪 或 簡敬恆 James' },
-                { product: 'Boston Ranger PTA Balloon', name: 'Claire 王言心' },
-                { product: 'Fortress sheath', name: 'Anson' },
-                { product: '博兒美 (JJ)', name: 'Kevin' },
-                { product: '喬昕 (Heartcare)', name: '台北找 Vivian' },
-                { product: '銀鐸 (Medtronics)', name: 'James' },
-                { product: '六霖 (Stryker)', name: '何比維' }
+                {"product": "Biotronik coronary stent", "name": "唐玉玶 Riley"},
+                {"product": "GORE VIABAHN stent", "name": "張家豪 或 簡敬恆 James"},
+                {"product": "Boston Ranger PTA Balloon", "name": "Claire 王言心"},
+                {"product": "Fortress sheath", "name": "Anson"},
+                {"product": "博兒美 (JJ)", "name": "Kevin"},
+                {"product": "喬昕 (Heartcare)", "name": "台北找 Vivian"},
+                {"product": "銀鐸 (Medtronics)", "name": "James"},
+                {"product": "六霖 (Stryker)", "name": "何比維"}
             ]);
 
             const showModal = ref(false);
@@ -638,29 +569,8 @@
             const contactsOpen = ref(false);
             const policiesOpen = ref(false);
 
-            // 載入 localStorage 已儲存的資料
-            const saved = localStorage.getItem('medDeviceInventory');
-            if (saved) {
-                try {
-                    const parsed = JSON.parse(saved);
-                    if (Array.isArray(parsed)) inventory.value = parsed;
-                } catch(e) {}
-            }
-            const savedContacts = localStorage.getItem('medDeviceContacts');
-            if (savedContacts) {
-                try {
-                    const parsed = JSON.parse(savedContacts);
-                    if (Array.isArray(parsed)) businessContacts.value = parsed;
-                } catch(e) {}
-            }
-
-            const savedPolicies = localStorage.getItem('medDevicePolicies');
-            if (savedPolicies) {
-                try {
-                    const parsed = JSON.parse(savedPolicies);
-                    if (Array.isArray(parsed)) nhiPolicies.value = parsed;
-                } catch(e) {}
-            }
+            // 已移除 localStorage 邏輯，確保所有人看到的初始資料完全一致。
+            // 頁面重新整理後，所有勾選與暫時修改的單價皆會重置為標準版。
 
             const openModal = (policy) => {
                 selectedPolicy.value = policy;
@@ -694,14 +604,12 @@
 
             const generatedOutput = computed(() => {
                 let out = [];
-                
                 // 1. 醫材清單
                 if (selectedItems.value.length > 0) {
                     selectedItems.value.forEach(item => {
                         out.push(`${item.name}(${item.code}) x${item.qty}`);
                     });
                 }
-
                 return out.join('\n');
             });
 
@@ -717,128 +625,18 @@
                 });
             };
 
-            // 匯出 Excel
-            const exportExcel = () => {
-                const wb = XLSX.utils.book_new();
-
-                // Sheet1: 醫材清單
-                const invData = [
-                    ['類別', '品名', '代碼', '自費單價', '預設數量']
-                ];
-                inventory.value.forEach(item => {
-                    invData.push([item.category, item.name, item.code, item.price, item.qty]);
-                });
-                const wsInv = XLSX.utils.aoa_to_sheet(invData);
-                XLSX.utils.book_append_sheet(wb, wsInv, '醫材清單');
-
-                // Sheet2: 廠商聯絡人
-                const contactData = [['廠商品項', '聯絡人']];
-                businessContacts.value.forEach(c => contactData.push([c.product, c.name]));
-                const wsContact = XLSX.utils.aoa_to_sheet(contactData);
-                XLSX.utils.book_append_sheet(wb, wsContact, '廠商聯絡人');
-
-                // Sheet3: 健保給付規定
-                const policyData = [['ID', '按鈕標題', '條文名稱', '生效日期', '給付規定內容', '來源文件', '更新日期', '官方連結']];
-                nhiPolicies.value.forEach(p => {
-                    policyData.push([p.id, p.title, p.name, p.effectiveDate, p.content, p.sourceDoc, p.updateDate, p.url]);
-                });
-                const wsPolicy = XLSX.utils.aoa_to_sheet(policyData);
-                XLSX.utils.book_append_sheet(wb, wsPolicy, '健保給付規定');
-
-                XLSX.writeFile(wb, '醫材與健保設定資料.xlsx');
-            };
-
-            // 載入 Excel
-            const importExcel = (event) => {
-                const file = event.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const wb = XLSX.read(e.target.result, { type: 'binary' });
-
-                    // Sheet1: 醫材清單
-                    const wsInv = wb.Sheets['醫材清單'];
-                    if (wsInv) {
-                        const rows = XLSX.utils.sheet_to_json(wsInv);
-                        if (rows.length > 0) {
-                            inventory.value = rows.map(r => ({
-                                category: r['類別'] || '',
-                                name: r['品名'] || '',
-                                code: String(r['代碼'] || ''),
-                                price: Number(r['自費單價']) || 0,
-                                qty: Number(r['預設數量']) || 0
-                            }));
-                            localStorage.setItem('medDeviceInventory', JSON.stringify(inventory.value));
-                        }
-                    }
-
-                    // Sheet2: 廠商聯絡人
-                    const wsContact = wb.Sheets['廠商聯絡人'];
-                    if (wsContact) {
-                        const rows = XLSX.utils.sheet_to_json(wsContact);
-                        if (rows.length > 0) {
-                            businessContacts.value = rows.map(r => ({
-                                product: r['廠商品項'] || '',
-                                name: r['聯絡人'] || ''
-                            }));
-                            localStorage.setItem('medDeviceContacts', JSON.stringify(businessContacts.value));
-                        }
-                    }
-
-                    // Sheet3: 健保給付規定
-                    const wsPolicy = wb.Sheets['健保給付規定'];
-                    if (wsPolicy) {
-                        const rows = XLSX.utils.sheet_to_json(wsPolicy);
-                        if (rows.length > 0) {
-                            nhiPolicies.value = rows.map(r => ({
-                                id: String(r['ID'] || ''),
-                                title: r['按鈕標題'] || '',
-                                name: r['條文名稱'] || '',
-                                effectiveDate: r['生效日期'] || '',
-                                content: r['給付規定內容'] || '',
-                                sourceDoc: r['來源文件'] || '',
-                                updateDate: r['更新日期'] || '',
-                                url: r['官方連結'] || ''
-                            }));
-                            localStorage.setItem('medDevicePolicies', JSON.stringify(nhiPolicies.value));
-                        }
-                    }
-
-                    alert('資料已成功載入並儲存！下次開啟網頁會自動讀取最新版本。');
-                    event.target.value = '';
-                };
-                reader.readAsBinaryString(file);
-            };
-
-            const increment = (item) => { 
-                item.qty = Number(item.qty) + 1; 
-            };
-            const decrement = (item) => { 
-                if (item.qty > 0) item.qty = Number(item.qty) - 1; 
-            };
+            const increment = (item) => { item.qty++; };
+            const decrement = (item) => { if (item.qty > 0) item.qty--; };
 
             return {
-                inventory,
-                groupedInventory,
-                nhiPolicies,
-                businessContacts,
-                contactsOpen,
-                policiesOpen,
-                showModal,
-                selectedPolicy,
-                totalPrice,
-                generatedOutput,
-                copyOutput,
-                exportExcel,
-                importExcel,
-                increment,
-                decrement,
-                openModal,
-                closeModal
+                inventory, nhiPolicies, businessContacts,
+                showModal, selectedPolicy, contactsOpen, policiesOpen,
+                openModal, closeModal,
+                groupedInventory, totalPrice, generatedOutput,
+                copyOutput, increment, decrement
             };
         }
-    });
-    app.mount('#app');
+    }).mount('#app');
 </script>
 
 </body>
