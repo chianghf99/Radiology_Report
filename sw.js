@@ -4,7 +4,7 @@
 // 只要連得上網就必須看到最新版本，快取只在離線時頂替。
 // 改版時請更新 CACHE_VERSION，舊快取會在啟用時清掉。
 
-const CACHE_VERSION = 'radiology-hub-v8';
+const CACHE_VERSION = 'radiology-hub-v9';
 
 // 離線時最低限度要能開啟班表所需的檔案
 const APP_SHELL = [
