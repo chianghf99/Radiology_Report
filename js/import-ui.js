@@ -42,7 +42,7 @@ $('parseBtn').addEventListener('click', async () => {
   try {
     let ni = null, review = [], evt = null;
 
-    let coverSug = [], coverWarn = [], leaveInfo = { leaves: {}, found: [] };
+    let coverSug = [], coverWarn = [], leaveInfo = { leaves: {}, found: [], warnings: [] };
     if (niFile) {
       const { tables, paras } = await readDocx(niFile);
       if (tables.length < 6) throw new Error(`NI 文件的表格數量不符（讀到 ${tables.length} 個，預期 6 個）。請確認選到的是 NI 日班工作分配檔。`);
@@ -150,7 +150,8 @@ const LOC_LABEL = { tp: '台北', ds: '淡水' };
 
 function renderCovers(sug, warns, leaveInfo, cloudNi) {
   const card = $('coverCard'), list = $('coverList');
-  if (!sug.length && !warns.length && !leaveInfo.found.length) { card.style.display = 'none'; return; }
+  if (!sug.length && !warns.length && !leaveInfo.found.length
+      && !((leaveInfo.warnings || []).length)) { card.style.display = 'none'; return; }
 
   const existing = (cloudNi && cloudNi.covers) || {};
   list.innerHTML = sug.map((s, i) => {
@@ -171,8 +172,9 @@ function renderCovers(sug, warns, leaveInfo, cloudNi) {
        </label></div>`
     : '';
 
-  $('coverWarnings').innerHTML = warns.length
-    ? `<div class="status show warn" style="margin-top:12px;">⚠️ 推導時略過了這些項目：<br>${warns.join('<br>')}</div>`
+  const allWarns = [...(warns || []), ...((leaveInfo && leaveInfo.warnings) || [])];
+  $('coverWarnings').innerHTML = allWarns.length
+    ? `<div class="status show warn" style="margin-top:12px;">⚠️ 需要注意：<br>${allWarns.join('<br>')}</div>`
     : '';
 
   card.style.display = '';

@@ -424,7 +424,9 @@ function buildCoverSuggestions(annots, monthKey) {
       }
       seg.days.forEach(day => {
         if (!validDates.has(day)) {
-          warnings.push(`${a.label}：${day} 不是這一格適用的日期（此格為 ${a.when.value || '每日'}），已略過`);
+          const scope = a.when.type === 'week' ? IMPORT_DOWS[a.when.value - 1]
+                      : (a.when.type === 'dow' ? a.when.value : '每日');
+          warnings.push(`${a.label}：${day} 不是${scope}，與這一格適用的日期不符，已略過`);
           return;
         }
         suggestions.push({
@@ -468,28 +470,49 @@ function suggestionsToCovers(list) {
   return covers;
 }
 
-// 由備註最下方的說明推導請假，例如「休假：俊肇(8/07-8/18)」
+// 由備註最下方的說明推導請假。
+// 需要涵蓋的寫法：
+//   休假：俊肇(8/07-8/18)                        單一區間
+//   休假：俊肇(9/05-9/09, 9/25-10/05)            多個區間、且可能跨月
+//   休假：姜信帆、魏士揚（6/4–6/8）               多人共用同一區間
 function parseLeavesFromNotes(notes, monthKey) {
   const [year, month] = monthKey.split('-').map(Number);
-  const leaves = {}, found = [];
+  const leaves = {}, found = [], warnings = [];
   const line = String(notes || '').split('\n').find(l => l.includes('休假')) || '';
+  if (!line) return { leaves, found, warnings };
   const body = line.slice(line.indexOf('休假'));
 
-  const re = /([一-鿿]{2,3})\s*[（(]\s*(\d{1,2})\/(\d{1,2})\s*[-–~]\s*(?:(\d{1,2})\/)?(\d{1,2})\s*[）)]/g;
+  // 姓名（可用「、」並列）＋ 括號內的區間清單
+  const re = /([一-鿿]{2,3}(?:\s*[、,]\s*[一-鿿]{2,3})*)\s*[（(]([^）)]*)[）)]/g;
   let m;
   while ((m = re.exec(body))) {
-    const person = resolvePerson(m[1]);
-    if (!person) continue;
-    const days = [];
-    const start = new Date(year, +m[2] - 1, +m[3]);
-    const end = new Date(year, (+(m[4] || m[2])) - 1, +m[5]);
-    for (const d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-      days.push(`${d.getMonth() + 1}/${d.getDate()}`);
-    }
-    if (days.length) {
-      leaves[person] = days;
-      found.push(`${person}：${days[0]}–${days[days.length - 1]}（${days.length} 天）`);
+    const people = m[1].split(/[、,]/).map(x => resolvePerson(x.trim())).filter(Boolean);
+    if (!people.length) continue;
+
+    const days = [], outside = [];
+    m[2].split(/[,，]/).forEach(part => {
+      const r = /(\d{1,2})\/(\d{1,2})\s*[-–~]\s*(?:(\d{1,2})\/)?(\d{1,2})/.exec(part);
+      if (!r) return;
+      const start = new Date(year, +r[1] - 1, +r[2]);
+      const end = new Date(year, (+(r[3] || r[1])) - 1, +r[4]);
+      if (isNaN(start) || isNaN(end) || end < start) return;
+      for (const d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+        const label = `${d.getMonth() + 1}/${d.getDate()}`;
+        // 區間可能跨到下個月（如 9/25-10/05），只保留屬於本月的部分
+        if (d.getMonth() + 1 === month) days.push(label);
+        else outside.push(label);
+      }
+    });
+
+    if (!days.length) continue;
+    people.forEach(p => {
+      leaves[p] = days;
+      found.push(`${p}：${days[0]}–${days[days.length - 1]}（${days.length} 天）`);
+    });
+    if (outside.length) {
+      warnings.push(`${people.join('、')} 的休假有 ${outside.length} 天落在本月之外`
+        + `（${outside[0]}–${outside[outside.length - 1]}），需於該月份另行設定`);
     }
   }
-  return { leaves, found };
+  return { leaves, found, warnings };
 }
