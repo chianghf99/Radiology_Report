@@ -141,6 +141,12 @@ let currentIdx = MONTH_KEYS.includes(todayKey)
   ? MONTH_KEYS.indexOf(todayKey)
   : MONTH_KEYS.length - 1;
 
+// 使用者是否曾手動切換月份。
+// 頁面剛載入時只有內建備援資料，若當月尚未包含在內就會退到最後一個月；
+// 等雲端資料到齊後必須重新判斷，否則會一直停在舊月份。
+// 但使用者若已自行切換過，就尊重他的選擇不要跳走。
+let userPickedMonth = false;
+
 let todayCardTab = 'today';
 let todayCardCustomDate = null;
 let activeTab = 'ni'; // 'ni' or 'evt'

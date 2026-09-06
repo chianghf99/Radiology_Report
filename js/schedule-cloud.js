@@ -74,10 +74,20 @@ function applyMonths(months) {
 function refreshMonthKeys() {
   const oldMonthKey = MONTH_KEYS[currentIdx];
   MONTH_KEYS = Array.from(new Set([...Object.keys(NI_DATA), ...Object.keys(ALL_SCHEDULES)])).sort();
+
+  // 用當下時間計算，不沿用頁面載入時的 now（跨月時才不會停在舊月份）
+  const nowReal = new Date();
+  const tk = `${nowReal.getFullYear()}-${String(nowReal.getMonth() + 1).padStart(2, '0')}`;
+
+  // 使用者尚未手動切換月份時，只要當月已經有資料就跳到當月。
+  // 載入初期只有內建備援，當月往往還不在其中，得等雲端到齊後才切得過去。
+  if (!userPickedMonth && MONTH_KEYS.includes(tk)) {
+    currentIdx = MONTH_KEYS.indexOf(tk);
+    return;
+  }
   if (MONTH_KEYS.includes(oldMonthKey)) {
     currentIdx = MONTH_KEYS.indexOf(oldMonthKey);
   } else {
-    const tk = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     currentIdx = MONTH_KEYS.includes(tk) ? MONTH_KEYS.indexOf(tk) : MONTH_KEYS.length - 1;
   }
 }

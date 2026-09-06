@@ -97,6 +97,7 @@ function changeMonth(dir) {
     cancelEditMode();
   }
   currentIdx = Math.max(0, Math.min(MONTH_KEYS.length - 1, currentIdx + dir));
+  userPickedMonth = true;   // 之後雲端資料更新時不要把使用者跳回當月
   activeCoverSection = null;
   isLeavesCoversExpanded = false;
   render();
